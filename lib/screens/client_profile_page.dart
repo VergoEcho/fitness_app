@@ -1,13 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:trainings/generated/locale_keys.g.dart';
 
 enum TrainingsOrInfo { trainings, info }
 
 class ClientProfilePage extends StatefulWidget {
   const ClientProfilePage({Key? key}) : super(key: key);
 
-  static const route = '/clientProfile';
+  static const route = '/client/profile';
 
   @override
   State<ClientProfilePage> createState() => _ClientProfilePageState();
@@ -86,49 +88,50 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       DayCard(
-                        day: 'Mon',
+                        day: LocaleKeys.days_monday.tr(),
                         time: '12:00',
                       ),
                       DayCard(
-                        day: 'Tue',
+                        day: LocaleKeys.days_tuesday.tr(),
                       ),
                       DayCard(
-                        day: 'Wed',
+                        day: LocaleKeys.days_wednesday.tr(),
                       ),
                       DayCard(
-                        day: 'Thu',
+                        day: LocaleKeys.days_thursday.tr(),
                         time: '12:00',
                       ),
                       DayCard(
-                        day: 'Fri',
+                        day: LocaleKeys.days_friday.tr(),
                         time: '12:00',
                       ),
                       DayCard(
-                        day: 'Sat',
+                        day: LocaleKeys.days_saturday.tr(),
                       ),
                       DayCard(
-                        day: 'Sun',
+                        day: LocaleKeys.days_friday.tr(),
                       ),
                     ],
                   ),
                 ),
-                CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
-                  groupValue: pageMode,
-                  children: const <TrainingsOrInfo, Widget>{
-                    TrainingsOrInfo.trainings: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 56),
-                        child: Text('Trainings')),
-                    TrainingsOrInfo.info: Text('Info'),
-                  },
-                  onValueChanged: (state) {
-                    setState(() {
-                      if (pageMode != state) {
-                        pageMode = state!;
-                      }
-                    });
-                  },
+                SizedBox(
+                  width: double.infinity,
+                  child: CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
+                    groupValue: pageMode,
+                    children: const <TrainingsOrInfo, Widget>{
+                      TrainingsOrInfo.trainings: Text('Trainings'),
+                      TrainingsOrInfo.info: Text('Info'),
+                    },
+                    onValueChanged: (state) {
+                      setState(() {
+                        if (pageMode != state) {
+                          pageMode = state!;
+                        }
+                      });
+                    },
+                  ),
                 ),
               ],
             ),

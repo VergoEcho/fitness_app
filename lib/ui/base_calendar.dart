@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -14,6 +15,7 @@ class BaseCalendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
+      locale: context.locale.languageCode,
       availableGestures: AvailableGestures.none,
       firstDay: DateTime.utc(2020, 10, 16),
       lastDay: DateTime.utc(2070, 3, 14),
@@ -28,7 +30,7 @@ class BaseCalendar extends StatelessWidget {
             top: -8,
             right: MediaQuery.of(context).size.width - 196,
             child: Text(
-              DateFormat('MMMM, yyyy').format(DateTime.now()),
+              DateFormat('MMMM, yyyy', context.locale.languageCode).format(DateTime.now()),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

@@ -1,0 +1,30 @@
+{
+  "app_title": "Fitness App",
+  "days": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun"
+  },
+  "tab_bar": {
+    "calendar": "Calendar",
+    "training": "Training",
+    "clients": "Clients"
+  },
+  "calendar_page": {
+    "title": "Today",
+    "modalTitle": "Calendar"
+  },
+  "calendar_training_page": {
+    "new_template": "New Template"
+  },
+  "clients_page": {
+    "title": "Clients",
+    "new_client": "New Client",
+    "current": "Current",
+    "archive": "Archive"
+  }
+}

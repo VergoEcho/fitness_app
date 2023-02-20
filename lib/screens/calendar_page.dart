@@ -1,11 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:trainings/calendar/view/views.dart';
-import 'package:trainings/calendar/widgets/widgets.dart';
+import 'package:trainings/generated/locale_keys.g.dart';
+import 'package:trainings/screens/calendar_training_page.dart';
+import 'package:trainings/ui/base_calendar.dart';
+import 'package:trainings/widgets/calendar_card.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({Key? key}) : super(key: key);
+
+  static const String route = '/calendar';
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +31,9 @@ class CalendarPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Today',
-                        style: TextStyle(
+                      Text(
+                        LocaleKeys.calendar_page_title.tr(),
+                        style: const TextStyle(
                           fontSize: 34,
                           fontWeight: FontWeight.w700,
                         ),
@@ -60,9 +64,9 @@ class CalendarPage extends StatelessWidget {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text(
-                                                'Calendar',
-                                                style: TextStyle(
+                                              Text(
+                                                LocaleKeys.calendar_page_modalTitle.tr(),
+                                                style: const TextStyle(
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -103,7 +107,7 @@ class CalendarPage extends StatelessWidget {
                         },
                         child: Row(
                           children: [
-                            Text(DateFormat('MMMM, yyyy')
+                            Text(DateFormat('MMMM, yyyy', context.locale.languageCode)
                                 .format(DateTime.now())),
                             const SizedBox(
                               width: 4,
@@ -128,7 +132,7 @@ class CalendarPage extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return CalendarCard(
                   onTap: () {
-                    Navigator.pushNamed(context, CalendarTrainingPage.route);
+                    Navigator.of(context, rootNavigator: true).pushNamed(CalendarTrainingPage.route);
                   },
                 );
               },

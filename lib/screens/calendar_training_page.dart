@@ -1,13 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import 'package:trainings/calendar/widgets/widgets.dart';
+import 'package:trainings/generated/locale_keys.g.dart';
+import 'package:trainings/ui/filled_button.dart';
+import 'package:trainings/widgets/calendar_exercise_card.dart';
 
 class CalendarTrainingPage extends StatelessWidget {
   const CalendarTrainingPage({Key? key}) : super(key: key);
 
-  static const route = '/calendarTraining';
+  static const route = '/calendar/training';
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +61,7 @@ class CalendarTrainingPage extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(Icons.calendar_month_outlined),
-                    Text(DateFormat('dd.mm.yy')
+                    Text(DateFormat('dd.MM.yy', context.locale.languageCode)
                         .format(DateTime.now())
                         .toString())
                   ],
@@ -84,18 +85,9 @@ class CalendarTrainingPage extends StatelessWidget {
                         left: 8,
                         top: 16,
                       ),
-                      child: CupertinoButton.filled(
-                        borderRadius: BorderRadius.circular(100),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        minSize: 32,
+                      child: AppleFilledButton(
+                        text: LocaleKeys.calendar_training_page_new_template.tr(),
                         onPressed: () {},
-                        child: Text(
-                          'New Template'.toUpperCase(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                       ),
                     ),
                   ],
@@ -106,10 +98,11 @@ class CalendarTrainingPage extends StatelessWidget {
                   itemCount: 3,
                   itemBuilder: (context, index) {
                     return const CalendarExerciseCard();
-                    return null;
                   },
                 ),
-                const SizedBox(height: 200,)
+                const SizedBox(
+                  height: 200,
+                )
               ],
             ),
           ),

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:trainings/trainings/widgets/widgets.dart';
+import 'package:trainings/widgets/exercise_card.dart';
+import 'package:trainings/widgets/training_template_card.dart';
 
 enum TemplateOrExercise { template, exercise }
 
 class TrainingsPage extends StatefulWidget {
   const TrainingsPage({Key? key}) : super(key: key);
+
+  static const String route = '/trainings';
 
   @override
   State<TrainingsPage> createState() => _TrainingsPageState();
@@ -59,21 +62,22 @@ class _TrainingsPageState extends State<TrainingsPage> {
                   const SizedBox(height: 16),
                   const CupertinoSearchTextField(),
                   const SizedBox(height: 16),
-                  CupertinoSlidingSegmentedControl<TemplateOrExercise>(
-                    groupValue: pageMode,
-                    children: const <TemplateOrExercise, Widget>{
-                      TemplateOrExercise.template: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 48),
-                          child: Text('Templates')),
-                      TemplateOrExercise.exercise: Text('Exercises'),
-                    },
-                    onValueChanged: (state) {
-                      setState(() {
-                        if (pageMode != state) {
-                          pageMode = state!;
-                        }
-                      });
-                    },
+                  SizedBox(
+                    width: double.infinity,
+                    child: CupertinoSlidingSegmentedControl<TemplateOrExercise>(
+                      groupValue: pageMode,
+                      children: const <TemplateOrExercise, Widget>{
+                        TemplateOrExercise.template: Text('Templates'),
+                        TemplateOrExercise.exercise: Text('Exercises'),
+                      },
+                      onValueChanged: (state) {
+                        setState(() {
+                          if (pageMode != state) {
+                            pageMode = state!;
+                          }
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -86,11 +90,9 @@ class _TrainingsPageState extends State<TrainingsPage> {
                 itemBuilder: (context, index) {
                   if (pageMode == TemplateOrExercise.template) {
                     return const TrainingTemplateCard();
-                  }
-                  if (pageMode == TemplateOrExercise.exercise) {
+                  } else {
                     return const ExerciseCard();
                   }
-                  return null;
                 },
               ),
             )

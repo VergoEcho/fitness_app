@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:trainings/calendar/calendar.dart';
-
-import '../view/views.dart';
+import 'package:trainings/screens/client_profile_page.dart';
+import 'package:trainings/ui/base_calendar.dart';
 
 class CurrentClientCard extends StatelessWidget {
   const CurrentClientCard({Key? key}) : super(key: key);
@@ -10,7 +9,7 @@ class CurrentClientCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, ClientProfilePage.route),
+      onTap: () => Navigator.of(context, rootNavigator: true).pushNamed(ClientProfilePage.route),
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
         padding: const EdgeInsets.all(16),

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CalendarCard extends StatelessWidget {
-  CalendarCard({
+  const CalendarCard({
     super.key,
     required this.onTap,
   });

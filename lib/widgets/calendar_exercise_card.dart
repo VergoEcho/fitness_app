@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:trainings/calendar/widgets/widgets.dart';
+import 'package:trainings/widgets/double_picker.dart';
+import 'package:trainings/widgets/set_card.dart';
 
 class CalendarExerciseCard extends StatefulWidget {
   const CalendarExerciseCard({Key? key}) : super(key: key);
