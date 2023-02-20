@@ -13,6 +13,7 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
     with SingleTickerProviderStateMixin {
   bool _expanded = false;
   bool _doublePickerExpanded = false;
+  bool _todayCardActive = false;
 
   late final AnimationController _controller;
   late final Animation<double> _expandCardAnimation;
@@ -39,12 +40,20 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
   }
 
   todaySwitcher() {
-    if (_doublePickerExpanded) {
-      return const SetCard();
+    if (_todayCardActive) {
+      return SetCard(
+        editable: true,
+        togglePicker: () {
+          setState(() {
+            _doublePickerExpanded = !_doublePickerExpanded;
+          });
+        },
+      );
     }
     return CupertinoButton(
       onPressed: () {
         setState(() {
+          _todayCardActive = !_todayCardActive;
           _doublePickerExpanded = !_doublePickerExpanded;
         });
       },
@@ -124,8 +133,10 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                         switchInCurve: Curves.easeInOut,
                         switchOutCurve: Curves.easeInOut,
                         duration: const Duration(milliseconds: 200),
-                        transitionBuilder: (Widget child, Animation<double> animation) {
-                          return ScaleTransition(scale: animation, child: child);
+                        transitionBuilder:
+                            (Widget child, Animation<double> animation) {
+                          return ScaleTransition(
+                              scale: animation, child: child);
                         },
                         child: todaySwitcher(),
                       ),

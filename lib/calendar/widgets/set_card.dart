@@ -1,8 +1,19 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class SetCard extends StatelessWidget {
-  const SetCard({Key? key}) : super(key: key);
+class SetCard extends StatefulWidget {
+  const SetCard({Key? key, this.editable = false, this.togglePicker}) : super(key: key);
+
+  final bool editable;
+  final Function? togglePicker;
+
+  @override
+  State<SetCard> createState() => _SetCardState();
+}
+
+class _SetCardState extends State<SetCard> {
+  late bool editInProgress = true;
 
   List<Widget> _getSetRows() {
     List<Widget> rows = [];
@@ -13,6 +24,12 @@ class SetCard extends StatelessWidget {
       ));
     }
     return rows;
+  }
+
+  @override
+  void initState() {
+    editInProgress = widget.editable ? true : false;
+    super.initState();
   }
 
   @override
@@ -51,6 +68,31 @@ class SetCard extends StatelessWidget {
             ),
           ),
         ),
+        widget.editable
+            ? Positioned(
+                right: 12,
+                top: -4,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    setState(() {
+                      editInProgress = !editInProgress;
+                    });
+                    widget.togglePicker!();
+                  },
+                  child: editInProgress
+                      ? const Icon(
+                          CupertinoIcons.checkmark_alt_circle_fill,
+                          color: Color(0xff3ecf8e),
+                          size: 32,
+                        )
+                      : const Icon(
+                          CupertinoIcons.add_circled_solid,
+                          size: 32,
+                        ),
+                ),
+              )
+            : const SizedBox(),
       ],
     );
   }

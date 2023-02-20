@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trainings/clients/clients.dart';
 import 'package:trainings/home.dart';
 
 import 'calendar/calendar.dart';
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
       routes: {
         HomePage.route: (context) => const HomePage(),
         CalendarTrainingPage.route: (context) => const CalendarTrainingPage(),
+        ClientProfilePage.route: (context) => const ClientProfilePage(),
       },
     );
   }

@@ -1,1 +1,2 @@
-export 'view/clients_page.dart';
+export 'view/views.dart';
+export 'widgets/widgets.dart';
