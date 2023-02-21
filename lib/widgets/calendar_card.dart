@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/models/client.dart';
 
 class CalendarCard extends StatelessWidget {
   const CalendarCard({
     super.key,
     required this.onTap,
+    required this.client,
   });
 
+  final Client client;
   final VoidCallback onTap;
 
   @override
@@ -26,20 +29,29 @@ class CalendarCard extends StatelessWidget {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Contact name'),
-                SizedBox(height: 2),
-                Text(
-                  'Comment about',
-                  style: TextStyle(fontSize: 14,
-                      color: Color(0x963c3c43)),
-                ),
-                SizedBox(height: 2),
-                Text('10:00-10:45'),
+              children: [
+                Text(client.name),
+                client.clientNote == ""
+                    ? const SizedBox()
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          client.clientNote,
+                          style: const TextStyle(
+                              fontSize: 14, color: Color(0x963c3c43)),
+                        ),
+                      ),
+                const SizedBox(height: 2),
+                const Text('10:00-10:45'),
               ],
             ),
-            const CupertinoButton(onPressed: null,
-            child: Icon(Icons.arrow_forward_ios, color: Color(0x963c3c43), size: 16,)),
+            const CupertinoButton(
+                onPressed: null,
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Color(0x963c3c43),
+                  size: 16,
+                )),
           ],
         ),
       ),

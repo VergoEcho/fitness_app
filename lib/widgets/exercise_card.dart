@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/models/exercise.dart';
 
 class ExerciseCard extends StatelessWidget {
-  const ExerciseCard({Key? key}) : super(key: key);
+  const ExerciseCard({Key? key, required this.exercise}) : super(key: key);
+
+  final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +21,15 @@ class ExerciseCard extends StatelessWidget {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Exercise name'),
-              SizedBox(height: 2),
-              Text(
-                'Distance (km)/Time (min)',
-                style: TextStyle(fontSize: 14, color: Color(0x963c3c43)),
+            children: [
+              Text(exercise.title),
+              const SizedBox(height: 2),
+              exercise.description == "" ? const SizedBox() : Padding(
+                padding: const EdgeInsets.only(top: 2.0),
+                child: Text(
+                  exercise.description,
+                  style: const TextStyle(fontSize: 14, color: Color(0x963c3c43)),
+                ),
               ),
             ],
           ),

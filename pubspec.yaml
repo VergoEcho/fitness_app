@@ -42,6 +42,7 @@ dependencies:
   bloc: ^8.1.1
   timelines: ^0.1.0
   easy_localization: ^3.0.1
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

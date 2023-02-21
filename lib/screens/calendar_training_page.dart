@@ -23,11 +23,11 @@ class CalendarTrainingPage extends StatelessWidget {
           padding: EdgeInsets.zero,
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.arrow_back_ios_new,
               ),
-              Text('Back')
+              Text(LocaleKeys.calendar_training_page_back.tr())
             ],
           ),
           onPressed: () {

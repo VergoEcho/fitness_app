@@ -2,14 +2,63 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
+import 'package:trainings/models/client.dart';
 import 'package:trainings/screens/calendar_training_page.dart';
 import 'package:trainings/ui/base_calendar.dart';
 import 'package:trainings/widgets/calendar_card.dart';
+
+List<Client> _clients = [
+  Client(
+    id: 0,
+    name: "Alexander",
+    phone: "+1234678",
+    birthday: "12.08.93",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 80,
+  ),
+  Client(
+    id: 1,
+    name: "Dmitriy",
+    phone: "+12344278",
+    birthday: "30.02.99",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 75,
+    clientNote: "want to gain more muscle",
+  ),
+  Client(
+    id: 2,
+    name: "Karina",
+    phone: "+12300231",
+    birthday: "12.11.03",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 42,
+    clientNote: "want to lose fat",
+  ),
+  Client(
+    id: 2,
+    name: "Diana",
+    phone: "+1111231",
+    birthday: "03.20.98",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 47,
+    isArchive: true,
+  ),
+];
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({Key? key}) : super(key: key);
 
   static const String route = '/calendar';
+
+  List<Client> _activeClients () {
+    return _clients.where((client) {
+      return client.isArchive == false;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +135,10 @@ class CalendarPage extends StatelessWidget {
                                         ListView.builder(
                                           physics: const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
-                                          itemCount: 6,
+                                          itemCount: _activeClients().length,
                                           itemBuilder: (context, index) {
                                             return CalendarCard(
+                                              client: _activeClients()[index],
                                               onTap: () {
                                                 Navigator.pushNamed(context,
                                                     CalendarTrainingPage.route);
@@ -128,9 +178,10 @@ class CalendarPage extends StatelessWidget {
             ),
             Expanded(
                 child: ListView.builder(
-              itemCount: 3,
+              itemCount: _activeClients().length,
               itemBuilder: (BuildContext context, int index) {
                 return CalendarCard(
+                  client: _activeClients()[index],
                   onTap: () {
                     Navigator.of(context, rootNavigator: true).pushNamed(CalendarTrainingPage.route);
                   },

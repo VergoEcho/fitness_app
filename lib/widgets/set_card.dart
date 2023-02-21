@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
@@ -60,7 +61,7 @@ class _SetCardState extends State<SetCard> {
                 color: CupertinoTheme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(100)),
             child: Text(
-              DateFormat('dd.MM.yy').format(DateTime.now()),
+              DateFormat('dd.MM.yy', context.locale.languageCode).format(DateTime.now()),
               style: const TextStyle(
                 color: CupertinoColors.white,
               ),

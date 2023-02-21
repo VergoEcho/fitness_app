@@ -35,6 +35,7 @@ class CodegenLoader extends AssetLoader{
     "modalTitle": "Calendar"
   },
   "calendar_training_page": {
+    "back": "Back",
     "new_template": "New Template"
   },
   "clients_page": {
@@ -42,6 +43,21 @@ class CodegenLoader extends AssetLoader{
     "new_client": "New Client",
     "current": "Current",
     "archive": "Archive"
+  },
+  "client_profile_page": {
+    "back": "Back",
+    "edit": "Edit",
+    "paid_till": "Paid till",
+    "workouts": "workouts",
+    "trainings": "Trainings",
+    "info": "Info",
+    "new_template": "New Template"
+  },
+  "trainings_page": {
+    "title": "Trainings",
+    "new_template": "New Template",
+    "templates": "Templates",
+    "exercises": "Exercises"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en};

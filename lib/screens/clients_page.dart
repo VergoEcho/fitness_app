@@ -1,9 +1,52 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
+import 'package:trainings/models/client.dart';
 import 'package:trainings/ui/filled_button.dart';
 import 'package:trainings/widgets/archived_client_card.dart';
 import 'package:trainings/widgets/current_client_card.dart';
+
+List<Client> _clients = [
+  Client(
+    id: 0,
+    name: "Alexander",
+    phone: "+1234678",
+    birthday: "12.08.93",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 80,
+  ),
+  Client(
+    id: 1,
+    name: "Dmitriy",
+    phone: "+12344278",
+    birthday: "30.02.99",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 75,
+    clientNote: "want to gain more muscle",
+  ),
+  Client(
+    id: 2,
+    name: "Karina",
+    phone: "+12300231",
+    birthday: "12.11.03",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 42,
+    clientNote: "want to lose fat",
+  ),
+  Client(
+    id: 2,
+    name: "Diana",
+    phone: "+1111231",
+    birthday: "03.20.98",
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    weight: 47,
+    isArchive: true,
+  ),
+];
 
 enum ClientState { current, archived }
 
@@ -18,6 +61,15 @@ class ClientsPage extends StatefulWidget {
 
 class _ClientsPageState extends State<ClientsPage> {
   ClientState pageMode = ClientState.current;
+
+  List<Client> _selectedClients () {
+    return _clients.where((client) {
+      if (pageMode == ClientState.current) {
+        return client.isArchive == false;
+      }
+      return client.isArchive == true;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +144,14 @@ class _ClientsPageState extends State<ClientsPage> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 5,
+                itemCount: _selectedClients().length,
                 itemBuilder: (context, index) {
+                  Client client = _selectedClients()[index];
                   if (pageMode == ClientState.current) {
-                    return const CurrentClientCard();
-                  } else {
-                    return const ArchivedClientCard();
+                    return CurrentClientCard(client: client);
                   }
+                  return ArchivedClientCard(client: client);
+
                 },
               ),
             )

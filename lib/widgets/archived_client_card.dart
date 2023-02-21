@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/models/client.dart';
 
 class ArchivedClientCard extends StatelessWidget {
-  const ArchivedClientCard({Key? key}) : super(key: key);
+  const ArchivedClientCard({Key? key, required this.client})
+      : super(key: key);
+
+  final Client client;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +22,18 @@ class ArchivedClientCard extends StatelessWidget {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Contact name'),
-              SizedBox(height: 2),
-              Text(
-                'Comment about',
-                style: TextStyle(fontSize: 14, color: Color(0x963c3c43)),
-              ),
+            children: [
+              Text(client.name),
+              client.clientNote == ""
+                  ? const SizedBox()
+                  : Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        client.clientNote,
+                        style: const TextStyle(
+                            fontSize: 14, color: Color(0x963c3c43)),
+                      ),
+                    ),
             ],
           ),
           CupertinoButton(

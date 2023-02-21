@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
+import 'package:trainings/models/training.dart';
 
 List<String> exercises = [
   '20 kg x 20 Reps',
@@ -10,7 +11,9 @@ List<String> exercises = [
 ];
 
 class TrainingTemplateCard extends StatefulWidget {
-  const TrainingTemplateCard({Key? key}) : super(key: key);
+  const TrainingTemplateCard({Key? key, required this.template}) : super(key: key);
+
+  final Training template;
 
   @override
   State<TrainingTemplateCard> createState() => _TrainingTemplateCardState();
@@ -71,12 +74,14 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Template name'),
-                    SizedBox(height: 2),
-                    Text(
-                      'Description here',
-                      style: TextStyle(fontSize: 14, color: Color(0x963c3c43)),
+                  children: [
+                    Text(widget.template.title),
+                    widget.template.description == "" ? SizedBox() :Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        widget.template.description,
+                        style: const TextStyle(fontSize: 14, color: Color(0x963c3c43)),
+                      ),
                     ),
                   ],
                 ),

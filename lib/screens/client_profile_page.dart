@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 
 enum TrainingsOrInfo { trainings, info }
@@ -31,11 +30,11 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
           padding: EdgeInsets.zero,
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.arrow_back_ios_new,
               ),
-              Text('Back')
+              Text(LocaleKeys.client_profile_page_back.tr())
             ],
           ),
           onPressed: () {
@@ -45,9 +44,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
         middle: const Text('Client Name'),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: Text('Edit'),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Text(LocaleKeys.client_profile_page_edit.tr()),
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -78,7 +77,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                 Row(
                   children: [
                     Text(
-                      'Paid till: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${3} workouts)',
+                      '${LocaleKeys.client_profile_page_paid_till.tr()}: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${3} ${LocaleKeys.client_profile_page_workouts.tr()})',
                       style: const TextStyle(color: Color(0xff828282)),
                     ),
                   ],
@@ -120,9 +119,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                   width: double.infinity,
                   child: CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
                     groupValue: pageMode,
-                    children: const <TrainingsOrInfo, Widget>{
-                      TrainingsOrInfo.trainings: Text('Trainings'),
-                      TrainingsOrInfo.info: Text('Info'),
+                    children: <TrainingsOrInfo, Widget>{
+                      TrainingsOrInfo.trainings: Text(LocaleKeys.client_profile_page_trainings.tr()),
+                      TrainingsOrInfo.info: Text(LocaleKeys.client_profile_page_info.tr()),
                     },
                     onValueChanged: (state) {
                       setState(() {
@@ -139,46 +138,48 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: pageMode == TrainingsOrInfo.trainings ? ListView.builder(
-                shrinkWrap: true,
-                itemCount: 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: pageMode == TrainingsOrInfo.trainings
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
                           children: [
-                            const Text(
-                              'Trainings (3)',
-                              style:
-                              TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-                            ),
-                            CupertinoButton.filled(
-                              borderRadius: BorderRadius.circular(100),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 4),
-                              minSize: 32,
-                              onPressed: () {},
-                              child: Text(
-                                'New Template'.toUpperCase(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 24.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${LocaleKeys.client_profile_page_trainings.tr()} (3)',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20),
+                                  ),
+                                  CupertinoButton.filled(
+                                    borderRadius: BorderRadius.circular(100),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 4),
+                                    minSize: 32,
+                                    onPressed: () {},
+                                    child: Text(
+                                      LocaleKeys.client_profile_page_new_template.tr().toUpperCase(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                            )
                           ],
-                        ),
-                      )
-                    ],
-                  );
-                },
-              ) : ListView(
-                children: const [
-
-                ],
-              ),
+                        );
+                      },
+                    )
+                  : ListView(
+                      children: const [],
+                    ),
             ),
           )
         ],

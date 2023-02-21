@@ -17,6 +17,7 @@ abstract class  LocaleKeys {
   static const calendar_page_title = 'calendar_page.title';
   static const calendar_page_modalTitle = 'calendar_page.modalTitle';
   static const calendar_page = 'calendar_page';
+  static const calendar_training_page_back = 'calendar_training_page.back';
   static const calendar_training_page_new_template = 'calendar_training_page.new_template';
   static const calendar_training_page = 'calendar_training_page';
   static const clients_page_title = 'clients_page.title';
@@ -24,5 +25,18 @@ abstract class  LocaleKeys {
   static const clients_page_current = 'clients_page.current';
   static const clients_page_archive = 'clients_page.archive';
   static const clients_page = 'clients_page';
+  static const client_profile_page_back = 'client_profile_page.back';
+  static const client_profile_page_edit = 'client_profile_page.edit';
+  static const client_profile_page_paid_till = 'client_profile_page.paid_till';
+  static const client_profile_page_workouts = 'client_profile_page.workouts';
+  static const client_profile_page_trainings = 'client_profile_page.trainings';
+  static const client_profile_page_info = 'client_profile_page.info';
+  static const client_profile_page_new_template = 'client_profile_page.new_template';
+  static const client_profile_page = 'client_profile_page';
+  static const trainings_page_title = 'trainings_page.title';
+  static const trainings_page_new_template = 'trainings_page.new_template';
+  static const trainings_page_templates = 'trainings_page.templates';
+  static const trainings_page_exercises = 'trainings_page.exercises';
+  static const trainings_page = 'trainings_page';
 
 }
