@@ -25,7 +25,7 @@ List<Exercise> _exercises = [
     description: '20 kg x 20 Reps',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
-    reps: [],
+    reps: const [],
   ),
   Exercise(
     id: 2,
@@ -33,7 +33,7 @@ List<Exercise> _exercises = [
     description: '20 kg x 20 Reps',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
-    reps: [],
+    reps: const [],
   ),
 ];
 
