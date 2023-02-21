@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
+import 'package:trainings/models/client.dart';
+import 'package:trainings/ui/filled_button.dart';
 
 enum TrainingsOrInfo { trainings, info }
 
@@ -19,6 +21,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String,Client> arguments = ModalRoute.of(context)?.settings.arguments as Map<String, Client>;
+    Client client = arguments['client']!;
+
     return CupertinoPageScaffold(
       backgroundColor: const Color(0xfffafafa),
       navigationBar: CupertinoNavigationBar(
@@ -41,7 +46,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             Navigator.pop(context);
           },
         ),
-        middle: const Text('Client Name'),
+        middle: Text(LocaleKeys.client_profile_page_title.tr()),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Padding(
@@ -49,7 +54,6 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             child: Text(LocaleKeys.client_profile_page_edit.tr()),
           ),
           onPressed: () {
-            Navigator.pop(context);
           },
         ),
       ),
@@ -66,9 +70,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Contact Name',
-                  style: TextStyle(
+                Text(
+                  client.name,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
@@ -120,8 +124,10 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                   child: CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
                     groupValue: pageMode,
                     children: <TrainingsOrInfo, Widget>{
-                      TrainingsOrInfo.trainings: Text(LocaleKeys.client_profile_page_trainings.tr()),
-                      TrainingsOrInfo.info: Text(LocaleKeys.client_profile_page_info.tr()),
+                      TrainingsOrInfo.trainings:
+                          Text(LocaleKeys.client_profile_page_trainings.tr()),
+                      TrainingsOrInfo.info:
+                          Text(LocaleKeys.client_profile_page_info.tr()),
                     },
                     onValueChanged: (state) {
                       setState(() {
@@ -157,18 +163,12 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                                         fontWeight: FontWeight.w600,
                                         fontSize: 20),
                                   ),
-                                  CupertinoButton.filled(
-                                    borderRadius: BorderRadius.circular(100),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 4),
-                                    minSize: 32,
+                                  AppleFilledButton(
+                                    text: LocaleKeys
+                                        .client_profile_page_new_template
+                                        .tr()
+                                        .toUpperCase(),
                                     onPressed: () {},
-                                    child: Text(
-                                      LocaleKeys.client_profile_page_new_template.tr().toUpperCase(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
                                   ),
                                 ],
                               ),

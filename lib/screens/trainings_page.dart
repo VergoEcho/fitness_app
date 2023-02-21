@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/training.dart';
+import 'package:trainings/ui/filled_button.dart';
 import 'package:trainings/widgets/exercise_card.dart';
 import 'package:trainings/widgets/training_template_card.dart';
 
@@ -94,21 +95,12 @@ class _TrainingsPageState extends State<TrainingsPage> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      CupertinoButton.filled(
-                        borderRadius: BorderRadius.circular(100),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        minSize: 32,
+                      AppleFilledButton(
+                        text: LocaleKeys.trainings_page_new_template
+                            .tr()
+                            .toUpperCase(),
                         onPressed: () {},
-                        child: Text(
-                          LocaleKeys.trainings_page_new_template
-                              .tr()
-                              .toUpperCase(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                      )
                     ],
                   ),
                   const SizedBox(height: 16),

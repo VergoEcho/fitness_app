@@ -45,6 +45,7 @@ class CodegenLoader extends AssetLoader{
     "archive": "Archive"
   },
   "client_profile_page": {
+    "title": "Client Profile",
     "back": "Back",
     "edit": "Edit",
     "paid_till": "Paid till",

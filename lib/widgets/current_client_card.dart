@@ -16,7 +16,7 @@ class CurrentClientCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.of(context, rootNavigator: true)
-          .pushNamed(ClientProfilePage.route),
+          .pushNamed(ClientProfilePage.route, arguments: {"client": client}),
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
         padding: const EdgeInsets.all(16),

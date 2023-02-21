@@ -54,7 +54,7 @@ class CalendarPage extends StatelessWidget {
 
   static const String route = '/calendar';
 
-  List<Client> _activeClients () {
+  List<Client> _activeClients() {
     return _clients.where((client) {
       return client.isArchive == false;
     }).toList();
@@ -100,64 +100,74 @@ class CalendarPage extends StatelessWidget {
                               context: context,
                               builder: (context) {
                                 return DraggableScrollableSheet(
-                                  initialChildSize: .7,
-                                  expand: false,
-                                  builder: (context, controller) {
-                                    return ListView(
-                                      controller: controller,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 16, top: 8, bottom: 4),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                LocaleKeys.calendar_page_modalTitle.tr(),
-                                                style: const TextStyle(
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.w600,
+                                    initialChildSize: .7,
+                                    expand: false,
+                                    builder: (context, controller) {
+                                      return ListView(
+                                        controller: controller,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 16, top: 8, bottom: 4),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  LocaleKeys
+                                                      .calendar_page_modalTitle
+                                                      .tr(),
+                                                  style: const TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
-                                              ),
-                                              CupertinoButton(
-                                                child: const Icon(Icons.cancel, size: 32, color: Color(0xff65656b),),
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                              )
-                                            ],
+                                                CupertinoButton(
+                                                  child: const Icon(
+                                                    Icons.cancel,
+                                                    size: 32,
+                                                    color: Color(0xff65656b),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        const Divider(),
-                                        const BaseCalendar(
-                                          headerVisible: true,
-                                        ),
-                                        ListView.builder(
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: _activeClients().length,
-                                          itemBuilder: (context, index) {
-                                            return CalendarCard(
-                                              client: _activeClients()[index],
-                                              onTap: () {
-                                                Navigator.pushNamed(context,
-                                                    CalendarTrainingPage.route);
-                                              },
-                                            );
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          height: 24,
-                                        )
-                                      ],
-                                    );
-                                  }
-                                );
+                                          const Divider(),
+                                          const BaseCalendar(
+                                            headerVisible: true,
+                                          ),
+                                          ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemCount: _activeClients().length,
+                                            itemBuilder: (context, index) {
+                                              return CalendarCard(
+                                                client: _activeClients()[index],
+                                                onTap: () {
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      CalendarTrainingPage
+                                                          .route);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(
+                                            height: 24,
+                                          )
+                                        ],
+                                      );
+                                    });
                               });
                         },
                         child: Row(
                           children: [
-                            Text(DateFormat('MMMM, yyyy', context.locale.languageCode)
+                            Text(DateFormat(
+                                    'MMMM, yyyy', context.locale.languageCode)
                                 .format(DateTime.now())),
                             const SizedBox(
                               width: 4,
@@ -180,10 +190,14 @@ class CalendarPage extends StatelessWidget {
                 child: ListView.builder(
               itemCount: _activeClients().length,
               itemBuilder: (BuildContext context, int index) {
+                Client client = _activeClients()[index];
                 return CalendarCard(
-                  client: _activeClients()[index],
+                  client: client,
                   onTap: () {
-                    Navigator.of(context, rootNavigator: true).pushNamed(CalendarTrainingPage.route);
+                    Navigator.of(context, rootNavigator: true).pushNamed(
+                      CalendarTrainingPage.route,
+                      arguments: {"client": client},
+                    );
                   },
                 );
               },

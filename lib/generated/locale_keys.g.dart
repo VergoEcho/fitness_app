@@ -25,6 +25,7 @@ abstract class  LocaleKeys {
   static const clients_page_current = 'clients_page.current';
   static const clients_page_archive = 'clients_page.archive';
   static const clients_page = 'clients_page';
+  static const client_profile_page_title = 'client_profile_page.title';
   static const client_profile_page_back = 'client_profile_page.back';
   static const client_profile_page_edit = 'client_profile_page.edit';
   static const client_profile_page_paid_till = 'client_profile_page.paid_till';

@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/models/exercise.dart';
 import 'package:trainings/widgets/double_picker.dart';
 import 'package:trainings/widgets/set_card.dart';
 
 class CalendarExerciseCard extends StatefulWidget {
-  const CalendarExerciseCard({Key? key}) : super(key: key);
+  const CalendarExerciseCard({Key? key, required this.exercise})
+      : super(key: key);
+
+  final Exercise exercise;
 
   @override
   State<CalendarExerciseCard> createState() => _CalendarExerciseCardState();
@@ -93,14 +97,18 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('Exercise name'),
-                      SizedBox(height: 2),
-                      Text(
-                        'Description here',
-                        style:
-                            TextStyle(fontSize: 14, color: Color(0x963c3c43)),
-                      ),
+                    children: [
+                      Text(widget.exercise.title),
+                      widget.exercise.description == ""
+                          ? const SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                widget.exercise.description,
+                                style: const TextStyle(
+                                    fontSize: 14, color: Color(0x963c3c43)),
+                              ),
+                            ),
                     ],
                   ),
                 ),

@@ -1,13 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
+import 'package:trainings/models/exercise.dart';
 import 'package:trainings/models/training.dart';
 
-List<String> exercises = [
-  '20 kg x 20 Reps',
-  '20 kg x 20 Reps',
-  '20 kg x 20 Reps',
-  '20 kg x 20 Reps',
+List<Exercise> _exercises = [
+  Exercise(
+    id: 0,
+    title: 'Squat',
+    description: '20 kg x 20 Reps',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    reps: const [
+      '20 kg x 10 Reps',
+      '30 kg x 10 Reps',
+      '40 kg x 10 Reps',
+      '40 kg x 10 Reps',
+      '40 kg x 10 Reps',
+      '40 kg x 10 Reps',
+    ],
+  ),
 ];
 
 class TrainingTemplateCard extends StatefulWidget {
@@ -76,7 +88,7 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(widget.template.title),
-                    widget.template.description == "" ? SizedBox() :Padding(
+                    widget.template.description == "" ? const SizedBox() :Padding(
                       padding: const EdgeInsets.only(top: 2.0),
                       child: Text(
                         widget.template.description,
@@ -117,7 +129,7 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
                     contentsBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        exercises[index],
+                        '${_exercises[0].title} ${_exercises[0].reps[index]}',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Color(0xff828282),
@@ -132,7 +144,7 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
                         ),
                       );
                     },
-                    itemCount: exercises.length,
+                    itemCount: _exercises[0].reps.length,
                   ),
                 ),
                 // const CustomTimeline(),
