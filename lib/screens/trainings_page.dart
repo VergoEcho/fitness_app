@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/training.dart';
 import 'package:trainings/ui/filled_button.dart';
@@ -70,16 +71,16 @@ class _TrainingsPageState extends State<TrainingsPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: const Color(0xfffafafa),
+      backgroundColor: FitnessColors.whiteGray,
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               padding: const EdgeInsets.only(left: 16, top: 32, right: 16),
-              decoration: const BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.all(
+              decoration: BoxDecoration(
+                color: FitnessColors.white,
+                borderRadius: const BorderRadius.all(
                   Radius.circular(24),
                 ),
               ),

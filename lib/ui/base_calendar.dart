@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:trainings/constants/colors.dart';
 
 class BaseCalendar extends StatelessWidget {
   const BaseCalendar(
@@ -51,14 +52,14 @@ class BaseCalendar extends StatelessWidget {
           left: MediaQuery.of(context).size.width - 104,
         ),
       ),
-      daysOfWeekStyle: const DaysOfWeekStyle(
+      daysOfWeekStyle: DaysOfWeekStyle(
         weekdayStyle: TextStyle(
           fontSize: 16,
-          color: Color(0x963c3c43),
+          color: FitnessColors.darkGray,
         ),
         weekendStyle: TextStyle(
           fontSize: 16,
-          color: Color(0x963c3c43),
+          color: FitnessColors.darkGray,
         ),
       ),
       calendarStyle: CalendarStyle(
@@ -66,7 +67,7 @@ class BaseCalendar extends StatelessWidget {
           fontSize: 16,
         ),
         todayTextStyle:
-            const TextStyle(fontSize: 16, color: CupertinoColors.white),
+        TextStyle(fontSize: 16, color: FitnessColors.white),
         weekendTextStyle: const TextStyle(
           fontSize: 16,
         ),

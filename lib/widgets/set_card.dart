@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:trainings/constants/colors.dart';
 
 class SetCard extends StatefulWidget {
   const SetCard({Key? key, this.editable = false, this.togglePicker}) : super(key: key);
@@ -43,7 +44,7 @@ class _SetCardState extends State<SetCard> {
           width: 160,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: const Color(0xffd9ebff)),
+              color: FitnessColors.whiteBlue ),
           child: Column(
             children: [
               const SizedBox(height: 8),
@@ -62,8 +63,8 @@ class _SetCardState extends State<SetCard> {
                 borderRadius: BorderRadius.circular(100)),
             child: Text(
               DateFormat('dd.MM.yy', context.locale.languageCode).format(DateTime.now()),
-              style: const TextStyle(
-                color: CupertinoColors.white,
+              style: TextStyle(
+                color: FitnessColors.white,
               ),
             ),
           ),
@@ -81,9 +82,9 @@ class _SetCardState extends State<SetCard> {
                     widget.togglePicker!();
                   },
                   child: editInProgress
-                      ? const Icon(
+                      ? Icon(
                           CupertinoIcons.checkmark_alt_circle_fill,
-                          color: Color(0xff3ecf8e),
+                          color: FitnessColors.green,
                           size: 32,
                         )
                       : const Icon(

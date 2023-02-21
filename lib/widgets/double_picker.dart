@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/constants/colors.dart';
 
 class DoublePicker extends StatefulWidget {
   const DoublePicker({
@@ -71,13 +72,13 @@ class _DoublePickerState extends State<DoublePicker>
                       initialItem: _selectedEffort - 1,
                     ),
                     selectionOverlay: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(
-                            color: Color(0xffb9b9bb),
+                            color: FitnessColors.blindGray,
                           ),
                           bottom: BorderSide(
-                            color: Color(0xffb9b9bb),
+                            color: FitnessColors.blindGray,
                           ),
                         ),
                       ),
@@ -102,13 +103,13 @@ class _DoublePickerState extends State<DoublePicker>
                       initialItem: _selectedTimes - 1,
                     ),
                     selectionOverlay: Container(
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(
-                            color: Color(0xffb9b9bb),
+                            color: FitnessColors.blindGray,
                           ),
                           bottom: BorderSide(
-                            color: Color(0xffb9b9bb),
+                            color: FitnessColors.blindGray,
                           ),
                         ),
                       ),

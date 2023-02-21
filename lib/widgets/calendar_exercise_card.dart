@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
 import 'package:trainings/widgets/double_picker.dart';
 import 'package:trainings/widgets/set_card.dart';
@@ -75,7 +76,7 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
       margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: CupertinoColors.white,
+        color: FitnessColors.white,
         borderRadius: BorderRadius.circular(13),
       ),
       child: Column(
@@ -105,8 +106,8 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                               padding: const EdgeInsets.only(top: 2),
                               child: Text(
                                 widget.exercise.description,
-                                style: const TextStyle(
-                                    fontSize: 14, color: Color(0x963c3c43)),
+                                style: TextStyle(
+                                    fontSize: 14, color: FitnessColors.darkGray),
                               ),
                             ),
                     ],
@@ -118,9 +119,9 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                     turns: _expanded ? .25 : 0,
                     curve: Curves.easeInOut,
                     duration: const Duration(milliseconds: 200),
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_forward_ios,
-                      color: Color(0x963c3c43),
+                      color: FitnessColors.darkGray,
                       size: 16,
                     ),
                   ),

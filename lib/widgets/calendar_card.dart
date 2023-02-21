@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/client.dart';
 
 class CalendarCard extends StatelessWidget {
@@ -20,7 +21,7 @@ class CalendarCard extends StatelessWidget {
         margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: FitnessColors.white,
           borderRadius: BorderRadius.circular(13),
         ),
         child: Row(
@@ -37,21 +38,22 @@ class CalendarCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Text(
                           client.clientNote,
-                          style: const TextStyle(
-                              fontSize: 14, color: Color(0x963c3c43)),
+                          style: TextStyle(
+                              fontSize: 14, color: FitnessColors.darkGray),
                         ),
                       ),
                 const SizedBox(height: 2),
                 const Text('10:00-10:45'),
               ],
             ),
-            const CupertinoButton(
-                onPressed: null,
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Color(0x963c3c43),
-                  size: 16,
-                )),
+            CupertinoButton(
+              onPressed: null,
+              child: Icon(
+                Icons.arrow_forward_ios,
+                color: FitnessColors.darkGray,
+                size: 16,
+              ),
+            ),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
 import 'package:trainings/models/exercise.dart';
@@ -47,10 +48,10 @@ class CalendarTrainingPage extends StatelessWidget {
     Client client = arguments['client']!;
 
     return CupertinoPageScaffold(
-      backgroundColor: const Color(0xfffafafa),
+      backgroundColor: FitnessColors.whiteGray,
       navigationBar: CupertinoNavigationBar(
-        border: Border.all(width: 0, color: CupertinoColors.white),
-        backgroundColor: CupertinoColors.white,
+        border: Border.all(width: 0, color: FitnessColors.white),
+        backgroundColor: FitnessColors.white,
         padding:
             const EdgeInsetsDirectional.symmetric(horizontal: 4, vertical: 0),
         leading: CupertinoButton(
@@ -75,9 +76,9 @@ class CalendarTrainingPage extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-            decoration: const BoxDecoration(
-              color: CupertinoColors.white,
-              borderRadius: BorderRadius.all(
+            decoration: BoxDecoration(
+              color: FitnessColors.white,
+              borderRadius: const BorderRadius.all(
                 Radius.circular(24),
               ),
             ),
@@ -103,7 +104,7 @@ class CalendarTrainingPage extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   _training.description,
-                  style: const TextStyle(fontSize: 14, color: Color(0xff8a8a8e)),
+                  style: TextStyle(fontSize: 14, color: FitnessColors.blindGray),
                 ),
               ],
             ),

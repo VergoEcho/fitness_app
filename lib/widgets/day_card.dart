@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:trainings/constants/colors.dart';
 
 class DayCard extends StatelessWidget {
   const DayCard({
@@ -24,16 +25,16 @@ class DayCard extends StatelessWidget {
             day.toUpperCase(),
             style: TextStyle(
                 color: time != null
-                    ? CupertinoColors.white
-                    : const Color(0xaa3c3c43),
+                    ? FitnessColors.white
+                    : FitnessColors.blindGray,
                 fontWeight: FontWeight.w600,
                 fontSize: 14),
           ),
           time != null
               ? Text(
             time!,
-            style: const TextStyle(
-              color: Color(0x99ffffff),
+            style: TextStyle(
+              color: FitnessColors.white.withOpacity(.7),
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

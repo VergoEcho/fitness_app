@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
 import 'package:trainings/screens/calendar_training_page.dart';
@@ -63,15 +64,15 @@ class CalendarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: const Color(0xfffafafa),
+      backgroundColor: FitnessColors.whiteGray,
       child: SafeArea(
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.only(left: 16, top: 32, right: 16),
-              decoration: const BoxDecoration(
-                color: CupertinoColors.white,
-                borderRadius: BorderRadius.all(
+              decoration: BoxDecoration(
+                color: FitnessColors.white,
+                borderRadius: const BorderRadius.all(
                   Radius.circular(24),
                 ),
               ),
@@ -124,10 +125,10 @@ class CalendarPage extends StatelessWidget {
                                                   ),
                                                 ),
                                                 CupertinoButton(
-                                                  child: const Icon(
+                                                  child: Icon(
                                                     Icons.cancel,
                                                     size: 32,
-                                                    color: Color(0xff65656b),
+                                                    color: FitnessColors.darkGray,
                                                   ),
                                                   onPressed: () =>
                                                       Navigator.pop(context),
