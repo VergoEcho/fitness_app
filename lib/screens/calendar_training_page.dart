@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
-import 'package:trainings/models/client.dart';
+// import 'package:trainings/models/client.dart';
 import 'package:trainings/models/exercise.dart';
 import 'package:trainings/models/training.dart';
 import 'package:trainings/ui/filled_button.dart';
@@ -44,8 +45,9 @@ class CalendarTrainingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String,Client> arguments = ModalRoute.of(context)?.settings.arguments as Map<String, Client>;
-    Client client = arguments['client']!;
+    // Map<String, Client> arguments =
+    //     ModalRoute.of(context)?.settings.arguments as Map<String, Client>;
+    // Client client = arguments['client']!;
 
     return CupertinoPageScaffold(
       backgroundColor: FitnessColors.whiteGray,
@@ -69,7 +71,7 @@ class CalendarTrainingPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        middle: Text(client.name),
+        middle: Text(LocaleKeys.calendar_training_page_client_name.tr()),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,25 +88,39 @@ class CalendarTrainingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _training.title,
+                  LocaleKeys.calendar_training_page_training_name.tr(),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_month_outlined),
-                    Text(DateFormat('dd.MM.yy', context.locale.languageCode)
-                        .format(_training.date)
-                        .toString())
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'images/calendar.svg',
+                        height: 16,
+                        width: 16,
+                        colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                            DateFormat('dd.MM.yy', context.locale.languageCode)
+                                .format(_training.date)
+                                .toString()),
+                      )
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  _training.description,
-                  style: TextStyle(fontSize: 14, color: FitnessColors.blindGray),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    LocaleKeys.calendar_training_page_training_notes.tr(),
+                    style:
+                        TextStyle(fontSize: 14, color: FitnessColors.blindGray),
+                  ),
                 ),
               ],
             ),
@@ -122,7 +138,7 @@ class CalendarTrainingPage extends StatelessWidget {
                       ),
                       child: AppleFilledButton(
                         text:
-                            LocaleKeys.calendar_training_page_new_template.tr(),
+                            LocaleKeys.calendar_training_page_new_exercise.tr(),
                         onPressed: () {},
                       ),
                     ),
@@ -133,10 +149,7 @@ class CalendarTrainingPage extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: _exercises.length,
                   itemBuilder: (context, index) {
-                    Exercise exercise = _exercises[index];
-                    return CalendarExerciseCard(
-                      exercise: exercise,
-                    );
+                    return CalendarExerciseCard(exercise: _exercises[index]);
                   },
                 ),
                 const SizedBox(

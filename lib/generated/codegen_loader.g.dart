@@ -36,7 +36,10 @@ class CodegenLoader extends AssetLoader{
   },
   "calendar_training_page": {
     "back": "Back",
-    "new_template": "New Template"
+    "new_exercise": "New Exercise",
+    "client_name": "Client Name",
+    "training_name": "Training Name",
+    "training_notes": "Traning notes about something can be that long or shot or"
   },
   "clients_page": {
     "title": "Clients",

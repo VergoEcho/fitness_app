@@ -34,7 +34,9 @@ class CurrentClientCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(client.name),
+                    Text(client.name, style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),),
                     const SizedBox(height: 2),
                     client.clientNote == ""
                         ? const SizedBox()

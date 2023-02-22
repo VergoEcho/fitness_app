@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/modal_calendar_bloc/modal_calendar_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
@@ -89,8 +91,7 @@ class CalendarPage extends StatelessWidget {
                         ),
                       ),
                       CupertinoButton(
-                        padding: const EdgeInsets.only(
-                            left: 16, top: 16, right: 0, bottom: 16),
+                        padding: const EdgeInsets.only(left: 16, right: 0),
                         onPressed: () {
                           showModalBottomSheet(
                               shape: const RoundedRectangleBorder(
@@ -128,7 +129,8 @@ class CalendarPage extends StatelessWidget {
                                                   child: Icon(
                                                     Icons.cancel,
                                                     size: 32,
-                                                    color: FitnessColors.darkGray,
+                                                    color:
+                                                        FitnessColors.darkGray,
                                                   ),
                                                   onPressed: () =>
                                                       Navigator.pop(context),
@@ -137,8 +139,24 @@ class CalendarPage extends StatelessWidget {
                                             ),
                                           ),
                                           const Divider(),
-                                          const BaseCalendar(
-                                            headerVisible: true,
+                                          BlocBuilder<ModalCalendarBloc,
+                                              ModalCalendarState>(
+                                            builder: (context, state) {
+                                              return BaseCalendar(
+                                                onDaySelected:
+                                                    (oldDate, newDate) {
+                                                  context
+                                                      .read<ModalCalendarBloc>()
+                                                      .add(
+                                                        SelectedDay(
+                                                            selectedDay:
+                                                                newDate),
+                                                      );
+                                                },
+                                                focusedDay: state.selectedDay,
+                                                headerVisible: true,
+                                              );
+                                            },
                                           ),
                                           ListView.builder(
                                             physics:

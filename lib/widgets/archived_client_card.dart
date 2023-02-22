@@ -24,7 +24,9 @@ class ArchivedClientCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(client.name),
+              Text(client.name, style: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),),
               client.clientNote == ""
                   ? const SizedBox()
                   : Padding(
@@ -32,7 +34,7 @@ class ArchivedClientCard extends StatelessWidget {
                       child: Text(
                         client.clientNote,
                         style: TextStyle(
-                            fontSize: 14, color: FitnessColors.darkGray),
+                            fontSize: 14, color: FitnessColors.blindGray),
                       ),
                     ),
             ],

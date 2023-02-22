@@ -94,6 +94,7 @@ class ClientsPage extends StatelessWidget {
                               onPressed: () {},
                             ),
                             CupertinoButton(
+                              padding: const EdgeInsets.symmetric(vertical: 0),
                               onPressed: () {},
                               child: const Icon(CupertinoIcons.settings),
                             ),
@@ -108,6 +109,7 @@ class ClientsPage extends StatelessWidget {
                     child: BlocBuilder<ClientsPageBloc, ClientState>(
                       builder: (context, state) {
                         return CupertinoSlidingSegmentedControl<ClientState>(
+                          thumbColor: FitnessColors.white,
                           groupValue: state,
                           children: <ClientState, Widget>{
                             ClientState.current: Text(

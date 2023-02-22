@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:trainings/constants/colors.dart';
 
 class AppleFilledButton extends StatelessWidget {
   const AppleFilledButton({Key? key, required this.text, this.onPressed}) : super(key: key);
@@ -16,8 +17,10 @@ class AppleFilledButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text.toUpperCase(),
-        style: const TextStyle(
+        style: TextStyle(
+          fontFamily: 'SF Pro Display',
           fontWeight: FontWeight.w600,
+          color: FitnessColors.white,
         ),
       ),
     );

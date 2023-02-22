@@ -91,7 +91,13 @@ class TrainingsPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const CupertinoSearchTextField(),
+                  CupertinoSearchTextField(
+                    style: TextStyle(
+                      color: FitnessColors.darkGray,
+                    ),
+                    prefixIcon: Icon(CupertinoIcons.search, color: FitnessColors.darkGray,),
+                    suffixIcon: Icon(CupertinoIcons.xmark_circle_fill, color: FitnessColors.darkGray,),
+                  ),
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
@@ -99,6 +105,7 @@ class TrainingsPage extends StatelessWidget {
                       builder: (context, state) {
                         return CupertinoSlidingSegmentedControl<
                             TemplateOrExercise>(
+                          thumbColor: FitnessColors.white,
                           groupValue: state,
                           children: <TemplateOrExercise, Widget>{
                             TemplateOrExercise.template:

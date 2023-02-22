@@ -1,7 +1,5 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
-// ignore_for_file: constant_identifier_names
-
 abstract class  LocaleKeys {
   static const app_title = 'app_title';
   static const days_monday = 'days.monday';
@@ -20,7 +18,10 @@ abstract class  LocaleKeys {
   static const calendar_page_modalTitle = 'calendar_page.modalTitle';
   static const calendar_page = 'calendar_page';
   static const calendar_training_page_back = 'calendar_training_page.back';
-  static const calendar_training_page_new_template = 'calendar_training_page.new_template';
+  static const calendar_training_page_new_exercise = 'calendar_training_page.new_exercise';
+  static const calendar_training_page_client_name = 'calendar_training_page.client_name';
+  static const calendar_training_page_training_name = 'calendar_training_page.training_name';
+  static const calendar_training_page_training_notes = 'calendar_training_page.training_notes';
   static const calendar_training_page = 'calendar_training_page';
   static const clients_page_title = 'clients_page.title';
   static const clients_page_new_client = 'clients_page.new_client';

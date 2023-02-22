@@ -124,6 +124,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                   child: BlocBuilder<ClientProfilePageBloc, TrainingsOrInfo>(
                     builder: (context, state) {
                       return CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
+                        thumbColor: FitnessColors.white,
                         groupValue: state,
                         children: <TrainingsOrInfo, Widget>{
                           TrainingsOrInfo.trainings: Text(

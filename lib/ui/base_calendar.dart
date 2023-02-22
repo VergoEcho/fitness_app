@@ -5,16 +5,18 @@ import 'package:trainings/constants/colors.dart';
 
 class BaseCalendar extends StatelessWidget {
   const BaseCalendar(
-      {Key? key, this.monthCalendar = true, this.headerVisible = false, this.focusedDay})
+      {Key? key, this.monthCalendar = true, this.headerVisible = false, this.focusedDay, this.onDaySelected})
       : super(key: key);
 
   final bool headerVisible;
   final bool monthCalendar;
   final DateTime? focusedDay;
+  final Function(DateTime oldDate, DateTime newDate)? onDaySelected;
 
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
+      onDaySelected: onDaySelected,
       locale: context.locale.languageCode,
       availableGestures: AvailableGestures.none,
       firstDay: DateTime.utc(2020, 10, 16),
