@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
@@ -49,28 +51,10 @@ List<Client> _clients = [
   ),
 ];
 
-enum ClientState { current, archived }
-
-class ClientsPage extends StatefulWidget {
+class ClientsPage extends StatelessWidget {
   const ClientsPage({Key? key}) : super(key: key);
 
   static const String route = '/clients';
-
-  @override
-  State<ClientsPage> createState() => _ClientsPageState();
-}
-
-class _ClientsPageState extends State<ClientsPage> {
-  ClientState pageMode = ClientState.current;
-
-  List<Client> _selectedClients () {
-    return _clients.where((client) {
-      if (pageMode == ClientState.current) {
-        return client.isArchive == false;
-      }
-      return client.isArchive == true;
-    }).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,20 +105,21 @@ class _ClientsPageState extends State<ClientsPage> {
                   const SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
-                    child: CupertinoSlidingSegmentedControl<ClientState>(
-                      groupValue: pageMode,
-                      children: <ClientState, Widget>{
-                        ClientState.current: Text(
-                            '${LocaleKeys.clients_page_current.tr()} (10)'),
-                        ClientState.archived:
+                    child: BlocBuilder<ClientsPageBloc, ClientState>(
+                      builder: (context, state) {
+                        return CupertinoSlidingSegmentedControl<ClientState>(
+                          groupValue: state,
+                          children: <ClientState, Widget>{
+                            ClientState.current: Text(
+                                '${LocaleKeys.clients_page_current.tr()} (10)'),
+                            ClientState.archived:
                             Text('${LocaleKeys.clients_page_archive.tr()} (3)'),
-                      },
-                      onValueChanged: (state) {
-                        setState(() {
-                          if (pageMode != state) {
-                            pageMode = state!;
-                          }
-                        });
+                          },
+                          onValueChanged: (value) {
+                            context.read<ClientsPageBloc>().add(
+                                ClientsPageModeChanged(value!));
+                          },
+                        );
                       },
                     ),
                   ),
@@ -143,16 +128,28 @@ class _ClientsPageState extends State<ClientsPage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _selectedClients().length,
-                itemBuilder: (context, index) {
-                  Client client = _selectedClients()[index];
-                  if (pageMode == ClientState.current) {
-                    return CurrentClientCard(client: client);
+              child: BlocBuilder<ClientsPageBloc, ClientState>(
+                builder: (context, state) {
+                  List<Client> selectedClients() {
+                    return _clients.where((client) {
+                      if (state == ClientState.current) {
+                        return client.isArchive == false;
+                      }
+                      return client.isArchive == true;
+                    }).toList();
                   }
-                  return ArchivedClientCard(client: client);
 
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: selectedClients().length,
+                    itemBuilder: (context, index) {
+                      Client client = selectedClients()[index];
+                      if (state == ClientState.current) {
+                        return CurrentClientCard(client: client);
+                      }
+                      return ArchivedClientCard(client: client);
+                    },
+                  );
                 },
               ),
             )

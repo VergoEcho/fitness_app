@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
 import 'package:trainings/ui/filled_button.dart';
 import 'package:trainings/widgets/day_card.dart';
-
-enum TrainingsOrInfo { trainings, info }
 
 class ClientProfilePage extends StatefulWidget {
   const ClientProfilePage({Key? key}) : super(key: key);
@@ -19,11 +19,10 @@ class ClientProfilePage extends StatefulWidget {
 }
 
 class _ClientProfilePageState extends State<ClientProfilePage> {
-  TrainingsOrInfo pageMode = TrainingsOrInfo.trainings;
-
   @override
   Widget build(BuildContext context) {
-    Map<String,Client> arguments = ModalRoute.of(context)?.settings.arguments as Map<String, Client>;
+    Map<String, Client> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, Client>;
     Client client = arguments['client']!;
 
     return CupertinoPageScaffold(
@@ -55,8 +54,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             padding: const EdgeInsets.only(right: 8.0),
             child: Text(LocaleKeys.client_profile_page_edit.tr()),
           ),
-          onPressed: () {
-          },
+          onPressed: () {},
         ),
       ),
       child: Column(
@@ -123,20 +121,21 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
-                    groupValue: pageMode,
-                    children: <TrainingsOrInfo, Widget>{
-                      TrainingsOrInfo.trainings:
-                          Text(LocaleKeys.client_profile_page_trainings.tr()),
-                      TrainingsOrInfo.info:
-                          Text(LocaleKeys.client_profile_page_info.tr()),
-                    },
-                    onValueChanged: (state) {
-                      setState(() {
-                        if (pageMode != state) {
-                          pageMode = state!;
-                        }
-                      });
+                  child: BlocBuilder<ClientProfilePageBloc, TrainingsOrInfo>(
+                    builder: (context, state) {
+                      return CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
+                        groupValue: state,
+                        children: <TrainingsOrInfo, Widget>{
+                          TrainingsOrInfo.trainings: Text(
+                              LocaleKeys.client_profile_page_trainings.tr()),
+                          TrainingsOrInfo.info:
+                              Text(LocaleKeys.client_profile_page_info.tr()),
+                        },
+                        onValueChanged: (value) {
+                          context.read<ClientProfilePageBloc>().add(
+                              ClientProfilePageModeChanged(value!));
+                        },
+                      );
                     },
                   ),
                 ),
@@ -144,44 +143,42 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: pageMode == TrainingsOrInfo.trainings
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 1,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${LocaleKeys.client_profile_page_trainings.tr()} (3)',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20),
-                                  ),
-                                  AppleFilledButton(
-                                    text: LocaleKeys
-                                        .client_profile_page_new_template
-                                        .tr()
-                                        .toUpperCase(),
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        );
-                      },
-                    )
-                  : ListView(
-                      children: const [],
-                    ),
+            child: BlocBuilder<ClientProfilePageBloc, TrainingsOrInfo>(
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: state == TrainingsOrInfo.trainings
+                      ? ListView(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${LocaleKeys.client_profile_page_trainings.tr()} (3)',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
+                                ),
+                                AppleFilledButton(
+                                  text: LocaleKeys
+                                      .client_profile_page_new_template
+                                      .tr()
+                                      .toUpperCase(),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                      : ListView(
+                          children: const [],
+                        ),
+                );
+              },
             ),
           )
         ],

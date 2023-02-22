@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/trainings_page_bloc/training_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/training.dart';
@@ -47,26 +49,10 @@ List<Exercise> _exercises = [
   ),
 ];
 
-enum TemplateOrExercise { template, exercise }
-
-class TrainingsPage extends StatefulWidget {
+class TrainingsPage extends StatelessWidget {
   const TrainingsPage({Key? key}) : super(key: key);
 
   static const String route = '/trainings';
-
-  @override
-  State<TrainingsPage> createState() => _TrainingsPageState();
-}
-
-class _TrainingsPageState extends State<TrainingsPage> {
-  TemplateOrExercise pageMode = TemplateOrExercise.template;
-
-  List _selectedList() {
-    if (pageMode == TemplateOrExercise.template) {
-      return _templates;
-    }
-    return _exercises;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,20 +95,22 @@ class _TrainingsPageState extends State<TrainingsPage> {
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
-                    child: CupertinoSlidingSegmentedControl<TemplateOrExercise>(
-                      groupValue: pageMode,
-                      children: <TemplateOrExercise, Widget>{
-                        TemplateOrExercise.template:
+                    child: BlocBuilder<TrainingPageBloc, TemplateOrExercise>(
+                      builder: (context, state) {
+                        return CupertinoSlidingSegmentedControl<
+                            TemplateOrExercise>(
+                          groupValue: state,
+                          children: <TemplateOrExercise, Widget>{
+                            TemplateOrExercise.template:
                             Text(LocaleKeys.trainings_page_templates.tr()),
-                        TemplateOrExercise.exercise:
+                            TemplateOrExercise.exercise:
                             Text(LocaleKeys.trainings_page_exercises.tr()),
-                      },
-                      onValueChanged: (state) {
-                        setState(() {
-                          if (pageMode != state) {
-                            pageMode = state!;
-                          }
-                        });
+                          },
+                          onValueChanged: (value) {
+                            context.read<TrainingPageBloc>().add(
+                                TrainingPageModeChanged(value!));
+                          },
+                        );
                       },
                     ),
                   ),
@@ -131,18 +119,28 @@ class _TrainingsPageState extends State<TrainingsPage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _selectedList().length,
-                itemBuilder: (context, index) {
-                  if (pageMode == TemplateOrExercise.template) {
-                    Training item = _selectedList()[index];
-                    return TrainingTemplateCard(
-                      template: item,
-                    );
+              child: BlocBuilder<TrainingPageBloc, TemplateOrExercise>(
+                builder: (context, state) {
+                  List selectedList() {
+                    if (state == TemplateOrExercise.template) {
+                      return _templates;
+                    }
+                    return _exercises;
                   }
-                  Exercise item = _selectedList()[index];
-                  return ExerciseCard(exercise: item);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: selectedList().length,
+                    itemBuilder: (context, index) {
+                      if (state == TemplateOrExercise.template) {
+                        Training item = selectedList()[index];
+                        return TrainingTemplateCard(
+                          template: item,
+                        );
+                      }
+                      Exercise item = selectedList()[index];
+                      return ExerciseCard(exercise: item);
+                    },
+                  );
                 },
               ),
             )
