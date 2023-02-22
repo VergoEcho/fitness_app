@@ -1,4 +1,4 @@
-part of 'modal_calendar_bloc.dart';
+part of 'modal_calendar_cubit.dart';
 
 class ModalCalendarState extends Equatable {
   final DateTime selectedDay;

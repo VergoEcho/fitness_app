@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
-import 'package:trainings/bloc/modal_calendar_bloc/modal_calendar_bloc.dart';
+import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/screens/calendar_page.dart';
@@ -32,7 +32,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => TrainingPageBloc()),
         BlocProvider(create: (context) => ClientsPageBloc()),
         BlocProvider(create: (context) => ClientProfilePageBloc()),
-        BlocProvider(create: (context) => ModalCalendarBloc()),
+        BlocProvider(create: (context) => ModalCalendarCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,

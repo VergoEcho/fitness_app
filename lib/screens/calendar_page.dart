@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trainings/bloc/modal_calendar_bloc/modal_calendar_bloc.dart';
+import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
@@ -139,19 +139,14 @@ class CalendarPage extends StatelessWidget {
                                             ),
                                           ),
                                           const Divider(),
-                                          BlocBuilder<ModalCalendarBloc,
+                                          BlocBuilder<ModalCalendarCubit,
                                               ModalCalendarState>(
                                             builder: (context, state) {
                                               return BaseCalendar(
                                                 onDaySelected:
                                                     (oldDate, newDate) {
                                                   context
-                                                      .read<ModalCalendarBloc>()
-                                                      .add(
-                                                        SelectedDay(
-                                                            selectedDay:
-                                                                newDate),
-                                                      );
+                                                      .read<ModalCalendarCubit>().selectDate(newDate);
                                                 },
                                                 focusedDay: state.selectedDay,
                                                 headerVisible: true,

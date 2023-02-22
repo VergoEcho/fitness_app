@@ -99,10 +99,9 @@ class CalendarTrainingPage extends StatelessWidget {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        'images/calendar.svg',
+                        'assets/images/calendar.svg',
                         height: 16,
                         width: 16,
-                        colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
