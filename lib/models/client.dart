@@ -1,5 +1,15 @@
 import 'package:equatable/equatable.dart';
 
+// enum TrainingDays {
+//   monday,
+//   tuesday,
+//   wednesday,
+//   thursday,
+//   friday,
+//   saturday,
+//   sunday,
+// }
+
 class Client extends Equatable {
 
   final int id;
@@ -12,6 +22,7 @@ class Client extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final double weight;
+  final List<String> trainingDays;
 
   const Client({
     required this.id,
@@ -24,6 +35,7 @@ class Client extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.weight,
+    this.trainingDays = const [],
   });
 
   @override
@@ -37,6 +49,7 @@ class Client extends Equatable {
         isArchive,
         createdAt,
         updatedAt,
-        weight
+        weight,
+        trainingDays,
       ];
 }

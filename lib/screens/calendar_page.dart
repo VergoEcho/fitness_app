@@ -13,41 +13,62 @@ import 'package:trainings/widgets/calendar_card.dart';
 List<Client> _clients = [
   Client(
     id: 0,
-    name: "Alexander",
+    name: "Contact Name",
+    clientNote: "Comment About",
     phone: "+1234678",
     birthday: "12.08.93",
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
+    trainingDays: const [
+      "monday",
+      "wednesday",
+      "thursday",
+    ],
     weight: 80,
   ),
   Client(
     id: 1,
-    name: "Dmitriy",
+    name: "Contact Name",
+    clientNote: "Comment About",
     phone: "+12344278",
     birthday: "30.02.99",
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
+    trainingDays: const [
+      "monday",
+      "wednesday",
+      "friday",
+    ],
     weight: 75,
-    clientNote: "want to gain more muscle",
   ),
   Client(
     id: 2,
-    name: "Karina",
+    name: "Contact Name",
     phone: "+12300231",
     birthday: "12.11.03",
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
     weight: 42,
-    clientNote: "want to lose fat",
+    trainingDays: const [
+      "monday",
+      "wednesday",
+      "friday",
+    ],
+    clientNote: "Comment About",
   ),
   Client(
     id: 2,
-    name: "Diana",
+    name: "Contact Name",
+    clientNote: "Comment About",
     phone: "+1111231",
     birthday: "03.20.98",
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
     weight: 47,
+    trainingDays: const [
+      "monday",
+      "friday",
+    ],
     isArchive: true,
   ),
 ];
@@ -56,12 +77,26 @@ class CalendarPage extends StatelessWidget {
   const CalendarPage({Key? key}) : super(key: key);
 
   static const String route = '/calendar';
-
+  
   List<Client> _activeClients() {
     return _clients.where((client) {
       return client.isArchive == false;
     }).toList();
   }
+  
+  List<Client> _selectedClients (BuildContext context, ModalCalendarState state) {
+    return _activeClients()
+        .where(
+    (client) => client
+      .trainingDays
+      .any((element) =>
+  element ==
+  DateFormat('EEEE', context.locale.languageCode)
+      .format(state
+      .selectedDay)
+      .toLowerCase()),
+  ).toList();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -144,28 +179,39 @@ class CalendarPage extends StatelessWidget {
                                             builder: (context, state) {
                                               return BaseCalendar(
                                                 onDaySelected:
-                                                    (oldDate, newDate) {
+                                                    (newDate, oldDate) {
                                                   context
-                                                      .read<ModalCalendarCubit>().selectDate(newDate);
+                                                      .read<
+                                                          ModalCalendarCubit>()
+                                                      .selectDate(newDate);
                                                 },
                                                 focusedDay: state.selectedDay,
                                                 headerVisible: true,
                                               );
                                             },
                                           ),
-                                          ListView.builder(
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount: _activeClients().length,
-                                            itemBuilder: (context, index) {
-                                              return CalendarCard(
-                                                client: _activeClients()[index],
-                                                onTap: () {
-                                                  Navigator.pushNamed(
-                                                      context,
-                                                      CalendarTrainingPage
-                                                          .route);
+                                          BlocBuilder<ModalCalendarCubit,
+                                              ModalCalendarState>(
+                                            builder: (context, state) {
+                                              return ListView.builder(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: 
+                                                    _selectedClients(context, state).length,
+                                                itemBuilder: (context, index) {
+                                                  return CalendarCard(
+                                                    client:
+                                                        _selectedClients(context, state)[index],
+                                                    onTap: () {
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pushNamed(
+                                                              CalendarTrainingPage
+                                                                  .route);
+                                                    },
+                                                  );
                                                 },
                                               );
                                             },

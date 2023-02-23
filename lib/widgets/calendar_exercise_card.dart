@@ -82,6 +82,7 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
       child: Column(
         children: [
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               setState(() {
                 _expanded = !_expanded;

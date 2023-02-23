@@ -14,24 +14,24 @@ import '../models/exercise.dart';
 List<Training> _templates = [
   Training(
     id: 0,
-    title: 'Leg day',
-    description: 'Training focused on legs',
+    title: 'Template Name',
+    description: 'Description here',
     date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
   Training(
     id: 1,
-    title: 'Arms day',
-    description: 'Training focused on arms',
+    title: 'Template Name',
+    description: 'Description here',
     date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
   Training(
     id: 2,
-    title: 'Core day',
-    description: 'Training focused on core',
+    title: 'Template Name',
+    description: 'Description here',
     date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
@@ -40,9 +40,17 @@ List<Training> _templates = [
 
 List<Exercise> _exercises = [
   Exercise(
-    id: 2,
-    title: 'Leg stretches',
-    description: '20 kg x 20 Reps',
+    id: 0,
+    title: 'Exercise Name',
+    description: 'Distance (km)/Time (min)',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+    reps: const [],
+  ),
+  Exercise(
+    id: 1,
+    title: 'Exercise Name',
+    description: 'Distance (km)/Time (min)',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
     reps: const [],

@@ -16,6 +16,7 @@ class CurrentClientCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () => Navigator.of(context, rootNavigator: true)
           .pushNamed(ClientProfilePage.route, arguments: {"client": client}),
       child: Container(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FitnessColors {
+  static Color primary = const Color(0xff007aff);
   static Color white = const Color(0xffffffff);
   static Color whiteGray = const Color(0xfffafafa);
   static Color darkGray = const Color(0xff65656b);

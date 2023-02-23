@@ -16,6 +16,7 @@ class CalendarCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
@@ -31,7 +32,9 @@ class CalendarCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(client.name),
+                Text(client.name, style: const TextStyle(
+                  fontSize: 16
+                ),),
                 client.clientNote == ""
                     ? const SizedBox()
                     : Padding(
@@ -39,11 +42,15 @@ class CalendarCard extends StatelessWidget {
                         child: Text(
                           client.clientNote,
                           style: TextStyle(
-                              fontSize: 14, color: FitnessColors.darkGray),
+                              fontSize: 14, color: FitnessColors.blindGray),
                         ),
                       ),
-                const SizedBox(height: 2),
-                const Text('10:00-10:45'),
+                const Padding(
+                  padding: EdgeInsets.only(top:2.0),
+                  child: Text('10:00-10:45', style: TextStyle(
+                    fontSize: 16
+                  ),),
+                ),
               ],
             ),
             CupertinoButton(

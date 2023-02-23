@@ -7,5 +7,7 @@ class ModalCalendarCubit extends Cubit<ModalCalendarState> {
   ModalCalendarCubit()
       : super(ModalCalendarState(selectedDay: DateTime.now()));
 
-  void selectDate(DateTime date) => emit(ModalCalendarState(selectedDay: date));
+  void selectDate(DateTime date) {
+    emit(ModalCalendarState(selectedDay: date));
+  }
 }

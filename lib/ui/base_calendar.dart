@@ -17,11 +17,13 @@ class BaseCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
     return TableCalendar(
       onDaySelected: onDaySelected,
+      rowHeight: 64,
       locale: context.locale.languageCode,
       availableGestures: AvailableGestures.none,
       firstDay: DateTime.utc(2020, 10, 16),
       lastDay: DateTime.utc(2070, 3, 14),
       focusedDay: focusedDay ?? DateTime.now(),
+      selectedDayPredicate: (day) =>isSameDay(focusedDay, day),
       headerVisible: headerVisible,
       calendarFormat:
           monthCalendar ? CalendarFormat.month : CalendarFormat.week,
@@ -46,6 +48,7 @@ class BaseCalendar extends StatelessWidget {
         ]);
       }),
       headerStyle: HeaderStyle(
+        headerMargin: const EdgeInsets.only(bottom: 8),
         formatButtonVisible: false,
         rightChevronPadding: const EdgeInsets.all(4),
         leftChevronPadding: const EdgeInsets.all(4),
@@ -64,6 +67,8 @@ class BaseCalendar extends StatelessWidget {
         ),
       ),
       calendarStyle: CalendarStyle(
+        isTodayHighlighted: focusedDay == null ? true : false,
+        selectedDecoration: BoxDecoration(color: FitnessColors.primary, shape: BoxShape.circle,),
         defaultTextStyle: const TextStyle(
           fontSize: 16,
         ),

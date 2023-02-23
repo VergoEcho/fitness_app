@@ -8,17 +8,15 @@ import 'package:trainings/models/training.dart';
 List<Exercise> _exercises = [
   Exercise(
     id: 0,
-    title: 'Squat',
+    title: 'Exercise 1',
     description: '20 kg x 20 Reps',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
     reps: const [
-      '20 kg x 10 Reps',
-      '30 kg x 10 Reps',
-      '40 kg x 10 Reps',
-      '40 kg x 10 Reps',
-      '40 kg x 10 Reps',
-      '40 kg x 10 Reps',
+      'Push up • 20 Reps',
+      'Push up • 20 Reps',
+      'Push up • 20 Reps',
+      'Push up • 20 Reps',
     ],
   ),
 ];
@@ -72,6 +70,7 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
       child: Column(
         children: [
           GestureDetector(
+            behavior: HitTestBehavior.translucent,
             onTap: () {
               setState(() {
                 _expanded = !_expanded;
