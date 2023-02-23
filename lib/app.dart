@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
 import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
@@ -33,6 +34,8 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => ClientsPageBloc()),
         BlocProvider(create: (context) => ClientProfilePageBloc()),
         BlocProvider(create: (context) => ModalCalendarCubit()),
+        BlocProvider(create: (context) => ModalCalendarCubit()),
+        BlocProvider(create: (context) => CalendarPageCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,
@@ -51,6 +54,7 @@ class App extends StatelessWidget {
             builder: (context) {
               return CupertinoTabScaffold(
                 tabBar: CupertinoTabBar(
+                  height: 56,
                   backgroundColor: FitnessColors.white,
                   items: [
                     BottomNavigationBarItem(

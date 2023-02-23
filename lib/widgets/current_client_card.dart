@@ -38,22 +38,24 @@ class CurrentClientCard extends StatelessWidget {
                     Text(client.name, style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),),
-                    const SizedBox(height: 2),
                     client.clientNote == ""
                         ? const SizedBox()
                         : Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
+                          padding: const EdgeInsets.only(top: 2),
                           child: Text(
                               client.clientNote,
                               style: TextStyle(
                                   fontSize: 14, color: FitnessColors.darkGray),
                             ),
                         ),
-                    const Text('10:00-10:45'),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2.0),
+                      child: Text('10:00-10:45'),
+                    ),
                   ],
                 ),
                 CupertinoButton(
-                  onPressed: () {},
+                  onPressed: null,
                   child: Icon(
                     Icons.arrow_forward_ios,
                     color: FitnessColors.darkGray,

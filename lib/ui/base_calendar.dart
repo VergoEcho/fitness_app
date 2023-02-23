@@ -19,7 +19,7 @@ class BaseCalendar extends StatelessWidget {
       onDaySelected: onDaySelected,
       rowHeight: 64,
       locale: context.locale.languageCode,
-      availableGestures: AvailableGestures.none,
+      // availableGestures: AvailableGestures.none,
       firstDay: DateTime.utc(2020, 10, 16),
       lastDay: DateTime.utc(2070, 3, 14),
       focusedDay: focusedDay ?? DateTime.now(),

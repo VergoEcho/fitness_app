@@ -158,7 +158,7 @@ class TrainingsPage extends StatelessWidget {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
       ),

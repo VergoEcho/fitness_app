@@ -133,8 +133,9 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                               Text(LocaleKeys.client_profile_page_info.tr()),
                         },
                         onValueChanged: (value) {
-                          context.read<ClientProfilePageBloc>().add(
-                              ClientProfilePageModeChanged(value!));
+                          context
+                              .read<ClientProfilePageBloc>()
+                              .add(ClientProfilePageModeChanged(value!));
                         },
                       );
                     },
@@ -150,38 +151,38 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: state == TrainingsOrInfo.trainings
                       ? ListView(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 24.0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${LocaleKeys.client_profile_page_trainings.tr()} (3)',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20),
-                                ),
-                                AppleFilledButton(
-                                  text: LocaleKeys
-                                      .client_profile_page_new_template
-                                      .tr()
-                                      .toUpperCase(),
-                                  onPressed: () {},
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      )
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 24.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${LocaleKeys.client_profile_page_trainings.tr()} (3)',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20),
+                                  ),
+                                  AppleFilledButton(
+                                    text: LocaleKeys
+                                        .client_profile_page_new_template
+                                        .tr()
+                                        .toUpperCase(),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        )
                       : ListView(
                           children: const [],
                         ),
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );
