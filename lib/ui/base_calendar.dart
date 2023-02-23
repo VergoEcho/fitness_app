@@ -3,9 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:trainings/constants/colors.dart';
 
-class BaseCalendar extends StatelessWidget {
+class BaseCalendar extends StatefulWidget {
   const BaseCalendar(
-      {Key? key, this.monthCalendar = true, this.headerVisible = false, this.focusedDay, this.onDaySelected})
+      {Key? key,
+      this.monthCalendar = true,
+      this.headerVisible = false,
+      this.focusedDay,
+      this.onDaySelected})
       : super(key: key);
 
   final bool headerVisible;
@@ -14,47 +18,69 @@ class BaseCalendar extends StatelessWidget {
   final Function(DateTime oldDate, DateTime newDate)? onDaySelected;
 
   @override
+  State<BaseCalendar> createState() => _BaseCalendarState();
+}
+
+class _BaseCalendarState extends State<BaseCalendar> {
+
+  late PageController pageController;
+
+  @override
   Widget build(BuildContext context) {
     return TableCalendar(
-      onDaySelected: onDaySelected,
+      onCalendarCreated: (controller) {
+        pageController = controller;
+      },
+      onDaySelected: widget.onDaySelected,
       rowHeight: 64,
       locale: context.locale.languageCode,
       // availableGestures: AvailableGestures.none,
       firstDay: DateTime.utc(2020, 10, 16),
       lastDay: DateTime.utc(2070, 3, 14),
-      focusedDay: focusedDay ?? DateTime.now(),
-      selectedDayPredicate: (day) =>isSameDay(focusedDay, day),
-      headerVisible: headerVisible,
+      focusedDay: widget.focusedDay ?? DateTime.now(),
+      selectedDayPredicate: (day) => isSameDay(widget.focusedDay, day),
+      headerVisible: widget.headerVisible,
       calendarFormat:
-          monthCalendar ? CalendarFormat.month : CalendarFormat.week,
+          widget.monthCalendar ? CalendarFormat.month : CalendarFormat.week,
       startingDayOfWeek: StartingDayOfWeek.monday,
-      calendarBuilders: CalendarBuilders(headerTitleBuilder: (context, date) {
-        return Stack(clipBehavior: Clip.none, children: [
-          Positioned(
-            top: -8,
-            right: MediaQuery.of(context).size.width - 196,
-            child: Text(
-              DateFormat('MMMM, yyyy', context.locale.languageCode).format(DateTime.now()),
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: CupertinoTheme.of(context).primaryColor,
-              ),
+      calendarBuilders: CalendarBuilders(
+        headerTitleBuilder: (context, date) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 14, bottom: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    DateFormat('MMMM yyyy', context.locale.languageCode)
+                        .format(date),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: CupertinoTheme.of(context).primaryColor,
+                    ),
+                  ),
+                ),
+                CupertinoButton(
+                  onPressed: () {
+                    pageController.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                  },
+                  child: const Icon(CupertinoIcons.chevron_back),
+                ),
+                CupertinoButton(
+                  onPressed: () {
+                    pageController.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                  },
+                  child: const Icon(CupertinoIcons.chevron_forward),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(
-            width: 0,
-          ),
-        ]);
-      }),
-      headerStyle: HeaderStyle(
-        headerMargin: const EdgeInsets.only(bottom: 8),
+          );
+        },
+      ),
+      headerStyle: const HeaderStyle(
+        rightChevronVisible: false,
+        leftChevronVisible: false,
         formatButtonVisible: false,
-        rightChevronPadding: const EdgeInsets.all(4),
-        leftChevronPadding: const EdgeInsets.all(4),
-        leftChevronMargin: EdgeInsets.only(
-          left: MediaQuery.of(context).size.width - 104,
-        ),
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
         weekdayStyle: TextStyle(
@@ -67,13 +93,15 @@ class BaseCalendar extends StatelessWidget {
         ),
       ),
       calendarStyle: CalendarStyle(
-        isTodayHighlighted: focusedDay == null ? true : false,
-        selectedDecoration: BoxDecoration(color: FitnessColors.primary, shape: BoxShape.circle,),
+        isTodayHighlighted: widget.focusedDay == null ? true : false,
+        selectedDecoration: BoxDecoration(
+          color: FitnessColors.primary,
+          shape: BoxShape.circle,
+        ),
         defaultTextStyle: const TextStyle(
           fontSize: 16,
         ),
-        todayTextStyle:
-        TextStyle(fontSize: 16, color: FitnessColors.white),
+        todayTextStyle: TextStyle(fontSize: 16, color: FitnessColors.white),
         weekendTextStyle: const TextStyle(
           fontSize: 16,
         ),

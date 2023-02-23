@@ -129,8 +129,11 @@ class CalendarPage extends StatelessWidget {
                         onPressed: () {
                           showModalBottomSheet(
                               shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                ),
+                              ),
                               // backgroundColor: const Color(0xfffafafa),
                               isScrollControlled: true,
                               context: context,
@@ -279,4 +282,3 @@ class CalendarPage extends StatelessWidget {
     );
   }
 }
-
