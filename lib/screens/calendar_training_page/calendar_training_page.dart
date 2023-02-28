@@ -1,14 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 // import 'package:trainings/models/client.dart';
 import 'package:trainings/models/exercise.dart';
 import 'package:trainings/models/training.dart';
-import 'package:trainings/ui/filled_button.dart';
-import 'package:trainings/widgets/calendar_exercise_card.dart';
+import 'package:trainings/common_widgets/filled_button.dart';
+import 'package:trainings/screens/calendar_training_page/widgets/calendar_exercise_card.dart';
 
 Training _training = Training(
   id: 1,
@@ -62,8 +61,9 @@ class CalendarTrainingPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.arrow_back_ios_new,
+                CupertinoIcons.chevron_back,
               ),
+              const SizedBox(width: 4),
               Text(LocaleKeys.calendar_training_page_back.tr())
             ],
           ),

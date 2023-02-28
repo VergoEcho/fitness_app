@@ -11,7 +11,6 @@ import 'package:equatable/equatable.dart';
 // }
 
 class Client extends Equatable {
-
   final int id;
   final String name;
   final String phone;
@@ -23,6 +22,7 @@ class Client extends Equatable {
   final DateTime updatedAt;
   final double weight;
   final List<String> trainingDays;
+  final int payedTrainings;
 
   const Client({
     required this.id,
@@ -36,6 +36,7 @@ class Client extends Equatable {
     required this.updatedAt,
     required this.weight,
     this.trainingDays = const [],
+    this.payedTrainings = 0,
   });
 
   @override
@@ -51,5 +52,6 @@ class Client extends Equatable {
         updatedAt,
         weight,
         trainingDays,
+        payedTrainings,
       ];
 }

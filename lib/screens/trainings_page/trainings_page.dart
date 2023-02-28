@@ -5,11 +5,11 @@ import 'package:trainings/bloc/trainings_page_bloc/training_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/training.dart';
-import 'package:trainings/ui/filled_button.dart';
-import 'package:trainings/widgets/exercise_card.dart';
-import 'package:trainings/widgets/training_template_card.dart';
+import 'package:trainings/common_widgets/filled_button.dart';
+import 'package:trainings/screens/trainings_page/widgets/exercise_card.dart';
+import 'package:trainings/screens/trainings_page/widgets/training_template_card.dart';
 
-import '../models/exercise.dart';
+import '../../models/exercise.dart';
 
 List<Training> _templates = [
   Training(

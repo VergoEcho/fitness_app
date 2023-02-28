@@ -6,16 +6,18 @@ import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
 import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
+import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
-import 'package:trainings/screens/calendar_page.dart';
-import 'package:trainings/screens/client_profile_page.dart';
-import 'package:trainings/screens/clients_page.dart';
-import 'package:trainings/screens/trainings_page.dart';
+import 'package:trainings/screens/calendar_page/calendar_page.dart';
+import 'package:trainings/screens/client_edit_page/client_edit_page.dart';
+import 'package:trainings/screens/client_profile_page/client_profile_page.dart';
+import 'package:trainings/screens/clients_page/clients_page.dart';
+import 'package:trainings/screens/trainings_page/trainings_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/trainings_page_bloc/training_page_bloc.dart';
-import 'screens/calendar_training_page.dart';
+import 'screens/calendar_training_page/calendar_training_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -36,6 +38,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => ModalCalendarCubit()),
         BlocProvider(create: (context) => ModalCalendarCubit()),
         BlocProvider(create: (context) => CalendarPageCubit()),
+        BlocProvider(create: (context) => SelectedClientCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,
@@ -49,6 +52,7 @@ class App extends StatelessWidget {
           ClientsPage.route: (context) => const ClientsPage(),
           CalendarTrainingPage.route: (context) => const CalendarTrainingPage(),
           ClientProfilePage.route: (context) => const ClientProfilePage(),
+          ClientEditPage.route: (context) => const ClientEditPage(),
         },
         home: Builder(
             builder: (context) {

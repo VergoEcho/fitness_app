@@ -90,7 +90,9 @@ class _DoublePickerState extends State<DoublePicker>
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 64.0),
-                          child: Text('${index + 1} kg'),
+                          child: Text('${index + 1} kg', style: TextStyle(
+                            color: FitnessColors.black,
+                          ),),
                         ),
                       );
                     }),

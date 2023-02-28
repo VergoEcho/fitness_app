@@ -2,6 +2,7 @@
 
 abstract class  LocaleKeys {
   static const app_title = 'app_title';
+  static const back = 'back';
   static const days_monday = 'days.monday';
   static const days_tuesday = 'days.tuesday';
   static const days_wednesday = 'days.wednesday';
@@ -29,13 +30,23 @@ abstract class  LocaleKeys {
   static const clients_page_archive = 'clients_page.archive';
   static const clients_page = 'clients_page';
   static const client_profile_page_title = 'client_profile_page.title';
-  static const client_profile_page_back = 'client_profile_page.back';
   static const client_profile_page_edit = 'client_profile_page.edit';
   static const client_profile_page_paid_till = 'client_profile_page.paid_till';
   static const client_profile_page_workouts = 'client_profile_page.workouts';
+  static const client_profile_page_trainings_title = 'client_profile_page.trainings.title';
+  static const client_profile_page_trainings_empty = 'client_profile_page.trainings.empty';
+  static const client_profile_page_trainings_add = 'client_profile_page.trainings.add';
+  static const client_profile_page_trainings_new_training = 'client_profile_page.trainings.new_training';
   static const client_profile_page_trainings = 'client_profile_page.trainings';
+  static const client_profile_page_info_slider = 'client_profile_page.info.slider';
+  static const client_profile_page_info_weight = 'client_profile_page.info.weight';
+  static const client_profile_page_info_birthday = 'client_profile_page.info.birthday';
+  static const client_profile_page_info_training = 'client_profile_page.info.training';
+  static const client_profile_page_info_goal = 'client_profile_page.info.goal';
+  static const client_profile_page_info_features = 'client_profile_page.info.features';
+  static const client_profile_page_info_phone = 'client_profile_page.info.phone';
+  static const client_profile_page_info_archive = 'client_profile_page.info.archive';
   static const client_profile_page_info = 'client_profile_page.info';
-  static const client_profile_page_new_template = 'client_profile_page.new_template';
   static const client_profile_page = 'client_profile_page';
   static const trainings_page_title = 'trainings_page.title';
   static const trainings_page_new_template = 'trainings_page.new_template';

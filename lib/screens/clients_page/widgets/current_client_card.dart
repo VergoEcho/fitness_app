@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/client.dart';
-import 'package:trainings/screens/client_profile_page.dart';
-import 'package:trainings/ui/base_calendar.dart';
+import 'package:trainings/screens/client_profile_page/client_profile_page.dart';
+import 'package:trainings/common_widgets/base_calendar.dart';
 
 class CurrentClientCard extends StatelessWidget {
   const CurrentClientCard({
@@ -17,8 +19,11 @@ class CurrentClientCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () => Navigator.of(context, rootNavigator: true)
-          .pushNamed(ClientProfilePage.route, arguments: {"client": client}),
+      onTap: () {
+        context.read<SelectedClientCubit>().select(client);
+        Navigator.of(context, rootNavigator: true)
+          .pushNamed(ClientProfilePage.route);
+      },
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
         padding: const EdgeInsets.all(16),

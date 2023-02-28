@@ -16,6 +16,7 @@ class CodegenLoader extends AssetLoader{
 
   static const Map<String,dynamic> en = {
   "app_title": "Fitness App",
+  "back": "Back",
   "days": {
     "monday": "Mon",
     "tuesday": "Tue",
@@ -49,13 +50,25 @@ class CodegenLoader extends AssetLoader{
   },
   "client_profile_page": {
     "title": "Client Profile",
-    "back": "Back",
     "edit": "Edit",
     "paid_till": "Paid till",
     "workouts": "workouts",
-    "trainings": "Trainings",
-    "info": "Info",
-    "new_template": "New Template"
+    "trainings": {
+      "title": "Trainings",
+      "empty": "The Client doesn’t has any training.\nPlease add from template or create new.",
+      "add": "Add training",
+      "new_training": "New Training"
+    },
+    "info": {
+      "slider": "Info",
+      "weight": "Weight",
+      "birthday": "Birthday",
+      "training": "Training",
+      "goal": "Client Goal",
+      "features": "Client Features",
+      "phone": "Client Phone",
+      "archive": "Move to Archive"
+    }
   },
   "trainings_page": {
     "title": "Trainings",
