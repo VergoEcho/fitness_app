@@ -6,8 +6,11 @@ import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
+import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
 import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
+import 'package:trainings/bloc/selected_exercise_cubit/selected_exercise_cubit.dart';
+import 'package:trainings/bloc/selected_training_cubit/selected_training_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/screens/calendar_page/calendar_page.dart';
@@ -45,6 +48,9 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => CalendarPageCubit()),
         BlocProvider(create: (context) => SelectedClientCubit()),
         BlocProvider(create: (context) => ClientsCubit()..fetchClients()),
+        BlocProvider(create: (context) => SelectedTrainingCubit()),
+        BlocProvider(create: (context) => ExercisesCubit()..fetchExercises()),
+        BlocProvider(create: (context) => SelectedExerciseCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,

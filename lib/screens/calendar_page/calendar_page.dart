@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
-import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
+import 'package:trainings/bloc/selected_training_cubit/selected_training_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
@@ -79,31 +79,44 @@ class CalendarPage extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                BlocBuilder<ModalCalendarCubit, ModalCalendarState>(
+                BlocBuilder<CalendarPageCubit, CalendarPageState>(
                   builder: (context, state) {
                     return BaseCalendar(
                       onDaySelected: (newDate, oldDate) {
-                        context.read<ModalCalendarCubit>().selectDate(newDate);
+                        context.read<CalendarPageCubit>().selectDate(newDate);
                       },
                       focusedDay: state.selectedDay,
                       headerVisible: true,
                     );
                   },
                 ),
-                BlocBuilder<ModalCalendarCubit, ModalCalendarState>(
+                BlocBuilder<CalendarPageCubit, CalendarPageState>(
                   builder: (context, state) {
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount:
-                          _selectedClients(context, state.selectedDay).length,
-                      itemBuilder: (context, index) {
+                      _selectedClients(context, state.selectedDay).length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Client client =
+                        _selectedClients(context, state.selectedDay)[index];
                         return CalendarCard(
-                          client: _selectedClients(
-                              context, state.selectedDay)[index],
+                          client: client,
                           onTap: () {
+                            context.read<SelectedTrainingCubit>().select(
+                                selectedDay: state.selectedDay, client: client);
                             Navigator.of(context, rootNavigator: true)
-                                .pushNamed(CalendarTrainingPage.route);
+                                .pushNamed(
+                              CalendarTrainingPage.route,
+                            )
+                                .then(
+                                  (value) => Future.delayed(
+                                const Duration(milliseconds: 500),
+                                    () => context
+                                    .read<SelectedTrainingCubit>()
+                                    .clear(),
+                              ),
+                            );
                           },
                         );
                       },
@@ -193,9 +206,20 @@ class CalendarPage extends StatelessWidget {
                       return CalendarCard(
                         client: client,
                         onTap: () {
-                          Navigator.of(context, rootNavigator: true).pushNamed(
-                            CalendarTrainingPage.route,
-                          );
+                          context.read<SelectedTrainingCubit>().select(
+                              selectedDay: state.selectedDay, client: client);
+                          Navigator.of(context, rootNavigator: true)
+                              .pushNamed(
+                                CalendarTrainingPage.route,
+                              )
+                              .then(
+                                (value) => Future.delayed(
+                                  const Duration(milliseconds: 500),
+                                  () => context
+                                      .read<SelectedTrainingCubit>()
+                                      .clear(),
+                                ),
+                              );
                         },
                       );
                     },

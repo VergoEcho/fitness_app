@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/client.dart';
 
@@ -12,6 +15,15 @@ class CalendarCard extends StatelessWidget {
 
   final Client client;
   final VoidCallback onTap;
+
+  String _time(BuildContext context) {
+    DateTime selectedDay = context.read<CalendarPageCubit>().state.selectedDay;
+    TimeOfDay startTime = client.trainingDays[DateFormat(
+      'EEEE',
+      'en-US',
+    ).format(selectedDay).toLowerCase()]!;
+    return '${startTime.format(context)} - ${startTime.replacing(hour: startTime.hour + 1).format(context)}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +44,10 @@ class CalendarCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(client.name, style: const TextStyle(
-                  fontSize: 16
-                ),),
+                Text(
+                  client.name,
+                  style: const TextStyle(fontSize: 16),
+                ),
                 client.clientNote == ""
                     ? const SizedBox()
                     : Padding(
@@ -45,11 +58,12 @@ class CalendarCard extends StatelessWidget {
                               fontSize: 14, color: FitnessColors.blindGray),
                         ),
                       ),
-                const Padding(
-                  padding: EdgeInsets.only(top:2.0),
-                  child: Text('10:00-10:45', style: TextStyle(
-                    fontSize: 16
-                  ),),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: Text(
+                    _time(context),
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               ],
             ),

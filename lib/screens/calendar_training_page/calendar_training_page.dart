@@ -1,53 +1,28 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
+import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
-// import 'package:trainings/models/client.dart';
-import 'package:trainings/models/exercise.dart';
-import 'package:trainings/models/training.dart';
 import 'package:trainings/common_widgets/filled_button.dart';
 import 'package:trainings/screens/calendar_training_page/widgets/calendar_exercise_card.dart';
-
-Training _training = Training(
-  id: 1,
-  title: 'Arms day',
-  description: 'Training focused on arms',
-  date: DateTime.now(),
-  createdAt: DateTime.now(),
-  updatedAt: DateTime.now(),
-);
-
-List<Exercise> _exercises = [
-  Exercise(
-    id: 2,
-    title: 'Squats',
-    description: '20 kg x 20 Reps',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-  Exercise(
-    id: 2,
-    title: 'Leg stretches',
-    description: '20 kg x 20 Reps',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-];
 
 class CalendarTrainingPage extends StatelessWidget {
   const CalendarTrainingPage({Key? key}) : super(key: key);
 
   static const route = '/calendar/training';
 
+  String _getDate (BuildContext context) {
+    DateTime selectedDate = context.read<CalendarPageCubit>().state.selectedDay;
+    return DateFormat('dd.MM.yy', context.locale.languageCode)
+        .format(selectedDate)
+        .toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Map<String, Client> arguments =
-    //     ModalRoute.of(context)?.settings.arguments as Map<String, Client>;
-    // Client client = arguments['client']!;
-
     return CupertinoPageScaffold(
       backgroundColor: FitnessColors.whiteGray,
       navigationBar: CupertinoNavigationBar(
@@ -105,10 +80,7 @@ class CalendarTrainingPage extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                            DateFormat('dd.MM.yy', context.locale.languageCode)
-                                .format(_training.date)
-                                .toString()),
+                        child: Text(_getDate(context)),
                       )
                     ],
                   ),
@@ -143,12 +115,17 @@ class CalendarTrainingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _exercises.length,
-                  itemBuilder: (context, index) {
-                    return CalendarExerciseCard(exercise: _exercises[index]);
+                BlocBuilder<ExercisesCubit, ExercisesState>(
+                  builder: (context, state) {
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: state.exercises.length,
+                      itemBuilder: (context, index) {
+                        return CalendarExerciseCard(
+                            exercise: state.exercises[index]);
+                      },
+                    );
                   },
                 ),
                 const SizedBox(

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/bloc/trainings_page_bloc/training_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
@@ -37,25 +38,6 @@ List<Training> _templates = [
     date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
-  ),
-];
-
-List<Exercise> _exercises = [
-  Exercise(
-    id: 0,
-    title: 'Exercise Name',
-    description: 'Distance (km)/Time (min)',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-  Exercise(
-    id: 1,
-    title: 'Exercise Name',
-    description: 'Distance (km)/Time (min)',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
   ),
 ];
 
@@ -152,7 +134,7 @@ class TrainingsPage extends StatelessWidget {
                     if (state == TemplateOrExercise.template) {
                       return _templates;
                     }
-                    return _exercises;
+                    return context.read<ExercisesCubit>().state.exercises;
                   }
 
                   return ListView.builder(
