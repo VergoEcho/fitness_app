@@ -35,7 +35,8 @@ class FieldTile extends StatelessWidget {
             placeholderStyle: TextStyle(
               color: FitnessColors.black,
             ),
-            style: const TextStyle(
+            style: TextStyle(
+              color: FitnessColors.black,
               fontSize: 16,
             ),
             padding: const EdgeInsets.only(left: 0, right: 0, top: 4),

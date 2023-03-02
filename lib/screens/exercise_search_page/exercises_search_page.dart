@@ -76,7 +76,19 @@ class ExercisesSearchPage extends StatelessWidget {
                       bottomLeft: Radius.circular(24))),
               padding: const EdgeInsets.only(
                   top: 8, left: 16, right: 16, bottom: 32),
-              child: const CupertinoSearchTextField(),
+              child: CupertinoSearchTextField(
+                style: TextStyle(
+                  color: FitnessColors.darkGray,
+                ),
+                prefixIcon: Icon(
+                  CupertinoIcons.search,
+                  color: FitnessColors.darkGray,
+                ),
+                suffixIcon: Icon(
+                  CupertinoIcons.xmark_circle_fill,
+                  color: FitnessColors.darkGray,
+                ),
+              ),
             ),
             Expanded(
               child: ListView.builder(
