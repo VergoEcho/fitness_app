@@ -1,20 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trainings/constants/colors.dart';
-import 'package:trainings/models/exercise.dart';
+import 'package:trainings/models/template.dart';
 
-class ExerciseCard extends StatelessWidget {
-  const ExerciseCard(
+class TemplateCard extends StatelessWidget {
+  const TemplateCard(
       {Key? key,
-      required this.exercise,
+      required this.template,
       required this.onTap,
-      this.marginTopDisabled = false,
-      this.fixedWidth})
+      this.fixedWidth,})
       : super(key: key);
 
-  final Exercise exercise;
+  final Template template;
   final VoidCallback onTap;
-  final bool marginTopDisabled;
   final double? fixedWidth;
 
   @override
@@ -23,12 +21,11 @@ class ExerciseCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: fixedWidth,
-        margin: EdgeInsets.only(
-          top: marginTopDisabled ? 0 : 16,
+        margin: const EdgeInsets.only(
           left: 8,
           right: 8,
         ),
-        padding: const EdgeInsets.only(left:16, top: 16, bottom: 16,),
+        padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16,),
         decoration: BoxDecoration(
           color: FitnessColors.white,
           borderRadius: BorderRadius.circular(13),
@@ -39,14 +36,14 @@ class ExerciseCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exercise.title),
+                Text(template.title),
                 const SizedBox(height: 2),
-                exercise.description == ""
+                template.description == ""
                     ? const SizedBox()
                     : Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Text(
-                          exercise.description,
+                          template.description,
                           style: TextStyle(
                             fontSize: 14,
                             color: FitnessColors.darkGray,

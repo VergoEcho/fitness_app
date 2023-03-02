@@ -126,7 +126,7 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                       size: 16,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

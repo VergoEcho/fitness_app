@@ -10,4 +10,7 @@ class SelectedClientCubit extends Cubit<SelectedClientState> {
   void select(Client client) {
     emit(SelectedClientSelected(client: client));
   }
+  void clear() {
+    emit(const SelectedClientNone());
+  }
 }

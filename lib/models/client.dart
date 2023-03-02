@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 // enum TrainingDays {
 //   monday,
@@ -21,7 +22,7 @@ class Client extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final double weight;
-  final List<String> trainingDays;
+  final Map<String, TimeOfDay> trainingDays;
   final int payedTrainings;
 
   const Client({
@@ -35,7 +36,7 @@ class Client extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.weight,
-    this.trainingDays = const [],
+    this.trainingDays = const <String, TimeOfDay>{},
     this.payedTrainings = 0,
   });
 

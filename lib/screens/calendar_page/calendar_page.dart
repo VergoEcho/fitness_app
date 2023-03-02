@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
+import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
 import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
@@ -11,88 +12,26 @@ import 'package:trainings/screens/calendar_training_page/calendar_training_page.
 import 'package:trainings/common_widgets/base_calendar.dart';
 import 'package:trainings/screens/calendar_page/widgets/calendar_card.dart';
 
-List<Client> _clients = [
-  Client(
-    id: 0,
-    name: "Contact Name",
-    clientNote: "Comment About",
-    phone: "+1234678",
-    birthday: "12.08.93",
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    trainingDays: const [
-      "monday",
-      "wednesday",
-      "thursday",
-    ],
-    weight: 80,
-  ),
-  Client(
-    id: 1,
-    name: "Contact Name",
-    clientNote: "Comment About",
-    phone: "+12344278",
-    birthday: "30.02.99",
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    trainingDays: const [
-      "monday",
-      "wednesday",
-      "friday",
-    ],
-    weight: 75,
-  ),
-  Client(
-    id: 2,
-    name: "Contact Name",
-    phone: "+12300231",
-    birthday: "12.11.03",
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    weight: 42,
-    trainingDays: const [
-      "monday",
-      "wednesday",
-      "friday",
-    ],
-    clientNote: "Comment About",
-  ),
-  Client(
-    id: 2,
-    name: "Contact Name",
-    clientNote: "Comment About",
-    phone: "+1111231",
-    birthday: "03.20.98",
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    weight: 47,
-    trainingDays: const [
-      "monday",
-      "friday",
-    ],
-    isArchive: true,
-  ),
-];
-
 class CalendarPage extends StatelessWidget {
   const CalendarPage({Key? key}) : super(key: key);
 
   static const String route = '/calendar';
 
-  List<Client> _activeClients() {
-    return _clients.where((client) {
-      return client.isArchive == false;
-    }).toList();
-  }
+  List<Client> _selectedClients(BuildContext context, DateTime selectedDay) {
+    List<Client> clients = context.read<ClientsCubit>().state.clients;
 
-  List<Client> _selectedClients(BuildContext context, state) {
-    return _activeClients()
+    return clients
+        .where((client) {
+          return client.isArchive == false;
+        })
         .where(
-          (client) => client.trainingDays.any((element) =>
-              element ==
-              DateFormat('EEEE', context.locale.languageCode)
-                  .format(state.selectedDay)
-                  .toLowerCase()),
+          (client) => client.trainingDays.keys.any(
+            (element) =>
+                element ==
+                DateFormat('EEEE', context.locale.languageCode)
+                    .format(selectedDay)
+                    .toLowerCase(),
+          ),
         )
         .toList();
   }
@@ -156,10 +95,12 @@ class CalendarPage extends StatelessWidget {
                     return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: _selectedClients(context, state).length,
+                      itemCount:
+                          _selectedClients(context, state.selectedDay).length,
                       itemBuilder: (context, index) {
                         return CalendarCard(
-                          client: _selectedClients(context, state)[index],
+                          client: _selectedClients(
+                              context, state.selectedDay)[index],
                           onTap: () {
                             Navigator.of(context, rootNavigator: true)
                                 .pushNamed(CalendarTrainingPage.route);
@@ -178,7 +119,6 @@ class CalendarPage extends StatelessWidget {
         );
       },
     );
-
   }
 
   @override
@@ -245,9 +185,11 @@ class CalendarPage extends StatelessWidget {
               child: BlocBuilder<CalendarPageCubit, CalendarPageState>(
                 builder: (context, state) {
                   return ListView.builder(
-                    itemCount: _selectedClients(context, state).length,
+                    itemCount:
+                        _selectedClients(context, state.selectedDay).length,
                     itemBuilder: (BuildContext context, int index) {
-                      Client client = _selectedClients(context, state)[index];
+                      Client client =
+                          _selectedClients(context, state.selectedDay)[index];
                       return CalendarCard(
                         client: client,
                         onTap: () {

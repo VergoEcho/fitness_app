@@ -22,7 +22,13 @@ class CurrentClientCard extends StatelessWidget {
       onTap: () {
         context.read<SelectedClientCubit>().select(client);
         Navigator.of(context, rootNavigator: true)
-          .pushNamed(ClientProfilePage.route);
+            .pushNamed(ClientProfilePage.route)
+            .then(
+          (value) {
+            Future.delayed(const Duration(milliseconds: 500),
+                () => context.read<SelectedClientCubit>().clear());
+          },
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
@@ -40,19 +46,22 @@ class CurrentClientCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(client.name, style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),),
+                    Text(
+                      client.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     client.clientNote == ""
                         ? const SizedBox()
                         : Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
                               client.clientNote,
                               style: TextStyle(
                                   fontSize: 14, color: FitnessColors.darkGray),
                             ),
-                        ),
+                          ),
                     const Padding(
                       padding: EdgeInsets.only(top: 2.0),
                       child: Text('10:00-10:45'),

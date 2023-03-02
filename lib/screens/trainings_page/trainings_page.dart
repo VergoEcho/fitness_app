@@ -6,6 +6,8 @@ import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/training.dart';
 import 'package:trainings/common_widgets/filled_button.dart';
+import 'package:trainings/screens/exercise_page/exercise_page.dart';
+import 'package:trainings/screens/new_template_page/new_template_page.dart';
 import 'package:trainings/screens/trainings_page/widgets/exercise_card.dart';
 import 'package:trainings/screens/trainings_page/widgets/training_template_card.dart';
 
@@ -94,7 +96,10 @@ class TrainingsPage extends StatelessWidget {
                         text: LocaleKeys.trainings_page_new_template
                             .tr()
                             .toUpperCase(),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true)
+                              .pushNamed(NewTemplatePage.route);
+                        },
                       )
                     ],
                   ),
@@ -103,8 +108,14 @@ class TrainingsPage extends StatelessWidget {
                     style: TextStyle(
                       color: FitnessColors.darkGray,
                     ),
-                    prefixIcon: Icon(CupertinoIcons.search, color: FitnessColors.darkGray,),
-                    suffixIcon: Icon(CupertinoIcons.xmark_circle_fill, color: FitnessColors.darkGray,),
+                    prefixIcon: Icon(
+                      CupertinoIcons.search,
+                      color: FitnessColors.darkGray,
+                    ),
+                    suffixIcon: Icon(
+                      CupertinoIcons.xmark_circle_fill,
+                      color: FitnessColors.darkGray,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -117,13 +128,14 @@ class TrainingsPage extends StatelessWidget {
                           groupValue: state,
                           children: <TemplateOrExercise, Widget>{
                             TemplateOrExercise.template:
-                            Text(LocaleKeys.trainings_page_templates.tr()),
+                                Text(LocaleKeys.trainings_page_templates.tr()),
                             TemplateOrExercise.exercise:
-                            Text(LocaleKeys.trainings_page_exercises.tr()),
+                                Text(LocaleKeys.trainings_page_exercises.tr()),
                           },
                           onValueChanged: (value) {
-                            context.read<TrainingPageBloc>().add(
-                                TrainingPageModeChanged(value!));
+                            context
+                                .read<TrainingPageBloc>()
+                                .add(TrainingPageModeChanged(value!));
                           },
                         );
                       },
@@ -142,6 +154,7 @@ class TrainingsPage extends StatelessWidget {
                     }
                     return _exercises;
                   }
+
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: selectedList().length,
@@ -153,7 +166,11 @@ class TrainingsPage extends StatelessWidget {
                         );
                       }
                       Exercise item = selectedList()[index];
-                      return ExerciseCard(exercise: item);
+                      return ExerciseCard(
+                        exercise: item,
+                        onTap: () => Navigator.of(context, rootNavigator: true)
+                            .pushNamed(ExercisePage.route),
+                      );
                     },
                   );
                 },

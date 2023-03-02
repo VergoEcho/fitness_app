@@ -40,13 +40,31 @@ class CodegenLoader extends AssetLoader{
     "new_exercise": "New Exercise",
     "client_name": "Client Name",
     "training_name": "Training Name",
-    "training_notes": "Traning notes about something can be that long or shot or"
+    "training_notes": "Training notes about something can be that long or shot or"
   },
   "clients_page": {
     "title": "Clients",
     "new_client": "New Client",
     "current": "Current",
     "archive": "Archive"
+  },
+  "client_edit_page": {
+    "title": {
+      "edit": "Edit Client",
+      "new": "New Client"
+    },
+    "save": "Save",
+    "done": "Done",
+    "name": "Name",
+    "phone": "Phone Number",
+    "birthday": "Birthday",
+    "weight": "Weight",
+    "goal": "Client Goal",
+    "note": "Client Note",
+    "select_date_title": "Select days and setup the time",
+    "schedule": "Schedule",
+    "time": "Time",
+    "paid_training": "Paid training"
   },
   "client_profile_page": {
     "title": "Client Profile",
@@ -70,11 +88,54 @@ class CodegenLoader extends AssetLoader{
       "archive": "Move to Archive"
     }
   },
+  "new_training_page": {
+    "title": "New Training",
+    "name": "Training Name",
+    "description": "Training description",
+    "add": {
+      "exercise": "New Exercise",
+      "template": "Add from templates",
+      "previous": "Add from previous"
+    },
+    "create": "Create training"
+  },
   "trainings_page": {
     "title": "Trainings",
     "new_template": "New Template",
     "templates": "Templates",
-    "exercises": "Exercises"
+    "exercises": "Exercises",
+    "search": {
+      "templates": "Templates",
+      "exercises": "Exercises"
+    }
+  },
+  "exercise_page": {
+    "title": "Exercise",
+    "edit": "Edit",
+    "name": "Exercise Name",
+    "description": "Exercise Description",
+    "units": {
+      "title": "Select Units",
+      "weight_reps": "Weight (kg)/Reps (times)",
+      "distance_time": "Distance (km)/Time (min)",
+      "reps_time": "Reps (times)/Time (min)",
+      "custom": "Add custom"
+    }
+  },
+  "template_page": {
+    "title": "New Template",
+    "name": "Template Name",
+    "description": "Template Description",
+    "add": {
+      "exercise": "Add Exercise",
+      "template": "Add from templates",
+      "previous": "Add from previous"
+    },
+    "create": "Create training"
+  },
+  "search_exercise_page": {
+    "title": "Exercises",
+    "add": "Add Exercise"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en};
