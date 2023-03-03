@@ -1,30 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/exercise.dart';
 
 import 'widgets/exercise_search_item.dart';
-
-List<Exercise> _exercises = [
-  Exercise(
-    id: 0,
-    title: 'Exercise Name',
-    description: 'Distance (km)/Time (min)',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-  Exercise(
-    id: 1,
-    title: 'Exercise Name',
-    description: 'Distance (km)/Time (min)',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-];
 
 class ExercisesSearchPage extends StatelessWidget {
   const ExercisesSearchPage({Key? key}) : super(key: key);
@@ -39,7 +22,7 @@ class ExercisesSearchPage extends StatelessWidget {
         border: Border.all(width: 0, color: FitnessColors.white),
         backgroundColor: FitnessColors.white,
         padding:
-            const EdgeInsetsDirectional.symmetric(horizontal: 4, vertical: 0),
+        const EdgeInsetsDirectional.symmetric(horizontal: 4, vertical: 0),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Row(
@@ -90,16 +73,20 @@ class ExercisesSearchPage extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _exercises.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ExerciseSearchItem(
-                    exercise: _exercises[index],
-                    onTap: () {},
-                  );
-                },
-              ),
+            BlocBuilder<ExercisesCubit, ExercisesState>(
+              builder: (context, state) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: state.exercises.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ExerciseSearchItem(
+                        exercise: state.exercises[index],
+                        onTap: () {},
+                      );
+                    },
+                  ),
+                );
+              },
             ),
             Padding(
               padding: const EdgeInsets.only(

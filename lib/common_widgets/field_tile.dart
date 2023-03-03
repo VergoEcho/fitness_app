@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:trainings/constants/colors.dart';
 
 class FieldTile extends StatelessWidget {
-  const FieldTile({Key? key, required this.text, required this.controller, this.withBorder = false}) : super(key: key);
+  const FieldTile({Key? key, required this.text, this.controller, this.withBorder = false, this.onChanged}) : super(key: key);
 
   final String text;
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final Function(String value)? onChanged;
   final bool withBorder;
 
   @override
@@ -30,6 +31,7 @@ class FieldTile extends StatelessWidget {
             ),
           ),
           CupertinoTextField.borderless(
+            onChanged: onChanged,
             controller: controller,
             placeholder: "-",
             placeholderStyle: TextStyle(

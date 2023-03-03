@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
+import 'package:trainings/bloc/client_edit_cubit/client_edit_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
@@ -51,6 +52,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SelectedTrainingCubit()),
         BlocProvider(create: (context) => ExercisesCubit()..fetchExercises()),
         BlocProvider(create: (context) => SelectedExerciseCubit()),
+        BlocProvider(create: (context) => ClientEditCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,

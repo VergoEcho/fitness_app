@@ -31,7 +31,10 @@ class ClientInfo extends StatelessWidget {
                         color: FitnessColors.green),
                     const SizedBox(width: 8),
                     ClientInfoBadge(
-                      value: state.client!.birthday,
+
+                      value: DateFormat('dd.MM.yy', context.locale.languageCode)
+                          .format(state.client!.birthday)
+                          .toString(),
                       label:
                           LocaleKeys.client_profile_page_info_birthday.tr(),
                       color: FitnessColors.violet,

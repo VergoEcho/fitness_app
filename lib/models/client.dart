@@ -15,17 +15,17 @@ class Client extends Equatable {
   final int id;
   final String name;
   final String phone;
-  final String birthday;
+  final DateTime birthday;
   final String clientGoal;
   final String clientNote;
   final bool isArchive;
   final DateTime createdAt;
   final DateTime updatedAt;
   final double weight;
-  final Map<String, TimeOfDay> trainingDays;
+  final Map<String, TimeOfDay?> trainingDays;
   final int payedTrainings;
 
-  const Client({
+  Client({
     required this.id,
     required this.name,
     required this.phone,
@@ -33,12 +33,21 @@ class Client extends Equatable {
     this.isArchive = false,
     this.clientGoal = "",
     this.clientNote = "",
-    required this.createdAt,
-    required this.updatedAt,
+    DateTime? creationDate,
+    DateTime? updateDate,
     required this.weight,
-    this.trainingDays = const <String, TimeOfDay>{},
+    this.trainingDays = const <String, TimeOfDay?>{
+      'monday': null,
+      'tuesday': null,
+      'wednesday': null,
+      'thursday': null,
+      'friday': null,
+      'saturday': null,
+      'sunday': null,
+    },
     this.payedTrainings = 0,
-  });
+  })  : createdAt = creationDate ?? DateTime.now(),
+        updatedAt = updateDate ?? DateTime.now();
 
   @override
   List<Object?> get props => [
@@ -55,4 +64,36 @@ class Client extends Equatable {
         trainingDays,
         payedTrainings,
       ];
+
+  Client copyWith({
+    int? id,
+    String? name,
+    String? phone,
+    DateTime? birthday,
+    String? clientGoal,
+    String? clientNote,
+    bool? isArchive,
+    DateTime? creationDate,
+    DateTime? updateDate,
+    double? weight,
+    Map<String, TimeOfDay?>? trainingDays,
+    int? payedTrainings,
+  }) {
+    DateTime createdAt = creationDate ?? DateTime.now();
+    DateTime updatedAt = updateDate ?? DateTime.now();
+    return Client(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      birthday: birthday ?? this.birthday,
+      clientGoal: clientGoal ?? this.clientGoal,
+      clientNote: clientNote ?? this.clientNote,
+      isArchive: isArchive ?? this.isArchive,
+      creationDate: createdAt ?? this.createdAt,
+      updateDate: updatedAt ?? this.updatedAt,
+      weight: weight ?? this.weight,
+      trainingDays: trainingDays ?? this.trainingDays,
+      payedTrainings: payedTrainings ?? this.payedTrainings,
+    );
+  }
 }
