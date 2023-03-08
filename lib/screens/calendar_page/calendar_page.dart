@@ -25,12 +25,13 @@ class CalendarPage extends StatelessWidget {
           return client.isArchive == false;
         })
         .where(
-          (client) => client.trainingDays.keys.any(
+          (client) => client.trainingDays.entries.any(
             (element) =>
-                element ==
-                DateFormat('EEEE', context.locale.languageCode)
-                    .format(selectedDay)
-                    .toLowerCase(),
+                (element.key ==
+                    DateFormat('EEEE', context.locale.languageCode)
+                        .format(selectedDay)
+                        .toLowerCase()) &&
+                element.value != null,
           ),
         )
         .toList();
@@ -96,10 +97,10 @@ class CalendarPage extends StatelessWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount:
-                      _selectedClients(context, state.selectedDay).length,
+                          _selectedClients(context, state.selectedDay).length,
                       itemBuilder: (BuildContext context, int index) {
                         Client client =
-                        _selectedClients(context, state.selectedDay)[index];
+                            _selectedClients(context, state.selectedDay)[index];
                         return CalendarCard(
                           client: client,
                           onTap: () {
@@ -107,16 +108,16 @@ class CalendarPage extends StatelessWidget {
                                 selectedDay: state.selectedDay, client: client);
                             Navigator.of(context, rootNavigator: true)
                                 .pushNamed(
-                              CalendarTrainingPage.route,
-                            )
+                                  CalendarTrainingPage.route,
+                                )
                                 .then(
                                   (value) => Future.delayed(
-                                const Duration(milliseconds: 500),
+                                    const Duration(milliseconds: 500),
                                     () => context
-                                    .read<SelectedTrainingCubit>()
-                                    .clear(),
-                              ),
-                            );
+                                        .read<SelectedTrainingCubit>()
+                                        .clear(),
+                                  ),
+                                );
                           },
                         );
                       },

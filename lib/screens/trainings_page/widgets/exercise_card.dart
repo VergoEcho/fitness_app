@@ -4,18 +4,20 @@ import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
 
 class ExerciseCard extends StatelessWidget {
-  const ExerciseCard(
-      {Key? key,
-      required this.exercise,
-      required this.onTap,
-      this.marginTopDisabled = false,
-      this.fixedWidth})
-      : super(key: key);
+  const ExerciseCard({
+    Key? key,
+    required this.exercise,
+    required this.onTap,
+    this.marginTopDisabled = false,
+    this.fixedWidth,
+    this.selectable = false,
+  }) : super(key: key);
 
   final Exercise exercise;
   final VoidCallback onTap;
   final bool marginTopDisabled;
   final double? fixedWidth;
+  final bool selectable;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,13 @@ class ExerciseCard extends StatelessWidget {
           left: 8,
           right: 8,
         ),
-        padding: const EdgeInsets.only(left:16, top: 16, bottom: 16,),
+        padding: const EdgeInsets.only(
+          left: 16,
+          top: 16,
+          bottom: 16,
+        ),
         decoration: BoxDecoration(
-          color: FitnessColors.white,
+          color: selectable ? FitnessColors.whiteBlue : FitnessColors.white,
           borderRadius: BorderRadius.circular(13),
         ),
         child: Row(
@@ -55,14 +61,16 @@ class ExerciseCard extends StatelessWidget {
                       ),
               ],
             ),
-            CupertinoButton(
-              onPressed: null,
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: FitnessColors.darkGray,
-                size: 16,
-              ),
-            )
+            selectable
+                ? const SizedBox()
+                : CupertinoButton(
+                    onPressed: null,
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: FitnessColors.darkGray,
+                      size: 16,
+                    ),
+                  )
           ],
         ),
       ),

@@ -1,34 +1,112 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:trainings/constants/colors.dart';
+import 'package:trainings/models/exercise_set.dart';
+import 'package:trainings/models/series.dart';
 
 class SetCard extends StatefulWidget {
-  const SetCard({Key? key, this.editable = false, this.togglePicker}) : super(key: key);
+  const SetCard({
+    Key? key,
+    this.editable = false,
+    this.togglePicker,
+    required this.exerciseSet,
+    this.selectedSeriesId,
+    this.addNewSeries,
+    this.changeSeriesId,
+    this.removeSeriesById,
+  }) : super(key: key);
 
   final bool editable;
-  final Function? togglePicker;
+  final Function({required bool expanded})? togglePicker;
+  final ExerciseSet exerciseSet;
+  final String? selectedSeriesId;
+  final VoidCallback? addNewSeries;
+  final Function({String? seriesId})? changeSeriesId;
+  final Function(String seriesId)? removeSeriesById;
 
   @override
   State<SetCard> createState() => _SetCardState();
 }
 
 class _SetCardState extends State<SetCard> {
-  late bool editInProgress = true;
-
-  List<Widget> _getSetRows() {
+  List<Widget> _getSeriesRows() {
     List<Widget> rows = [];
-    for (int i = 0; i < 3; i++) {
-      rows.add(const Padding(
-        padding: EdgeInsets.only(top: 8.0),
-        child: Text('20 kg x 20 Reps'),
-      ));
+    RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
+    for (Series series in widget.exerciseSet.series) {
+      rows.add(
+        widget.editable
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: widget.selectedSeriesId == series.id
+                      ? FitnessColors.white
+                      : null,
+                ),
+                padding: const EdgeInsets.only(
+                  right: 12,
+                  top: 4,
+                  bottom: 4,
+                ),
+                margin: const EdgeInsets.only(left: 8, right: 8),
+                child: SizedBox(
+                  height: 24,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: widget.selectedSeriesId == series.id
+                            ? () {
+                                widget.removeSeriesById!(series.id);
+                                widget.togglePicker!(expanded: false);
+                              }
+                            : null,
+                        child: Icon(
+                          CupertinoIcons.minus_circle_fill,
+                          color: widget.selectedSeriesId == series.id
+                              ? FitnessColors.red
+                              : FitnessColors.red.withOpacity(0),
+                        ),
+                      ),
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          if (widget.selectedSeriesId == series.id) {
+                            widget.changeSeriesId!();
+                            widget.togglePicker!(expanded: false);
+                          } else {
+                            widget.changeSeriesId!(seriesId: series.id);
+                            widget.togglePicker!(expanded: true);
+                          }
+                        },
+                        child: Text(
+                          '${series.effort.toString().replaceAll(regex, '')} kg x ${series.quantity} Reps',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: widget.selectedSeriesId == series.id
+                                ? FitnessColors.black
+                                : null,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(
+                    right: 16, left: 16, top: 8.0, bottom: 4),
+                child: Text(
+                    '${series.effort.toString().replaceAll(regex, '')} kg x ${series.quantity} Reps',
+                    style: const TextStyle(fontSize: 16)),
+              ),
+      );
     }
     return rows;
   }
 
   @override
   void initState() {
-    editInProgress = widget.editable ? true : false;
     super.initState();
   }
 
@@ -39,15 +117,15 @@ class _SetCardState extends State<SetCard> {
       children: [
         Container(
           margin: const EdgeInsets.only(right: 16, top: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          width: 160,
+          padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: FitnessColors.whiteBlue ),
+              color: FitnessColors.whiteBlue),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 8),
-              ..._getSetRows(),
+              const SizedBox(height: 16),
+              ..._getSeriesRows(),
               const SizedBox(height: 8),
             ],
           ),
@@ -58,10 +136,11 @@ class _SetCardState extends State<SetCard> {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             decoration: BoxDecoration(
-                color: CupertinoTheme.of(context).primaryColor,
+                color: FitnessColors.primary,
                 borderRadius: BorderRadius.circular(100)),
             child: Text(
-              DateFormat('dd.MM.yy', context.locale.languageCode).format(DateTime.now()),
+              DateFormat('dd.MM.yy', context.locale.languageCode)
+                  .format(DateTime.now()),
               style: TextStyle(
                 color: FitnessColors.white,
               ),
@@ -75,19 +154,24 @@ class _SetCardState extends State<SetCard> {
                 child: CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    setState(() {
-                      editInProgress = !editInProgress;
-                    });
-                    widget.togglePicker!();
+                    if (widget.selectedSeriesId == null) {
+                      setState(() {
+                        widget.addNewSeries!();
+                        widget.togglePicker!(expanded: true);
+                      });
+                    } else {
+                      widget.changeSeriesId!();
+                      widget.togglePicker!(expanded: false);
+                    }
                   },
-                  child: editInProgress
-                      ? Icon(
-                          CupertinoIcons.checkmark_alt_circle_fill,
-                          color: FitnessColors.green,
+                  child: widget.selectedSeriesId == null
+                      ? const Icon(
+                          CupertinoIcons.add_circled_solid,
                           size: 32,
                         )
-                      : const Icon(
-                          CupertinoIcons.add_circled_solid,
+                      : Icon(
+                          CupertinoIcons.checkmark_alt_circle_fill,
+                          color: FitnessColors.green,
                           size: 32,
                         ),
                 ),

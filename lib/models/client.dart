@@ -23,7 +23,7 @@ class Client extends Equatable {
   final DateTime updatedAt;
   final double weight;
   final Map<String, TimeOfDay?> trainingDays;
-  final int payedTrainings;
+  final int paidTrainings;
 
   Client({
     required this.id,
@@ -36,18 +36,19 @@ class Client extends Equatable {
     DateTime? creationDate,
     DateTime? updateDate,
     required this.weight,
-    this.trainingDays = const <String, TimeOfDay?>{
-      'monday': null,
-      'tuesday': null,
-      'wednesday': null,
-      'thursday': null,
-      'friday': null,
-      'saturday': null,
-      'sunday': null,
-    },
-    this.payedTrainings = 0,
+    Map<String, TimeOfDay?>?trainingDays,
+    this.paidTrainings = 0,
   })  : createdAt = creationDate ?? DateTime.now(),
-        updatedAt = updateDate ?? DateTime.now();
+        updatedAt = updateDate ?? DateTime.now(),
+        trainingDays = trainingDays ?? <String, TimeOfDay?>{
+          'monday': null,
+          'tuesday': null,
+          'wednesday': null,
+          'thursday': null,
+          'friday': null,
+          'saturday': null,
+          'sunday': null,
+        };
 
   @override
   List<Object?> get props => [
@@ -62,7 +63,7 @@ class Client extends Equatable {
         updatedAt,
         weight,
         trainingDays,
-        payedTrainings,
+        paidTrainings,
       ];
 
   Client copyWith({
@@ -77,8 +78,9 @@ class Client extends Equatable {
     DateTime? updateDate,
     double? weight,
     Map<String, TimeOfDay?>? trainingDays,
-    int? payedTrainings,
+    int? paidTrainings,
   }) {
+    print(name);
     DateTime createdAt = creationDate ?? DateTime.now();
     DateTime updatedAt = updateDate ?? DateTime.now();
     return Client(
@@ -93,7 +95,7 @@ class Client extends Equatable {
       updateDate: updatedAt ?? this.updatedAt,
       weight: weight ?? this.weight,
       trainingDays: trainingDays ?? this.trainingDays,
-      payedTrainings: payedTrainings ?? this.payedTrainings,
+      paidTrainings: paidTrainings ?? this.paidTrainings,
     );
   }
 }

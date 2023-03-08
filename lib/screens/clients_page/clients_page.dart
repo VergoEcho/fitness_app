@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/client_edit_cubit/client_edit_cubit.dart';
 import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
@@ -16,7 +17,8 @@ class ClientsPage extends StatelessWidget {
 
   static const String route = '/clients';
 
-  List<Client> selectedClients({required BuildContext context, required ClientState state}) {
+  List<Client> selectedClients(
+      {required BuildContext context, required ClientState state}) {
     List<Client> clients = context.read<ClientsCubit>().state.clients;
     return clients.where((client) {
       if (state == ClientState.current) {
@@ -63,7 +65,15 @@ class ClientsPage extends StatelessWidget {
                               text: LocaleKeys.clients_page_new_client.tr(),
                               onPressed: () =>
                                   Navigator.of(context, rootNavigator: true)
-                                      .pushNamed(ClientEditPage.route),
+                                      .pushNamed(ClientEditPage.route)
+                                      .then(
+                                        (_) => Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () => context
+                                              .read<ClientEditCubit>()
+                                              .clear(),
+                                        ),
+                                      ),
                             ),
                             CupertinoButton(
                               padding: const EdgeInsets.symmetric(vertical: 0),
@@ -115,11 +125,11 @@ class ClientsPage extends StatelessWidget {
                 builder: (context, state) {
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: selectedClients(context: context,
-                        state: state).length,
+                    itemCount:
+                        selectedClients(context: context, state: state).length,
                     itemBuilder: (context, index) {
-                      Client client = selectedClients(context: context,
-                          state: state)[index];
+                      Client client = selectedClients(
+                          context: context, state: state)[index];
                       if (state == ClientState.current) {
                         return CurrentClientCard(client: client);
                       }

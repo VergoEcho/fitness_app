@@ -5,9 +5,11 @@ import 'package:trainings/constants/colors.dart';
 class DoublePicker extends StatefulWidget {
   const DoublePicker({
     super.key,
-    required this.expanded,
+    required this.expanded, required this.onEffortChanged, required this.onQuantityChanged,
   });
 
+  final Function(int?) onEffortChanged;
+  final Function(int?) onQuantityChanged;
   final bool expanded;
 
   @override
@@ -85,12 +87,12 @@ class _DoublePickerState extends State<DoublePicker>
                     ),
                     offAxisFraction: -.4,
                     itemExtent: 32,
-                    onSelectedItemChanged: (index) {},
+                    onSelectedItemChanged: widget.onEffortChanged,
                     children: List<Widget>.generate(200, (int index) {
                       return Center(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 64.0),
-                          child: Text('${index + 1} kg', style: TextStyle(
+                          child: Text('$index kg', style: TextStyle(
                             color: FitnessColors.black,
                           ),),
                         ),
@@ -118,7 +120,7 @@ class _DoublePickerState extends State<DoublePicker>
                     ),
                     offAxisFraction: .4,
                     itemExtent: 32,
-                    onSelectedItemChanged: (index) {},
+                    onSelectedItemChanged: widget.onQuantityChanged,
                     children: List<Widget>.generate(100, (int index) {
                       return Center(
                         child: Padding(

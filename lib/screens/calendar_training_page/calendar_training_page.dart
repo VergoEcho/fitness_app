@@ -8,6 +8,7 @@ import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/common_widgets/filled_button.dart';
 import 'package:trainings/screens/calendar_training_page/widgets/calendar_exercise_card.dart';
+import 'package:trainings/screens/exercise_search_page/exercises_search_page.dart';
 
 class CalendarTrainingPage extends StatelessWidget {
   const CalendarTrainingPage({Key? key}) : super(key: key);
@@ -110,7 +111,8 @@ class CalendarTrainingPage extends StatelessWidget {
                       child: AppleFilledButton(
                         text:
                             LocaleKeys.calendar_training_page_new_exercise.tr(),
-                        onPressed: () {},
+                        // onPressed: () {},
+                        onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(ExercisesSearchPage.route),
                       ),
                     ),
                   ],

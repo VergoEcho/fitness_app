@@ -2,17 +2,35 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/exercise_edit_cubit/exercise_edit_cubit.dart';
 import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/exercise.dart';
+import 'package:trainings/screens/exercise_page/exercise_page.dart';
 
 import 'widgets/exercise_search_item.dart';
 
-class ExercisesSearchPage extends StatelessWidget {
+Exercise _templateExercise = Exercise(
+  id: 0,
+  title: 'Exercise Name',
+  description: 'Distance (km)/Time (min)',
+  reps: const [],
+  createdAt: DateTime.now(),
+  updatedAt: DateTime.now(),
+);
+
+class ExercisesSearchPage extends StatefulWidget {
   const ExercisesSearchPage({Key? key}) : super(key: key);
 
   static const String route = '/exercises/search';
+
+  @override
+  State<ExercisesSearchPage> createState() => _ExercisesSearchPageState();
+}
+
+class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
+  int? _selectedIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +40,7 @@ class ExercisesSearchPage extends StatelessWidget {
         border: Border.all(width: 0, color: FitnessColors.white),
         backgroundColor: FitnessColors.white,
         padding:
-        const EdgeInsetsDirectional.symmetric(horizontal: 4, vertical: 0),
+            const EdgeInsetsDirectional.symmetric(horizontal: 4, vertical: 0),
         leading: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Row(
@@ -43,8 +61,16 @@ class ExercisesSearchPage extends StatelessWidget {
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {},
-          child: const Icon(CupertinoIcons.add_circled_solid,),
+          onPressed: () {
+            context.read<ExerciseEditCubit>().changeMode(ExerciseCreateMode());
+            Navigator.of(context, rootNavigator: true)
+                .pushNamed(ExercisePage.route).then((value) {
+                  Navigator.pop(context, value);
+                });
+          },
+          child: const Icon(
+            CupertinoIcons.add_circled_solid,
+          ),
         ),
       ),
       child: SafeArea(
@@ -80,8 +106,14 @@ class ExercisesSearchPage extends StatelessWidget {
                     itemCount: state.exercises.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ExerciseSearchItem(
+                        index: index,
+                        selectedIndex: _selectedIndex,
                         exercise: state.exercises[index],
-                        onTap: () {},
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = index;
+                          });
+                        },
                       );
                     },
                   ),
@@ -90,7 +122,7 @@ class ExercisesSearchPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                bottom: 8.0,
+                bottom: 16,
                 right: 16,
                 left: 16,
               ),
@@ -99,7 +131,7 @@ class ExercisesSearchPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
-                onPressed: () {},
+                onPressed: _selectedIndex != null ? () => Navigator.pop(context, _templateExercise) : null,
                 child: Text(
                   LocaleKeys.search_exercise_page_add.tr(),
                   style: const TextStyle(

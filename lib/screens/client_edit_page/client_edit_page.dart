@@ -7,6 +7,7 @@ import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart'
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/common_widgets/field_tile.dart';
+import 'package:trainings/models/client.dart';
 
 import 'widgets/day_selector.dart';
 
@@ -39,6 +40,13 @@ class _ClientEditPageState extends State<ClientEditPage>
   late final Animation<double> _paidExpandAnimation;
   String? editDay;
   late TimeOfDay _selectedTime;
+  bool _timeExpanded = false;
+  late final AnimationController _timeExpandController;
+  late final Animation<double> _timeExpandAnimation;
+  bool clientInitialized = false;
+  String _selectedDay = '';
+
+  final _formKey = GlobalKey<FormState>();
 
   // void _initControllers () async {
   //   await _nameController.value = _nameController.value.copyWith(text: )
@@ -53,6 +61,7 @@ class _ClientEditPageState extends State<ClientEditPage>
 
     _birthdayExpandController.dispose();
     _weightExpandController.dispose();
+    _timeExpandController.dispose();
     _paidExpandController.dispose();
     super.dispose();
   }
@@ -62,7 +71,7 @@ class _ClientEditPageState extends State<ClientEditPage>
     _birthday = DateTime.now();
     _weight = 70;
     _paidTrainings = 0;
-    _selectedTime = const TimeOfDay(hour: 12, minute: 00);
+    _selectedTime = const TimeOfDay(hour: 0, minute: 00);
 
     _birthdayExpandController = AnimationController(
       duration: const Duration(milliseconds: 200),
@@ -84,6 +93,16 @@ class _ClientEditPageState extends State<ClientEditPage>
       curve: Curves.fastOutSlowIn,
     );
 
+    _timeExpandController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _timeExpandAnimation = CurvedAnimation(
+      parent: _timeExpandController,
+      curve: Curves.fastOutSlowIn,
+    );
+
     _paidExpandController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -97,6 +116,15 @@ class _ClientEditPageState extends State<ClientEditPage>
     super.initState();
   }
 
+  TimeOfDay _selectedDayTime(ClientEditState state) {
+    return state.client.trainingDays[_selectedDay] ?? _selectedTime;
+  }
+
+  String _selectedDayTimeString(ClientEditState state) {
+    TimeOfDay time = _selectedDayTime(state);
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     bool clientIsNew =
@@ -104,6 +132,22 @@ class _ClientEditPageState extends State<ClientEditPage>
 
     return BlocBuilder<ClientEditCubit, ClientEditState>(
       builder: (context, state) {
+        if (!clientInitialized) {
+          if (!clientIsNew) {
+            Client client = context.read<SelectedClientCubit>().state.client!;
+            _weight = client.weight.toInt();
+            _birthday = client.birthday;
+            _paidTrainings = client.paidTrainings;
+            Client formClient =
+                state.client.copyWith(trainingDays: client.trainingDays);
+            Future.delayed(const Duration(milliseconds: 100),
+                () => context.read<ClientEditCubit>().update(formClient));
+          } else {
+            _weight = state.client.weight.toInt();
+            _birthday = state.client.birthday;
+          }
+          clientInitialized = true;
+        }
         return CupertinoPageScaffold(
           backgroundColor: FitnessColors.whiteGray,
           navigationBar: CupertinoNavigationBar(
@@ -127,7 +171,7 @@ class _ClientEditPageState extends State<ClientEditPage>
               },
             ),
             middle: Text(
-              clientIsNew is SelectedClientNone
+              clientIsNew
                   ? LocaleKeys.client_edit_page_title_new.tr()
                   : LocaleKeys.client_edit_page_title_edit.tr(),
             ),
@@ -142,7 +186,52 @@ class _ClientEditPageState extends State<ClientEditPage>
                 ),
               ),
               onPressed: () {
-                Navigator.pop(context);
+                _formKey.currentState!.validate();
+                if (_nameController.text.isEmpty) {
+                  showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                          title: Text(LocaleKeys
+                              .client_edit_page_error_name_title
+                              .tr()),
+                          content: Text(
+                            LocaleKeys.client_edit_page_error_name_description
+                                .tr(),
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          actions: [
+                            CupertinoButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text(
+                                LocaleKeys.client_edit_page_error_name_confirm
+                                    .tr(),
+                              ),
+                            )
+                          ],
+                        );
+                      });
+                } else {
+                  // Validation passed
+                  if (clientIsNew) {
+                    // Client newClient = state.client.copyWith(
+                    //   id: context.read<ClientsCubit>().state.clients.length,
+                    //   name: _nameController.text,
+                    //   phone: _phoneController.text,
+                    //   birthday: _birthday,
+                    //   weight: _weight.toDouble(),
+                    //   clientGoal: _goalController.text,
+                    //   clientNote: _noteController.text,
+                    //   paidTrainings: _paidTrainings,
+                    // );
+                    // context.read<ClientsCubit>().addClient(newClient);
+                  }
+                  Navigator.pop(context);
+                }
               },
             ),
           ),
@@ -151,13 +240,21 @@ class _ClientEditPageState extends State<ClientEditPage>
             child: ListView(
               children: [
                 FieldTile(
-                  controller: _nameController..text = clientIsNew
-                      ? ''
-                      : context
-                      .read<SelectedClientCubit>()
-                      .state
-                      .client!
-                      .phone,
+                  validator: (String? text) {
+                    if (text == null || text.isEmpty || text == '') {
+                      return LocaleKeys.client_edit_page_error_name_field.tr();
+                    }
+                    return null;
+                  },
+                  formKey: _formKey,
+                  controller: _nameController
+                    ..text = clientIsNew
+                        ? ''
+                        : context
+                            .read<SelectedClientCubit>()
+                            .state
+                            .client!
+                            .name,
                   text: LocaleKeys.client_edit_page_name.tr(),
                 ),
                 FieldTile(
@@ -210,7 +307,7 @@ class _ClientEditPageState extends State<ClientEditPage>
                                   Text(
                                     DateFormat('dd MMM yyy',
                                             context.locale.languageCode)
-                                        .format(state.client.birthday),
+                                        .format(_birthday),
                                     style: TextStyle(
                                         color: FitnessColors.blindGray,
                                         fontSize: 16),
@@ -249,9 +346,9 @@ class _ClientEditPageState extends State<ClientEditPage>
                             dateOrder: DatePickerDateOrder.dmy,
                             mode: CupertinoDatePickerMode.date,
                             onDateTimeChanged: (DateTime value) {
-                              context.read<ClientEditCubit>().update(
-                                    state.client.copyWith(birthday: value),
-                                  );
+                              setState(() {
+                                _birthday = value;
+                              });
                             },
                           ),
                         ),
@@ -313,13 +410,18 @@ class _ClientEditPageState extends State<ClientEditPage>
                           height: 200,
                           child: CupertinoPicker(
                             scrollController: FixedExtentScrollController(
-                              initialItem: state.client.weight.toInt() - 1,
+                              initialItem: clientIsNew
+                                  ? state.client.weight.toInt() - 1
+                                  : context
+                                          .read<SelectedClientCubit>()
+                                          .state
+                                          .client!
+                                          .weight
+                                          .toInt() -
+                                      1,
                             ),
                             itemExtent: 32,
                             onSelectedItemChanged: (index) {
-                              context.read<ClientEditCubit>().update(
-                                    state.client.copyWith(weight: index + 1),
-                                  );
                               setState(() {
                                 _weight = index + 1;
                               });
@@ -342,23 +444,25 @@ class _ClientEditPageState extends State<ClientEditPage>
                 ),
                 FieldTile(
                   text: LocaleKeys.client_edit_page_goal.tr(),
-                  controller: _goalController..text = clientIsNew
-                      ? ''
-                      : context
-                      .read<SelectedClientCubit>()
-                      .state
-                      .client!
-                      .clientGoal,
+                  controller: _goalController
+                    ..text = clientIsNew
+                        ? ''
+                        : context
+                            .read<SelectedClientCubit>()
+                            .state
+                            .client!
+                            .clientGoal,
                 ),
                 FieldTile(
                   text: LocaleKeys.client_edit_page_note.tr(),
-                  controller: _noteController..text = clientIsNew
-                      ? ''
-                      : context
-                      .read<SelectedClientCubit>()
-                      .state
-                      .client!
-                      .clientNote,
+                  controller: _noteController
+                    ..text = clientIsNew
+                        ? ''
+                        : context
+                            .read<SelectedClientCubit>()
+                            .state
+                            .client!
+                            .clientNote,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -397,38 +501,25 @@ class _ClientEditPageState extends State<ClientEditPage>
                         padding: const EdgeInsets.only(top: 16.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            DaySelector(
-                              day: LocaleKeys.days_monday.tr(),
-                              onPressed: () {
-
-                              },
-                            ),
-                            DaySelector(
-                              day: LocaleKeys.days_tuesday.tr(),
-                              onPressed: () {},
-                            ),
-                            DaySelector(
-                              day: LocaleKeys.days_wednesday.tr(),
-                              onPressed: () {},
-                            ),
-                            DaySelector(
-                              day: LocaleKeys.days_thursday.tr(),
-                              onPressed: () {},
-                            ),
-                            DaySelector(
-                              day: LocaleKeys.days_friday.tr(),
-                              onPressed: () {},
-                            ),
-                            DaySelector(
-                              day: LocaleKeys.days_saturday.tr(),
-                              onPressed: () {},
-                            ),
-                            DaySelector(
-                              day: LocaleKeys.days_sunday.tr(),
-                              onPressed: () {},
-                            ),
-                          ],
+                          children:
+                              state.client.trainingDays.entries.map((day) {
+                            return DaySelector(
+                                clearTime: () {
+                                  Client client = state.client;
+                                  client.trainingDays[day.key] = null;
+                                  context
+                                      .read<ClientEditCubit>()
+                                      .update(client);
+                                },
+                                time: day.value,
+                                selectedDay: _selectedDay,
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedDay = day.key;
+                                  });
+                                },
+                                day: day.key.substring(0, 3));
+                          }).toList(),
                         ),
                       ),
                       Padding(
@@ -446,16 +537,43 @@ class _ClientEditPageState extends State<ClientEditPage>
                             CupertinoButton(
                               padding: const EdgeInsets.all(8),
                               color: FitnessColors.whiteShaded,
+                              onPressed: _selectedDay == ''
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        _timeExpanded = !_timeExpanded;
+                                      });
+                                      if (_timeExpanded) {
+                                        _timeExpandController.forward();
+                                      } else {
+                                        _timeExpandController.reverse();
+                                      }
+                                    },
                               child: Text(
-                                _selectedTime.format(context),
+                                _selectedDayTimeString(state),
                                 style: TextStyle(
                                   color: FitnessColors.black,
                                   fontSize: 20,
                                 ),
                               ),
-                              onPressed: () {},
                             ),
                           ],
+                        ),
+                      ),
+                      SizeTransition(
+                        sizeFactor: _timeExpandAnimation,
+                        child: SizedBox(
+                          height: 200,
+                          child: CupertinoDatePicker(
+                            use24hFormat: true,
+                            mode: CupertinoDatePickerMode.time,
+                            onDateTimeChanged: (DateTime value) {
+                              Client client = state.client;
+                              client.trainingDays[_selectedDay] =
+                                  TimeOfDay.fromDateTime(value);
+                              context.read<ClientEditCubit>().update(client);
+                            },
+                          ),
                         ),
                       )
                     ],
@@ -495,7 +613,7 @@ class _ClientEditPageState extends State<ClientEditPage>
                               Row(
                                 children: [
                                   Text(
-                                    state.client.payedTrainings.toString(),
+                                    _paidTrainings.toString(),
                                     style: TextStyle(
                                       color: FitnessColors.blindGray,
                                       fontSize: 16,
@@ -529,10 +647,9 @@ class _ClientEditPageState extends State<ClientEditPage>
                               ),
                               itemExtent: 32,
                               onSelectedItemChanged: (index) {
-                                context.read<ClientEditCubit>().update(
-                                      state.client
-                                          .copyWith(payedTrainings: index),
-                                    );
+                                setState(() {
+                                  _paidTrainings = index;
+                                });
                               },
                               children: List<Widget>.generate(100, (int index) {
                                 return Center(

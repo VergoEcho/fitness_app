@@ -3,11 +3,18 @@ import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
 
 class ExerciseSearchItem extends StatelessWidget {
-  const ExerciseSearchItem({Key? key, required this.onTap, required this.exercise, this.checked = false}) : super(key: key);
+  const ExerciseSearchItem(
+      {Key? key,
+      required this.onTap,
+      required this.exercise,
+      required this.index,
+      required this.selectedIndex})
+      : super(key: key);
 
   final VoidCallback onTap;
   final Exercise exercise;
-  final bool checked;
+  final int index;
+  final int? selectedIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +26,15 @@ class ExerciseSearchItem extends StatelessWidget {
           left: 8,
           right: 8,
         ),
-        padding: const EdgeInsets.only(left:16, top: 16, bottom: 16,),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: FitnessColors.white,
           borderRadius: BorderRadius.circular(13),
+          border: Border.all(
+            color: selectedIndex == index
+                ? FitnessColors.primary
+                : FitnessColors.white,
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,25 +47,24 @@ class ExerciseSearchItem extends StatelessWidget {
                 exercise.description == ""
                     ? const SizedBox()
                     : Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: Text(
-                    exercise.description,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: FitnessColors.darkGray,
-                    ),
-                  ),
-                ),
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          exercise.description,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: FitnessColors.darkGray,
+                          ),
+                        ),
+                      ),
               ],
             ),
-            // CupertinoButton(
-            //   onPressed: null,
-            //   child: Icon(
-            //     CupertinoIcons.checkmark,
-            //     color: FitnessColors.primary,
-            //     size: 16,
-            //   ),
-            // )
+            selectedIndex == index
+                ? Icon(
+                    CupertinoIcons.checkmark,
+                    color: FitnessColors.primary,
+                    size: 16,
+                  )
+                : const SizedBox(),
           ],
         ),
       ),

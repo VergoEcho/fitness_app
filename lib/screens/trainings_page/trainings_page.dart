@@ -1,14 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/exercise_edit_cubit/exercise_edit_cubit.dart';
 import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
+import 'package:trainings/bloc/new_training_cubit/new_training_cubit.dart';
 import 'package:trainings/bloc/trainings_page_bloc/training_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/training.dart';
 import 'package:trainings/common_widgets/filled_button.dart';
 import 'package:trainings/screens/exercise_page/exercise_page.dart';
-import 'package:trainings/screens/new_template_page/new_template_page.dart';
+import 'package:trainings/screens/new_training_page/new_training_page.dart';
 import 'package:trainings/screens/trainings_page/widgets/exercise_card.dart';
 import 'package:trainings/screens/trainings_page/widgets/training_template_card.dart';
 
@@ -19,7 +21,6 @@ List<Training> _templates = [
     id: 0,
     title: 'Template Name',
     description: 'Description here',
-    date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
@@ -27,7 +28,6 @@ List<Training> _templates = [
     id: 1,
     title: 'Template Name',
     description: 'Description here',
-    date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
@@ -35,7 +35,6 @@ List<Training> _templates = [
     id: 2,
     title: 'Template Name',
     description: 'Description here',
-    date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
@@ -79,8 +78,9 @@ class TrainingsPage extends StatelessWidget {
                             .tr()
                             .toUpperCase(),
                         onPressed: () {
+                          context.read<NewTrainingCubit>().changeMode(NewTemplateMode());
                           Navigator.of(context, rootNavigator: true)
-                              .pushNamed(NewTemplatePage.route);
+                              .pushNamed(NewTrainingPage.route);
                         },
                       )
                     ],
@@ -150,8 +150,11 @@ class TrainingsPage extends StatelessWidget {
                       Exercise item = selectedList()[index];
                       return ExerciseCard(
                         exercise: item,
-                        onTap: () => Navigator.of(context, rootNavigator: true)
-                            .pushNamed(ExercisePage.route),
+                        onTap: () {
+                          context.read<ExerciseEditCubit>().changeMode(ExerciseEditMode());
+                          Navigator.of(context, rootNavigator: true)
+                            .pushNamed(ExercisePage.route);
+                        },
                       );
                     },
                   );

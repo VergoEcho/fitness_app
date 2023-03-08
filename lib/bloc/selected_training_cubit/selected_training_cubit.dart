@@ -9,7 +9,6 @@ Training tempTraining = Training(
   id: 1,
   title: 'Training name',
   description: 'Training notes ',
-  date: DateTime.now(),
   createdAt: DateTime.now(),
   updatedAt: DateTime.now(),
 );

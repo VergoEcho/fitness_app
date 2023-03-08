@@ -61,7 +61,7 @@ class ClientTrainingTile extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
                           DateFormat('dd.MM.yy', context.locale.languageCode)
-                              .format(training.date)
+                              .format(DateTime.now())
                               .toString(),
                           style: const TextStyle(fontSize: 16),
                         ),

@@ -7,8 +7,10 @@ import 'package:trainings/bloc/client_edit_cubit/client_edit_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
+import 'package:trainings/bloc/exercise_edit_cubit/exercise_edit_cubit.dart';
 import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/bloc/modal_calendar_cubit/modal_calendar_cubit.dart';
+import 'package:trainings/bloc/new_training_cubit/new_training_cubit.dart';
 import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
 import 'package:trainings/bloc/selected_exercise_cubit/selected_exercise_cubit.dart';
 import 'package:trainings/bloc/selected_training_cubit/selected_training_cubit.dart';
@@ -20,7 +22,6 @@ import 'package:trainings/screens/client_profile_page/client_profile_page.dart';
 import 'package:trainings/screens/clients_page/clients_page.dart';
 import 'package:trainings/screens/exercise_page/exercise_page.dart';
 import 'package:trainings/screens/exercise_search_page/exercises_search_page.dart';
-import 'package:trainings/screens/new_template_page/new_template_page.dart';
 import 'package:trainings/screens/new_training_page/new_training_page.dart';
 import 'package:trainings/screens/trainings_page/trainings_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,13 +54,17 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => ExercisesCubit()..fetchExercises()),
         BlocProvider(create: (context) => SelectedExerciseCubit()),
         BlocProvider(create: (context) => ClientEditCubit()),
+        BlocProvider(create: (context) => NewTrainingCubit()),
+        BlocProvider(create: (context) => ExerciseEditCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         title: LocaleKeys.app_title.tr(),
-        // theme: appTheme,
+        theme: const CupertinoThemeData(
+          brightness: Brightness.light,
+        ),
         routes: {
           CalendarPage.route: (context) => const CalendarPage(),
           TrainingsPage.route: (context) => const TrainingsPage(),
@@ -68,7 +73,6 @@ class App extends StatelessWidget {
           ClientProfilePage.route: (context) => const ClientProfilePage(),
           ClientEditPage.route: (context) => const ClientEditPage(),
           ExercisePage.route: (context) => const ExercisePage(),
-          NewTemplatePage.route: (context) => NewTemplatePage(),
           NewTrainingPage.route: (context) => NewTrainingPage(),
           ExercisesSearchPage.route: (context) => const ExercisesSearchPage(),
         },

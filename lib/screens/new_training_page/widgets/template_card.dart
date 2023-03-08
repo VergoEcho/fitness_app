@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trainings/constants/colors.dart';
-import 'package:trainings/models/template.dart';
+import 'package:trainings/models/training.dart';
 
 class TemplateCard extends StatelessWidget {
   const TemplateCard(
@@ -11,7 +11,7 @@ class TemplateCard extends StatelessWidget {
       this.fixedWidth,})
       : super(key: key);
 
-  final Template template;
+  final Training template;
   final VoidCallback onTap;
   final double? fixedWidth;
 

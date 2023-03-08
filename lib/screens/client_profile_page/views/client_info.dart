@@ -41,7 +41,7 @@ class ClientInfo extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     ClientInfoBadge(
-                      value: state.client!.payedTrainings.toString(),
+                      value: state.client!.paidTrainings.toString(),
                       label:
                           LocaleKeys.client_profile_page_info_training.tr(),
                       color: FitnessColors.orange,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/client_edit_cubit/client_edit_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
 import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
 import 'package:trainings/constants/colors.dart';
@@ -49,7 +50,13 @@ class ClientProfilePage extends StatelessWidget {
             child: Text(LocaleKeys.client_profile_page_edit.tr()),
           ),
           onPressed: () => Navigator.of(context, rootNavigator: true)
-              .pushNamed(ClientEditPage.route),
+              .pushNamed(ClientEditPage.route)
+              .then(
+                (_) => Future.delayed(
+                  const Duration(milliseconds: 500),
+                  () => context.read<ClientEditCubit>().clear(),
+                ),
+              ),
         ),
       ),
       child: BlocBuilder<ClientProfilePageBloc, TrainingsOrInfo>(
@@ -83,9 +90,9 @@ class ClientProfilePage extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  '${LocaleKeys.client_profile_page_paid_till.tr()}: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${3} ${LocaleKeys.client_profile_page_workouts.tr()})',
-                                  style: TextStyle(
-                                      color: FitnessColors.blindGray),
+                                  '${LocaleKeys.client_profile_page_paid_till.tr()}: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${state.client!.paidTrainings} ${LocaleKeys.client_profile_page_workouts.tr()})',
+                                  style:
+                                      TextStyle(color: FitnessColors.blindGray),
                                 ),
                               ],
                             ),
@@ -96,32 +103,14 @@ class ClientProfilePage extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: [
-                                  DayCard(
-                                    day: LocaleKeys.days_monday.tr(),
-                                    time: '12:00',
-                                  ),
-                                  DayCard(
-                                    day: LocaleKeys.days_tuesday.tr(),
-                                  ),
-                                  DayCard(
-                                    day: LocaleKeys.days_wednesday.tr(),
-                                  ),
-                                  DayCard(
-                                    day: LocaleKeys.days_thursday.tr(),
-                                    time: '12:00',
-                                  ),
-                                  DayCard(
-                                    day: LocaleKeys.days_friday.tr(),
-                                    time: '12:00',
-                                  ),
-                                  DayCard(
-                                    day: LocaleKeys.days_saturday.tr(),
-                                  ),
-                                  DayCard(
-                                    day: LocaleKeys.days_friday.tr(),
-                                  ),
-                                ],
+                                children: state.client!.trainingDays.entries
+                                    .map((day) {
+                                  return DayCard(
+                                      day: day.key.substring(0,3),
+                                      time: day.value == null
+                                          ? null
+                                          : '${day.value!.hour.toString().padLeft(2, '0')}:${day.value!.minute.toString().padLeft(2, '0')}');
+                                }).toList(),
                               ),
                             ),
                           ],
@@ -130,17 +119,15 @@ class ClientProfilePage extends StatelessWidget {
                     ),
                     SizedBox(
                       width: double.infinity,
-                      child:
-                          CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
+                      child: CupertinoSlidingSegmentedControl<TrainingsOrInfo>(
                         thumbColor: FitnessColors.white,
                         groupValue: state,
                         children: <TrainingsOrInfo, Widget>{
                           TrainingsOrInfo.trainings: Text(LocaleKeys
                               .client_profile_page_trainings_title
                               .tr()),
-                          TrainingsOrInfo.info: Text(LocaleKeys
-                              .client_profile_page_info_slider
-                              .tr()),
+                          TrainingsOrInfo.info: Text(
+                              LocaleKeys.client_profile_page_info_slider.tr()),
                         },
                         onValueChanged: (value) {
                           context

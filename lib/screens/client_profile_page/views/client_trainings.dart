@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trainings/bloc/new_training_cubit/new_training_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/common_widgets/filled_button.dart';
@@ -12,7 +14,6 @@ List<Training> _trainings = [
     id: 0,
     title: 'Training Name',
     description: 'Comment about',
-    date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
@@ -20,7 +21,6 @@ List<Training> _trainings = [
     id: 1,
     title: 'Training Name',
     description: 'Comment about',
-    date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
@@ -28,7 +28,6 @@ List<Training> _trainings = [
     id: 2,
     title: 'Training Name',
     description: 'Comment about',
-    date: DateTime.now(),
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   ),
@@ -89,9 +88,11 @@ class ClientTrainings extends StatelessWidget {
                           .client_profile_page_trainings_new_training
                           .tr()
                           .toUpperCase(),
-                      onPressed: () =>
-                          Navigator.of(context, rootNavigator: true)
-                              .pushNamed(NewTrainingPage.route),
+                      onPressed: () {
+                        context.read<NewTrainingCubit>().changeMode(NewTrainingMode());
+                        Navigator.of(context, rootNavigator: true)
+                              .pushNamed(NewTrainingPage.route);
+                      },
                     ),
                   ],
                 ),

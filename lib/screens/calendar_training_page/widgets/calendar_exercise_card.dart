@@ -2,8 +2,47 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
+import 'package:trainings/models/exercise_set.dart';
+import 'package:trainings/models/series.dart';
 import 'package:trainings/screens/calendar_training_page/widgets/double_picker.dart';
 import 'package:trainings/screens/calendar_training_page/widgets/set_card.dart';
+import 'package:uuid/uuid.dart';
+
+List<ExerciseSet> setList = [
+  ExerciseSet(
+    id: 0,
+    series: [
+      Series(id: '0', effort: 20, quantity: 20),
+      Series(id: '0', effort: 20, quantity: 20),
+      Series(id: '0', effort: 20, quantity: 20),
+    ],
+    createdAt: DateTime.now(),
+  ),
+  ExerciseSet(
+    id: 1,
+    series: [
+      Series(id: '0', effort: 20, quantity: 20),
+      Series(id: '0', effort: 20, quantity: 20),
+      Series(id: '0', effort: 20, quantity: 20),
+    ],
+    createdAt: DateTime.now(),
+  ),
+  ExerciseSet(
+    id: 2,
+    series: [
+      Series(id: '0', effort: 20, quantity: 20),
+      Series(id: '0', effort: 20, quantity: 20),
+      Series(id: '0', effort: 20, quantity: 20),
+    ],
+    createdAt: DateTime.now(),
+  ),
+];
+
+ExerciseSet newExerciseSet = ExerciseSet(
+  id: setList.length,
+  createdAt: DateTime.now(),
+  series: [Series(id: "0", effort: 20, quantity: 10)],
+);
 
 class CalendarExerciseCard extends StatefulWidget {
   const CalendarExerciseCard({Key? key, required this.exercise})
@@ -23,6 +62,8 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
 
   late final AnimationController _controller;
   late final Animation<double> _expandCardAnimation;
+
+  String? selectedSeriesId = '0';
 
   @override
   void initState() {
@@ -48,24 +89,61 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
   todaySwitcher() {
     if (_todayCardActive) {
       return SetCard(
-        editable: true,
-        togglePicker: () {
+        addNewSeries: () {
+          Uuid id = const Uuid();
+          Series newSeries = Series(
+            id: id.v1(),
+            effort: 10,
+            quantity: 10,
+          );
+          newExerciseSet.series.add(newSeries);
           setState(() {
+            selectedSeriesId = newSeries.id;
+          });
+        },
+        changeSeriesId: ({String? seriesId}) {
+          setState(() {
+            selectedSeriesId = seriesId;
+          });
+        },
+        selectedSeriesId: selectedSeriesId,
+        editable: true,
+        togglePicker: ({required bool expanded}) {
+          setState(() {
+            _doublePickerExpanded = expanded;
+          });
+        },
+        removeSeriesById: (String id) {
+          Series series =
+              newExerciseSet.series.firstWhere((series) => series.id == id);
+          int seriesIndex = newExerciseSet.series.indexOf(series);
+          if (newExerciseSet.series.length <= 1) {
+            setState(() {
+              _todayCardActive = false;
+            });
+          } else {
+            setState(() {
+              newExerciseSet.series.removeAt(seriesIndex);
+            });
+          }
+        },
+        exerciseSet: newExerciseSet,
+      );
+    }
+    return SizedBox(
+      height: 160,
+      child: CupertinoButton(
+        onPressed: () {
+          setState(() {
+            _todayCardActive = true;
+            selectedSeriesId = '0';
             _doublePickerExpanded = !_doublePickerExpanded;
           });
         },
-      );
-    }
-    return CupertinoButton(
-      onPressed: () {
-        setState(() {
-          _todayCardActive = !_todayCardActive;
-          _doublePickerExpanded = !_doublePickerExpanded;
-        });
-      },
-      child: const Icon(
-        CupertinoIcons.add_circled_solid,
-        size: 32,
+        child: const Icon(
+          CupertinoIcons.add_circled_solid,
+          size: 32,
+        ),
       ),
     );
   }
@@ -108,7 +186,8 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                               child: Text(
                                 widget.exercise.description,
                                 style: TextStyle(
-                                    fontSize: 14, color: FitnessColors.darkGray),
+                                    fontSize: 14,
+                                    color: FitnessColors.darkGray),
                               ),
                             ),
                     ],
@@ -139,6 +218,7 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                   clipBehavior: Clip.none,
                   scrollDirection: Axis.horizontal,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AnimatedSwitcher(
                         switchInCurve: Curves.easeInOut,
@@ -151,13 +231,41 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                         },
                         child: todaySwitcher(),
                       ),
-                      const SetCard(),
-                      const SetCard(),
-                      const SetCard(),
+                      ...setList.map((exerciseSet) {
+                        return SetCard(
+                          exerciseSet: exerciseSet,
+                        );
+                      }).toList()
                     ],
                   ),
                 ),
-                DoublePicker(expanded: _doublePickerExpanded)
+                DoublePicker(
+                  expanded: _doublePickerExpanded,
+                  onEffortChanged: (int? index) {
+                    Series series = newExerciseSet.series
+                        .firstWhere((series) => series.id == selectedSeriesId);
+                    int seriesIndex = newExerciseSet.series.indexOf(series);
+                    setState(() {
+                      newExerciseSet.series[seriesIndex] = Series(
+                        id: series.id,
+                        effort: index!.toDouble(),
+                        quantity: series.quantity,
+                      );
+                    });
+                  },
+                  onQuantityChanged: (int? index) {
+                    Series series = newExerciseSet.series
+                        .firstWhere((series) => series.id == selectedSeriesId);
+                    int seriesIndex = newExerciseSet.series.indexOf(series);
+                    setState(() {
+                      newExerciseSet.series[seriesIndex] = Series(
+                        id: series.id,
+                        effort: series.effort,
+                        quantity: index! + 1,
+                      );
+                    });
+                  },
+                )
               ],
             ),
           ),

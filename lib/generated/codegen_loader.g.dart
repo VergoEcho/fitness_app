@@ -53,6 +53,14 @@ class CodegenLoader extends AssetLoader{
       "edit": "Edit Client",
       "new": "New Client"
     },
+    "error": {
+      "name": {
+        "title": "Error",
+        "description": "User name is empty",
+        "confirm": "Confirm",
+        "field": "Name cannot be blank"
+      }
+    },
     "save": "Save",
     "done": "Done",
     "name": "Name",
@@ -89,6 +97,14 @@ class CodegenLoader extends AssetLoader{
     }
   },
   "new_training_page": {
+    "error": {
+      "title": "Error",
+      "name": {
+        "description": "Training name is empty",
+        "field": "Training name cannot be blank",
+        "confirm": "Confirm"
+      }
+    },
     "title": "New Training",
     "name": "Training Name",
     "description": "Training description",
@@ -110,10 +126,22 @@ class CodegenLoader extends AssetLoader{
     }
   },
   "exercise_page": {
-    "title": "Exercise",
+    "title": {
+      "edit": "Exercise",
+      "new": "New Exercise"
+    },
     "edit": "Edit",
+    "save": "Save Exercise",
     "name": "Exercise Name",
     "description": "Exercise Description",
+    "error": {
+      "title": "Error",
+      "name": {
+        "description": "Exercise name is empty",
+        "field": "Exercise name cannot be blank",
+        "confirm": "Confirm"
+      }
+    },
     "units": {
       "title": "Select Units",
       "weight_reps": "Weight (kg)/Reps (times)",
@@ -122,7 +150,15 @@ class CodegenLoader extends AssetLoader{
       "custom": "Add custom"
     }
   },
-  "template_page": {
+  "new_template_page": {
+    "error": {
+      "title": "Error",
+      "name": {
+        "description": "Template name is empty",
+        "field": "Template name cannot be blank",
+        "confirm": "Confirm"
+      }
+    },
     "title": "New Template",
     "name": "Template Name",
     "description": "Template Description",
