@@ -57,7 +57,7 @@ class CalendarPage extends StatelessWidget {
               controller: controller,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 8, bottom: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -69,17 +69,22 @@ class CalendarPage extends StatelessWidget {
                         ),
                       ),
                       CupertinoButton(
-                        child: Icon(
-                          Icons.cancel,
-                          size: 32,
-                          color: FitnessColors.darkGray,
+                        padding: EdgeInsets.zero,
+                        child: CircleAvatar(
+                          backgroundColor: FitnessColors.whiteShaded,
+                          child: Icon(
+                            Icons.close,
+                            weight: 200,
+                            size: 24,
+                            color: FitnessColors.darkGray,
+                          ),
                         ),
                         onPressed: () => Navigator.pop(context),
                       )
                     ],
                   ),
                 ),
-                const Divider(),
+                const Divider(height: 0,),
                 BlocBuilder<CalendarPageCubit, CalendarPageState>(
                   builder: (context, state) {
                     return BaseCalendar(
@@ -88,6 +93,9 @@ class CalendarPage extends StatelessWidget {
                       },
                       focusedDay: state.selectedDay,
                       headerVisible: true,
+                      eventLoader: (date) {
+                        return _selectedClients(context, date);
+                      },
                     );
                   },
                 ),
@@ -167,9 +175,13 @@ class CalendarPage extends StatelessWidget {
                         onPressed: () => showModal(context),
                         child: Row(
                           children: [
-                            Text(DateFormat(
-                                    'MMMM, yyyy', context.locale.languageCode)
-                                .format(DateTime.now())),
+                            BlocBuilder<CalendarPageCubit, CalendarPageState>(
+                              builder: (context, state) {
+                                return Text(DateFormat('MMMM, yyyy',
+                                        context.locale.languageCode)
+                                    .format(state.selectedDay));
+                              },
+                            ),
                             const SizedBox(
                               width: 4,
                             ),
@@ -187,6 +199,9 @@ class CalendarPage extends StatelessWidget {
                         focusedDay: state.selectedDay,
                         onDaySelected: (newDate, oldDate) {
                           context.read<CalendarPageCubit>().selectDate(newDate);
+                        },
+                        eventLoader: (date) {
+                          return _selectedClients(context, date);
                         },
                       );
                     },

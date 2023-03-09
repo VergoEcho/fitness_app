@@ -26,7 +26,7 @@ class DayCard extends StatelessWidget {
             style: TextStyle(
                 color: time != null
                     ? FitnessColors.white
-                    : FitnessColors.blindGray,
+                    : FitnessColors.ghostGray,
                 fontWeight: FontWeight.w600,
                 fontSize: 14),
           ),

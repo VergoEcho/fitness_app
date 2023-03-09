@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
 import 'package:trainings/constants/colors.dart';
+import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/client.dart';
 import 'package:trainings/screens/client_profile_page/client_profile_page.dart';
 import 'package:trainings/common_widgets/base_calendar.dart';
@@ -49,22 +51,23 @@ class CurrentClientCard extends StatelessWidget {
                     Text(
                       client.name,
                       style: const TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    client.clientNote == ""
-                        ? const SizedBox()
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 2),
-                            child: Text(
-                              client.clientNote,
-                              style: TextStyle(
-                                  fontSize: 14, color: FitnessColors.darkGray),
-                            ),
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        '${LocaleKeys.client_profile_page_paid_till.tr()}: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${client.paidTrainings} ${LocaleKeys.client_profile_page_workouts.tr()})',
+                        style: TextStyle(
+                            fontSize: 16, color: FitnessColors.darkGray),
+                      ),
+                    ),
                     const Padding(
                       padding: EdgeInsets.only(top: 2.0),
-                      child: Text('10:00-10:45'),
+                      child: Text('10:00-10:45', style: TextStyle(
+                        fontSize: 16,
+                      ),),
                     ),
                   ],
                 ),
@@ -83,6 +86,7 @@ class CurrentClientCard extends StatelessWidget {
             ),
             const Divider(),
             const BaseCalendar(
+              oneLetter: true,
               monthCalendar: false,
             ),
           ],

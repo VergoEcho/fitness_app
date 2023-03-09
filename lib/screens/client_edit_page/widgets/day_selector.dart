@@ -35,7 +35,10 @@ class DaySelector extends StatelessWidget {
         return FitnessColors.white;
       }
     }
-    return FitnessColors.black;
+    if (time != null) {
+      return FitnessColors.black;
+    }
+    return FitnessColors.ghostGray;
   }
 
   @override

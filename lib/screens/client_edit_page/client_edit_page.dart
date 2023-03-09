@@ -45,12 +45,27 @@ class _ClientEditPageState extends State<ClientEditPage>
   late final Animation<double> _timeExpandAnimation;
   bool clientInitialized = false;
   String _selectedDay = '';
+  final ScrollController _scrollController = ScrollController();
 
   final _formKey = GlobalKey<FormState>();
 
   // void _initControllers () async {
   //   await _nameController.value = _nameController.value.copyWith(text: )
   // }
+
+  _closeExpanded() {
+    _birthdayExpanded = false;
+    _weightExpanded = false;
+    _timeExpanded = false;
+    _paidTrainingsExpanded = false;
+  }
+
+  _reversePickerControllers() {
+    _birthdayExpandController.reverse();
+    _weightExpandController.reverse();
+    _timeExpandController.reverse();
+    _paidExpandController.reverse();
+  }
 
   @override
   void dispose() {
@@ -181,41 +196,17 @@ class _ClientEditPageState extends State<ClientEditPage>
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
                   clientIsNew
-                      ? LocaleKeys.client_edit_page_save.tr()
-                      : LocaleKeys.client_edit_page_done.tr(),
+                      ? LocaleKeys.client_edit_page_done.tr()
+                      : LocaleKeys.client_edit_page_save.tr(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
                 ),
               ),
               onPressed: () {
-                _formKey.currentState!.validate();
-                if (_nameController.text.isEmpty) {
-                  showCupertinoDialog(
-                      context: context,
-                      builder: (context) {
-                        return CupertinoAlertDialog(
-                          title: Text(LocaleKeys
-                              .client_edit_page_error_name_title
-                              .tr()),
-                          content: Text(
-                            LocaleKeys.client_edit_page_error_name_description
-                                .tr(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                          actions: [
-                            CupertinoButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                LocaleKeys.client_edit_page_error_name_confirm
-                                    .tr(),
-                              ),
-                            )
-                          ],
-                        );
-                      });
-                } else {
+                bool valid = _formKey.currentState!.validate();
+                if (valid) {
                   // Validation passed
                   if (clientIsNew) {
                     // Client newClient = state.client.copyWith(
@@ -238,6 +229,7 @@ class _ClientEditPageState extends State<ClientEditPage>
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView(
+              controller: _scrollController,
               children: [
                 FieldTile(
                   validator: (String? text) {
@@ -270,9 +262,6 @@ class _ClientEditPageState extends State<ClientEditPage>
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: FitnessColors.white,
@@ -282,13 +271,18 @@ class _ClientEditPageState extends State<ClientEditPage>
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
+                          _scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
                           setState(() {
+                            _closeExpanded();
                             _birthdayExpanded = !_birthdayExpanded;
                           });
+                          _reversePickerControllers();
                           if (_birthdayExpanded) {
                             _birthdayExpandController.forward();
-                          } else {
-                            _birthdayExpandController.reverse();
                           }
                         },
                         child: Padding(
@@ -353,17 +347,24 @@ class _ClientEditPageState extends State<ClientEditPage>
                           ),
                         ),
                       ),
-                      const Divider(),
+                      const Divider(
+                        height: 0,
+                      ),
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
+                          _scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
                           setState(() {
+                            _closeExpanded();
                             _weightExpanded = !_weightExpanded;
                           });
+                          _reversePickerControllers();
                           if (_weightExpanded) {
                             _weightExpandController.forward();
-                          } else {
-                            _weightExpandController.reverse();
                           }
                         },
                         child: Padding(
@@ -540,13 +541,19 @@ class _ClientEditPageState extends State<ClientEditPage>
                               onPressed: _selectedDay == ''
                                   ? null
                                   : () {
+                                      _scrollController.animateTo(
+                                        240,
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
                                       setState(() {
+                                        _closeExpanded();
                                         _timeExpanded = !_timeExpanded;
                                       });
+                                      _reversePickerControllers();
                                       if (_timeExpanded) {
                                         _timeExpandController.forward();
-                                      } else {
-                                        _timeExpandController.reverse();
                                       }
                                     },
                               child: Text(
@@ -592,13 +599,18 @@ class _ClientEditPageState extends State<ClientEditPage>
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
+                            _scrollController.animateTo(
+                              280,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
                             setState(() {
+                              _closeExpanded();
                               _paidTrainingsExpanded = !_paidTrainingsExpanded;
                             });
+                            _reversePickerControllers();
                             if (_paidTrainingsExpanded) {
                               _paidExpandController.forward();
-                            } else {
-                              _paidExpandController.reverse();
                             }
                           },
                           child: Row(
@@ -667,7 +679,10 @@ class _ClientEditPageState extends State<ClientEditPage>
                       ],
                     ),
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 160,
+                ),
               ],
             ),
           ),

@@ -80,7 +80,6 @@ class Client extends Equatable {
     Map<String, TimeOfDay?>? trainingDays,
     int? paidTrainings,
   }) {
-    print(name);
     DateTime createdAt = creationDate ?? DateTime.now();
     DateTime updatedAt = updateDate ?? DateTime.now();
     return Client(

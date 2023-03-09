@@ -129,7 +129,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                             return state is NewTrainingMode
                                 ? LocaleKeys.new_training_page_error_name_field
                                     .tr()
-                                : LocaleKeys.new_template_page_error_name_field;
+                                : LocaleKeys.new_template_page_error_name_field.tr();
                           }
                           return null;
                         },
@@ -308,6 +308,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                           },
                         ),
                       ),
+                      const SizedBox(height: 160,),
                     ],
                   ),
                 ),
@@ -323,46 +324,8 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     onPressed: () {
-                      _formKey.currentState!.validate();
-                      if (_name.text.isEmpty) {
-                        showCupertinoDialog(
-                          context: context,
-                          builder: (context) {
-                            return CupertinoAlertDialog(
-                              title: Text(
-                                state is NewTrainingMode
-                                    ? LocaleKeys.new_training_page_error_title
-                                        .tr()
-                                    : LocaleKeys.new_template_page_error_title
-                                        .tr(),
-                              ),
-                              content: Text(
-                                state is NewTrainingMode
-                                    ? LocaleKeys
-                                        .new_training_page_error_name_description
-                                        .tr()
-                                    : LocaleKeys.new_template_page_error_name
-                                        .tr(),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                              actions: [
-                                CupertinoButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(
-                                    LocaleKeys
-                                        .new_training_page_error_name_confirm
-                                        .tr(),
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      } else {
+                      bool valid = _formKey.currentState!.validate();
+                      if (valid) {
                         Navigator.pop(context);
                       }
                     },
@@ -375,7 +338,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

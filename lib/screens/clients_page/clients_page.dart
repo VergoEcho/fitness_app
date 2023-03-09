@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/bloc/client_edit_cubit/client_edit_cubit.dart';
 import 'package:trainings/bloc/clients_cubit/clients_cubit.dart';
 import 'package:trainings/bloc/clients_page_bloc/clients_page_bloc.dart';
@@ -78,7 +79,11 @@ class ClientsPage extends StatelessWidget {
                             CupertinoButton(
                               padding: const EdgeInsets.symmetric(vertical: 0),
                               onPressed: () {},
-                              child: const Icon(CupertinoIcons.settings),
+                              child: SvgPicture.asset(
+                                'assets/images/cog.svg',
+                                height: 20,
+                                width: 20,
+                              ),
                             ),
                           ],
                         ),

@@ -23,7 +23,7 @@ List<Client> _clients = [
       "sunday": null,
     },
     weight: 80,
-    paidTrainings: 5
+    paidTrainings: 5,
   ),
   Client(
     id: 1,
@@ -42,6 +42,7 @@ List<Client> _clients = [
       "sunday": null,
     },
     weight: 75,
+    paidTrainings: 2
   ),
   Client(
     id: 2,
@@ -60,6 +61,7 @@ List<Client> _clients = [
     },
     clientGoal: "Clients goal here",
     clientNote: "Comment About",
+    paidTrainings: 12,
   ),
   Client(
     id: 2,

@@ -44,35 +44,8 @@ class _ExercisePageState extends State<ExercisePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _submitForm() {
-    _formKey.currentState!.validate();
-    if (_name.text.isEmpty) {
-      showCupertinoDialog(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: Text(
-              LocaleKeys.exercise_page_error_title.tr(),
-            ),
-            content: Text(
-              LocaleKeys.exercise_page_error_name_description.tr(),
-              style: const TextStyle(
-                fontSize: 14,
-              ),
-            ),
-            actions: [
-              CupertinoButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  LocaleKeys.exercise_page_error_name_confirm.tr(),
-                ),
-              )
-            ],
-          );
-        },
-      );
-    } else {
+    bool valid = _formKey.currentState!.validate();
+    if (valid) {
       Navigator.pop(context, _templateExercise);
     }
   }

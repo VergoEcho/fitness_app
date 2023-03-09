@@ -9,25 +9,29 @@ class BaseCalendar extends StatefulWidget {
       this.monthCalendar = true,
       this.headerVisible = false,
       this.focusedDay,
-      this.onDaySelected})
+      this.onDaySelected,
+      this.oneLetter = false,
+      this.eventLoader})
       : super(key: key);
 
   final bool headerVisible;
   final bool monthCalendar;
   final DateTime? focusedDay;
   final Function(DateTime oldDate, DateTime newDate)? onDaySelected;
+  final bool oneLetter;
+  final List<dynamic> Function(DateTime)? eventLoader;
 
   @override
   State<BaseCalendar> createState() => _BaseCalendarState();
 }
 
 class _BaseCalendarState extends State<BaseCalendar> {
-
   late PageController pageController;
 
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
+      eventLoader: widget.eventLoader,
       onCalendarCreated: (controller) {
         pageController = controller;
       },
@@ -35,8 +39,8 @@ class _BaseCalendarState extends State<BaseCalendar> {
       rowHeight: 64,
       locale: context.locale.languageCode,
       // availableGestures: AvailableGestures.none,
-      firstDay: DateTime.now().subtract(const Duration(days: 365*5)),
-      lastDay: DateTime.now().add(const Duration(days: 365*10)),
+      firstDay: DateTime.now().subtract(const Duration(days: 365 * 5)),
+      lastDay: DateTime.now().add(const Duration(days: 365 * 10)),
       focusedDay: widget.focusedDay ?? DateTime.now(),
       selectedDayPredicate: (day) => isSameDay(widget.focusedDay, day),
       headerVisible: widget.headerVisible,
@@ -44,9 +48,45 @@ class _BaseCalendarState extends State<BaseCalendar> {
           widget.monthCalendar ? CalendarFormat.month : CalendarFormat.week,
       startingDayOfWeek: StartingDayOfWeek.monday,
       calendarBuilders: CalendarBuilders(
+        // singleMarkerBuilder: (context, date, client) {
+        //   return Container(
+        //     margin: const EdgeInsets.only(left: 2, right: 2, top: 20),
+        //     height: 4,
+        //     width: 4,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       color: FitnessColors.violet,
+        //     ),
+        //   );
+        // },
+        markerBuilder: (context, date, list) {
+          List<Widget> markers = [];
+          int index = 0;
+          for (var _ in list) {
+            if (index == 3) break;
+            markers.add(
+              Container(
+                margin: const EdgeInsets.only(left: 2, right: 2),
+                height: 4,
+                width: 4,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:  index == 0 ? FitnessColors.violet : index == 1 ? FitnessColors.orange : FitnessColors.green,
+                ),
+              ),
+            );
+            index++;
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: markers,
+          );
+        },
         headerTitleBuilder: (context, date) {
           return Padding(
-            padding: const EdgeInsets.only(left: 14, bottom: 8),
+            padding: const EdgeInsets.only(
+              left: 14,
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -62,13 +102,17 @@ class _BaseCalendarState extends State<BaseCalendar> {
                 ),
                 CupertinoButton(
                   onPressed: () {
-                    pageController.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                    pageController.previousPage(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut);
                   },
                   child: const Icon(CupertinoIcons.chevron_back),
                 ),
                 CupertinoButton(
                   onPressed: () {
-                    pageController.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+                    pageController.nextPage(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut);
                   },
                   child: const Icon(CupertinoIcons.chevron_forward),
                 ),
@@ -83,13 +127,19 @@ class _BaseCalendarState extends State<BaseCalendar> {
         formatButtonVisible: false,
       ),
       daysOfWeekStyle: DaysOfWeekStyle(
+        dowTextFormatter: (DateTime date, dynamic locale) {
+          return DateFormat('E', context.locale.languageCode)
+              .format(date)
+              .toUpperCase()
+              .substring(0, widget.oneLetter ? 1 : 3);
+        },
         weekdayStyle: TextStyle(
-          fontSize: 16,
-          color: FitnessColors.darkGray,
+          fontSize: 12,
+          color: FitnessColors.ghostGray,
         ),
         weekendStyle: TextStyle(
-          fontSize: 16,
-          color: FitnessColors.darkGray,
+          fontSize: 12,
+          color: FitnessColors.ghostGray,
         ),
       ),
       calendarStyle: CalendarStyle(
@@ -105,7 +155,7 @@ class _BaseCalendarState extends State<BaseCalendar> {
         weekendTextStyle: const TextStyle(
           fontSize: 16,
         ),
-        cellMargin: const EdgeInsets.only(top: 16),
+        cellMargin: const EdgeInsets.only(top: 10, bottom: 10),
         todayDecoration: BoxDecoration(
           color: CupertinoTheme.of(context).primaryColor,
           shape: BoxShape.circle,
