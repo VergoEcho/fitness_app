@@ -34,7 +34,6 @@ class FieldTile extends StatelessWidget {
           ),
           Form(
             key: formKey,
-            autovalidateMode: AutovalidateMode.always,
             child: CupertinoTextFormFieldRow(scrollPadding: EdgeInsets.zero,
               onChanged: onChanged,
               controller: controller,
