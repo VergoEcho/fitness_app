@@ -23,6 +23,7 @@ abstract class  LocaleKeys {
   static const calendar_training_page_client_name = 'calendar_training_page.client_name';
   static const calendar_training_page_training_name = 'calendar_training_page.training_name';
   static const calendar_training_page_training_notes = 'calendar_training_page.training_notes';
+  static const calendar_training_page_today = 'calendar_training_page.today';
   static const calendar_training_page = 'calendar_training_page';
   static const clients_page_title = 'clients_page.title';
   static const clients_page_new_client = 'clients_page.new_client';
@@ -91,6 +92,7 @@ abstract class  LocaleKeys {
   static const trainings_page_exercises = 'trainings_page.exercises';
   static const trainings_page_search_templates = 'trainings_page.search.templates';
   static const trainings_page_search_exercises = 'trainings_page.search.exercises';
+  static const trainings_page_search_cancel = 'trainings_page.search.cancel';
   static const trainings_page_search = 'trainings_page.search';
   static const trainings_page = 'trainings_page';
   static const exercise_page_title_edit = 'exercise_page.title.edit';
@@ -130,6 +132,8 @@ abstract class  LocaleKeys {
   static const new_template_page = 'new_template_page';
   static const search_exercise_page_title = 'search_exercise_page.title';
   static const search_exercise_page_add = 'search_exercise_page.add';
+  static const search_exercise_page_new_exercise = 'search_exercise_page.new_exercise';
+  static const search_exercise_page_no_exercise_label = 'search_exercise_page.no_exercise_label';
   static const search_exercise_page = 'search_exercise_page';
 
 }

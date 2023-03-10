@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
+import 'package:trainings/bloc/search_cubit/search_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/common_widgets/filled_button.dart';
@@ -15,7 +16,7 @@ class CalendarTrainingPage extends StatelessWidget {
 
   static const route = '/calendar/training';
 
-  String _getDate (BuildContext context) {
+  String _getDate(BuildContext context) {
     DateTime selectedDate = context.read<CalendarPageCubit>().state.selectedDay;
     return DateFormat('dd.MM.yy', context.locale.languageCode)
         .format(selectedDate)
@@ -90,8 +91,10 @@ class CalendarTrainingPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     LocaleKeys.calendar_training_page_training_notes.tr(),
-                    style:
-                        TextStyle(fontSize: 14, color: FitnessColors.blindGray),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: FitnessColors.blindGray,
+                    ),
                   ),
                 ),
               ],
@@ -105,14 +108,19 @@ class CalendarTrainingPage extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                        left: 8,
+                        left: 16,
                         top: 16,
                       ),
                       child: AppleFilledButton(
                         text:
                             LocaleKeys.calendar_training_page_new_exercise.tr(),
                         // onPressed: () {},
-                        onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(ExercisesSearchPage.route),
+                        onPressed: () =>
+                            Navigator.of(context, rootNavigator: true)
+                                .pushNamed(ExercisesSearchPage.route)
+                                .then((value) {
+                          context.read<SearchCubit>().clear();
+                        }),
                       ),
                     ),
                   ],

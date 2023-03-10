@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:trainings/constants/colors.dart';
 
 class DaySelector extends StatelessWidget {
-  const DaySelector(
-      {Key? key,
-      required this.onPressed,
-      required this.day,
-      this.time,
-      required this.selectedDay, required this.clearTime})
-      : super(key: key);
+  const DaySelector({
+    Key? key,
+    required this.onPressed,
+    required this.day,
+    this.time,
+    required this.selectedDay,
+    required this.clearTime,
+  }) : super(key: key);
 
   final VoidCallback onPressed;
   final VoidCallback clearTime;
@@ -20,11 +21,11 @@ class DaySelector extends StatelessWidget {
   Color? _containerColor() {
     if (selectedDay.length >= 3) {
       if (selectedDay.substring(0, 3) == day) {
-        return FitnessColors.primary;
+        return FitnessColors.whiteShaded;
       }
     }
     if (time != null) {
-      return FitnessColors.whiteShaded;
+      return FitnessColors.primary;
     }
     return null;
   }
@@ -32,13 +33,37 @@ class DaySelector extends StatelessWidget {
   Color? _textColor() {
     if (selectedDay.length >= 3) {
       if (selectedDay.substring(0, 3) == day) {
-        return FitnessColors.white;
+        return FitnessColors.black;
       }
     }
     if (time != null) {
-      return FitnessColors.black;
+      return FitnessColors.white;
     }
     return FitnessColors.ghostGray;
+  }
+
+  Widget _getMinus() {
+    if (selectedDay.length >= 3) {
+      if (selectedDay.substring(0, 3) == day && time != null) {
+        return Positioned(
+          right: -8,
+          top: -12,
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: CupertinoButton(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+              onPressed: clearTime,
+              child: Icon(
+                CupertinoIcons.minus_circle_fill,
+                color: FitnessColors.red,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    return const SizedBox();
   }
 
   @override
@@ -66,24 +91,7 @@ class DaySelector extends StatelessWidget {
             ),
           ),
         ),
-        time != null
-            ? Positioned(
-                right: -8,
-                top: -12,
-                child: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: CupertinoButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                    onPressed: clearTime,
-                    child: Icon(
-                      CupertinoIcons.minus_circle_fill,
-                      color: FitnessColors.red,
-                    ),
-                  ),
-                ),
-              )
-            : const SizedBox(),
+        _getMinus(),
       ],
     );
   }

@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
@@ -26,24 +25,20 @@ class ClientInfo extends StatelessWidget {
                   children: [
                     ClientInfoBadge(
                         value: state.client!.weight.floor().toString(),
-                        label:
-                            LocaleKeys.client_profile_page_info_weight.tr(),
-                        color: FitnessColors.green),
+                        label: LocaleKeys.client_profile_page_info_weight.tr(),
+                        color: FitnessColors.darkGreen),
                     const SizedBox(width: 8),
                     ClientInfoBadge(
-
                       value: DateFormat('dd.MM.yy', context.locale.languageCode)
                           .format(state.client!.birthday)
                           .toString(),
-                      label:
-                          LocaleKeys.client_profile_page_info_birthday.tr(),
+                      label: LocaleKeys.client_profile_page_info_birthday.tr(),
                       color: FitnessColors.violet,
                     ),
                     const SizedBox(width: 8),
                     ClientInfoBadge(
                       value: state.client!.paidTrainings.toString(),
-                      label:
-                          LocaleKeys.client_profile_page_info_training.tr(),
+                      label: LocaleKeys.client_profile_page_info_training.tr(),
                       color: FitnessColors.orange,
                     ),
                   ],
@@ -65,7 +60,13 @@ class ClientInfo extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: Implement archivation of a client
+                    // context
+                    //     .read<ClientsCubit>()
+                    //     .archiveClient(state.client!.id);
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     backgroundColor: FitnessColors.whiteShaded,

@@ -136,9 +136,9 @@ class _ExercisePageState extends State<ExercisePage> {
                         padding:
                             const EdgeInsets.only(top: 24, right: 16, left: 16),
                         child: Text(
-                          LocaleKeys.exercise_page_units_title.tr(),
+                          LocaleKeys.exercise_page_units_title.tr().toUpperCase(),
                           style: TextStyle(
-                              fontSize: 16, color: FitnessColors.blindGray),
+                              fontSize: 12, color: FitnessColors.blindGray),
                         ),
                       ),
                       Container(
@@ -174,7 +174,7 @@ class _ExercisePageState extends State<ExercisePage> {
                     ],
                   ),
                 ),
-                Padding(
+                state is ExerciseEditMode ? const SizedBox() : Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(

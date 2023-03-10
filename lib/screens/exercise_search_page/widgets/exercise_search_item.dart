@@ -23,8 +23,8 @@ class ExerciseSearchItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(
           top: 16,
-          left: 8,
-          right: 8,
+          left: 16,
+          right: 16,
         ),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

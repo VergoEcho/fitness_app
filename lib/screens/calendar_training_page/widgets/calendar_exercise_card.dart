@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
 import 'package:trainings/models/exercise_set.dart';
@@ -88,61 +89,67 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
 
   todaySwitcher() {
     if (_todayCardActive) {
-      return SetCard(
-        addNewSeries: () {
-          Uuid id = const Uuid();
-          Series newSeries = Series(
-            id: id.v1(),
-            effort: 10,
-            quantity: 10,
-          );
-          newExerciseSet.series.add(newSeries);
-          setState(() {
-            selectedSeriesId = newSeries.id;
-          });
-        },
-        changeSeriesId: ({String? seriesId}) {
-          setState(() {
-            selectedSeriesId = seriesId;
-          });
-        },
-        selectedSeriesId: selectedSeriesId,
-        editable: true,
-        togglePicker: ({required bool expanded}) {
-          setState(() {
-            _doublePickerExpanded = expanded;
-          });
-        },
-        removeSeriesById: (String id) {
-          Series series =
-              newExerciseSet.series.firstWhere((series) => series.id == id);
-          int seriesIndex = newExerciseSet.series.indexOf(series);
-          if (newExerciseSet.series.length <= 1) {
+      return Padding(
+        padding: const EdgeInsets.only(left: 16.0),
+        child: SetCard(
+          addNewSeries: () {
+            Uuid id = const Uuid();
+            Series newSeries = Series(
+              id: id.v1(),
+              effort: 10,
+              quantity: 10,
+            );
+            newExerciseSet.series.add(newSeries);
             setState(() {
-              _todayCardActive = false;
+              selectedSeriesId = newSeries.id;
             });
-          } else {
+          },
+          changeSeriesId: ({String? seriesId}) {
             setState(() {
-              newExerciseSet.series.removeAt(seriesIndex);
+              selectedSeriesId = seriesId;
             });
-          }
-        },
-        exerciseSet: newExerciseSet,
+          },
+          selectedSeriesId: selectedSeriesId,
+          editable: true,
+          togglePicker: ({required bool expanded}) {
+            setState(() {
+              _doublePickerExpanded = expanded;
+            });
+          },
+          removeSeriesById: (String id) {
+            Series series =
+                newExerciseSet.series.firstWhere((series) => series.id == id);
+            int seriesIndex = newExerciseSet.series.indexOf(series);
+            if (newExerciseSet.series.length <= 1) {
+              setState(() {
+                _todayCardActive = false;
+              });
+            } else {
+              setState(() {
+                newExerciseSet.series.removeAt(seriesIndex);
+              });
+            }
+          },
+          exerciseSet: newExerciseSet,
+        ),
       );
     }
     return SizedBox(
       height: 160,
-      child: CupertinoButton(
-        onPressed: () {
-          setState(() {
-            _todayCardActive = true;
-            selectedSeriesId = '0';
-            _doublePickerExpanded = !_doublePickerExpanded;
-          });
-        },
-        child: const Icon(
-          CupertinoIcons.add_circled_solid,
-          size: 32,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: CupertinoButton(
+          onPressed: () {
+            setState(() {
+              _todayCardActive = true;
+              selectedSeriesId = '0';
+              _doublePickerExpanded = !_doublePickerExpanded;
+            });
+          },
+          child: const Icon(
+            CupertinoIcons.add_circled_solid,
+            size: 32,
+          ),
         ),
       ),
     );
@@ -151,8 +158,8 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
         color: FitnessColors.white,
         borderRadius: BorderRadius.circular(13),
@@ -169,44 +176,48 @@ class _CalendarExerciseCardState extends State<CalendarExerciseCard>
                 _controller.forward();
               } else {
                 _controller.reverse();
-                _doublePickerExpanded = false;
+                // _doublePickerExpanded = false;
               }
             },
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(widget.exercise.title),
-                      widget.exercise.description == ""
-                          ? const SizedBox()
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 2),
-                              child: Text(
-                                widget.exercise.description,
-                                style: TextStyle(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.exercise.title),
+                        widget.exercise.description == ""
+                            ? const SizedBox()
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 2),
+                                child: Text(
+                                  widget.exercise.description,
+                                  style: TextStyle(
                                     fontSize: 14,
-                                    color: FitnessColors.darkGray),
+                                    color: FitnessColors.blindGray,
+                                  ),
+                                ),
                               ),
-                            ),
-                    ],
-                  ),
-                ),
-                CupertinoButton(
-                  onPressed: null,
-                  child: AnimatedRotation(
-                    turns: _expanded ? .25 : 0,
-                    curve: Curves.easeInOut,
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: FitnessColors.darkGray,
-                      size: 16,
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  CupertinoButton(
+                    onPressed: null,
+                    child: AnimatedRotation(
+                      turns: _expanded ? .25 : 0,
+                      curve: Curves.easeInOut,
+                      duration: const Duration(milliseconds: 200),
+                      child: SvgPicture.asset(
+                        'assets/images/chevron-forward.svg',
+                        height: 16,
+                        width: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           SizeTransition(

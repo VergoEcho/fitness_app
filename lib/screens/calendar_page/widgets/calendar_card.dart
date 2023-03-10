@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/bloc/calendar_page_cubit/calendar_page_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/client.dart';
@@ -31,8 +32,8 @@ class CalendarCard extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+        padding: const EdgeInsets.only(top:16, bottom: 16, left: 16),
         decoration: BoxDecoration(
           color: FitnessColors.white,
           borderRadius: BorderRadius.circular(13),
@@ -69,10 +70,10 @@ class CalendarCard extends StatelessWidget {
             ),
             CupertinoButton(
               onPressed: null,
-              child: Icon(
-                Icons.arrow_forward_ios,
-                color: FitnessColors.darkGray,
-                size: 16,
+              child: SvgPicture.asset(
+                'assets/images/chevron-forward.svg',
+                height: 16,
+                width: 16,
               ),
             ),
           ],

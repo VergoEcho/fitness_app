@@ -40,7 +40,8 @@ class CodegenLoader extends AssetLoader{
     "new_exercise": "New Exercise",
     "client_name": "Client Name",
     "training_name": "Training Name",
-    "training_notes": "Training notes about something can be that long or shot or"
+    "training_notes": "Training notes about something can be that long or shot or",
+    "today": "Today"
   },
   "clients_page": {
     "title": "Clients",
@@ -122,7 +123,8 @@ class CodegenLoader extends AssetLoader{
     "exercises": "Exercises",
     "search": {
       "templates": "Templates",
-      "exercises": "Exercises"
+      "exercises": "Exercises",
+      "cancel": "Cancel"
     }
   },
   "exercise_page": {
@@ -171,7 +173,9 @@ class CodegenLoader extends AssetLoader{
   },
   "search_exercise_page": {
     "title": "Exercises",
-    "add": "Add Exercise"
+    "add": "Add Exercise",
+    "new_exercise": "New Exercise",
+    "no_exercise_label": "Looks like there is no exercise you are looking for. Create a new one?"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en};

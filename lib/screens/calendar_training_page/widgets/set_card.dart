@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:trainings/constants/colors.dart';
+import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/exercise_set.dart';
 import 'package:trainings/models/series.dart';
 
@@ -49,23 +50,26 @@ class _SetCardState extends State<SetCard> {
                 ),
                 margin: const EdgeInsets.only(left: 8, right: 8),
                 child: SizedBox(
-                  height: 24,
+                  height: 22,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: widget.selectedSeriesId == series.id
-                            ? () {
-                                widget.removeSeriesById!(series.id);
-                                widget.togglePicker!(expanded: false);
-                              }
-                            : null,
-                        child: Icon(
-                          CupertinoIcons.minus_circle_fill,
-                          color: widget.selectedSeriesId == series.id
-                              ? FitnessColors.red
-                              : FitnessColors.red.withOpacity(0),
+                      SizedBox(
+                        width: 32,
+                        child: CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: widget.selectedSeriesId == series.id
+                              ? () {
+                                  widget.removeSeriesById!(series.id);
+                                  widget.togglePicker!(expanded: false);
+                                }
+                              : null,
+                          child: Icon(
+                            CupertinoIcons.minus_circle_fill,
+                            color: widget.selectedSeriesId == series.id
+                                ? FitnessColors.red
+                                : FitnessColors.red.withOpacity(0),
+                          ),
                         ),
                       ),
                       CupertinoButton(
@@ -82,7 +86,8 @@ class _SetCardState extends State<SetCard> {
                         child: Text(
                           '${series.effort.toString().replaceAll(regex, '')} kg x ${series.quantity} Reps',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
                             color: widget.selectedSeriesId == series.id
                                 ? FitnessColors.black
                                 : null,
@@ -95,10 +100,14 @@ class _SetCardState extends State<SetCard> {
               )
             : Padding(
                 padding: const EdgeInsets.only(
-                    right: 16, left: 16, top: 8.0, bottom: 4),
+                    right: 16, left: 16, top: 8.0, bottom: 5),
                 child: Text(
-                    '${series.effort.toString().replaceAll(regex, '')} kg x ${series.quantity} Reps',
-                    style: const TextStyle(fontSize: 16)),
+                  '${series.effort.toString().replaceAll(regex, '')} kg x ${series.quantity} Reps',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
       );
     }
@@ -124,9 +133,8 @@ class _SetCardState extends State<SetCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               ..._getSeriesRows(),
-              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -139,9 +147,13 @@ class _SetCardState extends State<SetCard> {
                 color: FitnessColors.primary,
                 borderRadius: BorderRadius.circular(100)),
             child: Text(
-              DateFormat('dd.MM.yy', context.locale.languageCode)
-                  .format(DateTime.now()),
+              widget.editable
+                  ? LocaleKeys.calendar_training_page_today.tr().toUpperCase()
+                  : DateFormat('dd.MM.yy', context.locale.languageCode)
+                      .format(DateTime.now()),
               style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
                 color: FitnessColors.white,
               ),
             ),
@@ -171,7 +183,7 @@ class _SetCardState extends State<SetCard> {
                         )
                       : Icon(
                           CupertinoIcons.checkmark_alt_circle_fill,
-                          color: FitnessColors.green,
+                          color: FitnessColors.lightGreen,
                           size: 32,
                         ),
                 ),

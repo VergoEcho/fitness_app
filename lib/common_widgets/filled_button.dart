@@ -13,12 +13,12 @@ class AppleFilledButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(100),
       padding: const EdgeInsets.symmetric(
           horizontal: 16, vertical: 4),
-      minSize: 32,
+      minSize: 28,
       onPressed: onPressed,
       child: Text(
         text.toUpperCase(),
         style: TextStyle(
-          fontFamily: 'SF Pro Display',
+          fontSize: 16,
           fontWeight: FontWeight.w600,
           color: FitnessColors.white,
         ),

@@ -71,7 +71,7 @@ class _BaseCalendarState extends State<BaseCalendar> {
                 width: 4,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:  index == 0 ? FitnessColors.violet : index == 1 ? FitnessColors.orange : FitnessColors.green,
+                  color:  index == 0 ? FitnessColors.violet : index == 1 ? FitnessColors.orange : FitnessColors.lightGreen,
                 ),
               ),
             );

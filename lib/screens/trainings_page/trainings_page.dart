@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/exercise_edit_cubit/exercise_edit_cubit.dart';
 import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/bloc/new_training_cubit/new_training_cubit.dart';
+import 'package:trainings/bloc/search_cubit/search_cubit.dart';
+import 'package:trainings/bloc/trainings_cubit/trainings_cubit.dart';
 import 'package:trainings/bloc/trainings_page_bloc/training_page_bloc.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
@@ -13,32 +15,9 @@ import 'package:trainings/screens/exercise_page/exercise_page.dart';
 import 'package:trainings/screens/new_training_page/new_training_page.dart';
 import 'package:trainings/screens/trainings_page/widgets/exercise_card.dart';
 import 'package:trainings/screens/trainings_page/widgets/training_template_card.dart';
+import 'package:trainings/screens/trainings_search.dart';
 
 import '../../models/exercise.dart';
-
-List<Training> _templates = [
-  Training(
-    id: 0,
-    title: 'Template Name',
-    description: 'Description here',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-  Training(
-    id: 1,
-    title: 'Template Name',
-    description: 'Description here',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-  Training(
-    id: 2,
-    title: 'Template Name',
-    description: 'Description here',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-];
 
 class TrainingsPage extends StatelessWidget {
   const TrainingsPage({Key? key}) : super(key: key);
@@ -78,7 +57,9 @@ class TrainingsPage extends StatelessWidget {
                             .tr()
                             .toUpperCase(),
                         onPressed: () {
-                          context.read<NewTrainingCubit>().changeMode(NewTemplateMode());
+                          context
+                              .read<NewTrainingCubit>()
+                              .changeMode(NewTemplateMode());
                           Navigator.of(context, rootNavigator: true)
                               .pushNamed(NewTrainingPage.route);
                         },
@@ -86,17 +67,29 @@ class TrainingsPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  CupertinoSearchTextField(
-                    style: TextStyle(
-                      color: FitnessColors.darkGray,
-                    ),
-                    prefixIcon: Icon(
-                      CupertinoIcons.search,
-                      color: FitnessColors.darkGray,
-                    ),
-                    suffixIcon: Icon(
-                      CupertinoIcons.xmark_circle_fill,
-                      color: FitnessColors.darkGray,
+                  Hero(
+                    tag: 'trainings_search',
+                    child: CupertinoSearchTextField(
+                      style: TextStyle(
+                        color: FitnessColors.darkGray,
+                      ),
+                      prefixIcon: Icon(
+                        CupertinoIcons.search,
+                        color: FitnessColors.darkGray,
+                      ),
+                      suffixIcon: Icon(
+                        CupertinoIcons.mic_solid,
+                        color: FitnessColors.blindGray,
+                      ),
+                      suffixMode: OverlayVisibilityMode.always,
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true)
+                            .pushNamed(TrainingsSearchPage.route)
+                            .then(
+                              (value) => context.read<SearchCubit>().clear(),
+                            );
+                      },
+                      onSuffixTap: () {},
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -132,7 +125,7 @@ class TrainingsPage extends StatelessWidget {
                 builder: (context, state) {
                   List selectedList() {
                     if (state == TemplateOrExercise.template) {
-                      return _templates;
+                      return context.read<TrainingsCubit>().state.trainings;
                     }
                     return context.read<ExercisesCubit>().state.exercises;
                   }
@@ -143,18 +136,27 @@ class TrainingsPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       if (state == TemplateOrExercise.template) {
                         Training item = selectedList()[index];
-                        return TrainingTemplateCard(
-                          template: item,
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 16.0, left: 16, right: 16),
+                          child: TrainingTemplateCard(
+                            template: item,
+                          ),
                         );
                       }
                       Exercise item = selectedList()[index];
-                      return ExerciseCard(
-                        exercise: item,
-                        onTap: () {
-                          context.read<ExerciseEditCubit>().changeMode(ExerciseEditMode());
-                          Navigator.of(context, rootNavigator: true)
-                            .pushNamed(ExercisePage.route);
-                        },
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: ExerciseCard(
+                          exercise: item,
+                          onTap: () {
+                            context
+                                .read<ExerciseEditCubit>()
+                                .changeMode(ExerciseEditMode());
+                            Navigator.of(context, rootNavigator: true)
+                                .pushNamed(ExercisePage.route);
+                          },
+                        ),
                       );
                     },
                   );

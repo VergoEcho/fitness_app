@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
 
@@ -45,7 +45,9 @@ class ExerciseCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(exercise.title),
+                Text(exercise.title, style: const TextStyle(
+                  fontSize: 16,
+                ),),
                 const SizedBox(height: 2),
                 exercise.description == ""
                     ? const SizedBox()
@@ -55,7 +57,7 @@ class ExerciseCard extends StatelessWidget {
                           exercise.description,
                           style: TextStyle(
                             fontSize: 14,
-                            color: FitnessColors.darkGray,
+                            color: FitnessColors.blindGray,
                           ),
                         ),
                       ),
@@ -65,11 +67,11 @@ class ExerciseCard extends StatelessWidget {
                 ? const SizedBox()
                 : CupertinoButton(
                     onPressed: null,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: FitnessColors.darkGray,
-                      size: 16,
-                    ),
+                child: SvgPicture.asset(
+                  'assets/images/chevron-forward.svg',
+                  height: 16,
+                  width: 16,
+                ),
                   )
           ],
         ),

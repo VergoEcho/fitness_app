@@ -4,16 +4,15 @@ import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/client.dart';
 
 class ArchivedClientCard extends StatelessWidget {
-  const ArchivedClientCard({Key? key, required this.client})
-      : super(key: key);
+  const ArchivedClientCard({Key? key, required this.client}) : super(key: key);
 
   final Client client;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, left: 8, right: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
         color: FitnessColors.white,
         borderRadius: BorderRadius.circular(13),
@@ -21,23 +20,30 @@ class ArchivedClientCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(client.name, style: const TextStyle(
-                fontWeight: FontWeight.w600,
-              ),),
-              client.clientNote == ""
-                  ? const SizedBox()
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        client.clientNote,
-                        style: TextStyle(
-                            fontSize: 14, color: FitnessColors.blindGray),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  client.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                client.clientNote == ""
+                    ? const SizedBox()
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Text(
+                          client.clientNote,
+                          style: TextStyle(
+                              fontSize: 14, color: FitnessColors.blindGray),
+                        ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
           CupertinoButton(
             onPressed: () {},

@@ -38,7 +38,7 @@ class ClientsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 16, top: 32, right: 16),
+              padding: const EdgeInsets.only(top: 32),
               decoration: BoxDecoration(
                 color: FitnessColors.white,
                 borderRadius: const BorderRadius.all(
@@ -47,78 +47,84 @@ class ClientsPage extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          LocaleKeys.clients_page_title.tr(),
-                          style: const TextStyle(
-                            fontSize: 34,
-                            fontWeight: FontWeight.w700,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            LocaleKeys.clients_page_title.tr(),
+                            style: const TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AppleFilledButton(
-                              text: LocaleKeys.clients_page_new_client.tr(),
-                              onPressed: () =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pushNamed(ClientEditPage.route)
-                                      .then(
-                                        (_) => Future.delayed(
-                                          const Duration(milliseconds: 500),
-                                          () => context
-                                              .read<ClientEditCubit>()
-                                              .clear(),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AppleFilledButton(
+                                text: LocaleKeys.clients_page_new_client.tr(),
+                                onPressed: () =>
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pushNamed(ClientEditPage.route)
+                                        .then(
+                                          (_) => Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                            () => context
+                                                .read<ClientEditCubit>()
+                                                .clear(),
+                                          ),
                                         ),
-                                      ),
-                            ),
-                            CupertinoButton(
-                              padding: const EdgeInsets.symmetric(vertical: 0),
-                              onPressed: () {},
-                              child: SvgPicture.asset(
-                                'assets/images/cog.svg',
-                                height: 20,
-                                width: 20,
                               ),
-                            ),
-                          ],
+                              CupertinoButton(
+                                padding: const EdgeInsets.symmetric(vertical: 0),
+                                onPressed: () {},
+                                child: SvgPicture.asset(
+                                  'assets/images/cog.svg',
+                                  height: 20,
+                                  width: 20,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: BlocBuilder<ClientsPageBloc, ClientState>(
-                      builder: (context, state) {
-                        return CupertinoSlidingSegmentedControl<ClientState>(
-                          thumbColor: FitnessColors.white,
-                          groupValue: state,
-                          children: <ClientState, Widget>{
-                            ClientState.current: Text(
-                              '${LocaleKeys.clients_page_current.tr()} (${selectedClients(
-                                context: context,
-                                state: ClientState.current,
-                              ).length})',
-                            ),
-                            ClientState.archived: Text(
-                              '${LocaleKeys.clients_page_archive.tr()} (${selectedClients(
-                                context: context,
-                                state: ClientState.archived,
-                              ).length})',
-                            ),
-                          },
-                          onValueChanged: (value) {
-                            context
-                                .read<ClientsPageBloc>()
-                                .add(ClientsPageModeChanged(value!));
-                          },
-                        );
-                      },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: BlocBuilder<ClientsPageBloc, ClientState>(
+                        builder: (context, state) {
+                          return CupertinoSlidingSegmentedControl<ClientState>(
+                            thumbColor: FitnessColors.white,
+                            groupValue: state,
+                            children: <ClientState, Widget>{
+                              ClientState.current: Text(
+                                '${LocaleKeys.clients_page_current.tr()} (${selectedClients(
+                                  context: context,
+                                  state: ClientState.current,
+                                ).length})',
+                              ),
+                              ClientState.archived: Text(
+                                '${LocaleKeys.clients_page_archive.tr()} (${selectedClients(
+                                  context: context,
+                                  state: ClientState.archived,
+                                ).length})',
+                              ),
+                            },
+                            onValueChanged: (value) {
+                              context
+                                  .read<ClientsPageBloc>()
+                                  .add(ClientsPageModeChanged(value!));
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -126,22 +132,28 @@ class ClientsPage extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: BlocBuilder<ClientsPageBloc, ClientState>(
-                builder: (context, state) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount:
-                        selectedClients(context: context, state: state).length,
-                    itemBuilder: (context, index) {
-                      Client client = selectedClients(
-                          context: context, state: state)[index];
-                      if (state == ClientState.current) {
-                        return CurrentClientCard(client: client);
-                      }
-                      return ArchivedClientCard(client: client);
+              child: ListView(
+                children: [
+                  BlocBuilder<ClientsPageBloc, ClientState>(
+                    builder: (context, state) {
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount:
+                            selectedClients(context: context, state: state).length,
+                        itemBuilder: (context, index) {
+                          Client client = selectedClients(
+                              context: context, state: state)[index];
+                          if (state == ClientState.current) {
+                            return CurrentClientCard(client: client);
+                          }
+                          return ArchivedClientCard(client: client);
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                  const SizedBox(height: 80),
+                ],
               ),
             ),
           ],

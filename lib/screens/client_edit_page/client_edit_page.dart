@@ -44,14 +44,14 @@ class _ClientEditPageState extends State<ClientEditPage>
   late final AnimationController _timeExpandController;
   late final Animation<double> _timeExpandAnimation;
   bool clientInitialized = false;
-  String _selectedDay = '';
+  String selectedDay = '';
   final ScrollController _scrollController = ScrollController();
 
-  final _formKey = GlobalKey<FormState>();
+  late final AnimationController _selectedDayExpandController;
+  late final Animation<double> _selectedDayExpandAnimation;
 
-  // void _initControllers () async {
-  //   await _nameController.value = _nameController.value.copyWith(text: )
-  // }
+
+  final _formKey = GlobalKey<FormState>();
 
   _closeExpanded() {
     _birthdayExpanded = false;
@@ -74,10 +74,13 @@ class _ClientEditPageState extends State<ClientEditPage>
     _goalController.dispose();
     _noteController.dispose();
 
+    _scrollController.dispose();
+
     _birthdayExpandController.dispose();
     _weightExpandController.dispose();
     _timeExpandController.dispose();
     _paidExpandController.dispose();
+    _selectedDayExpandController.dispose();
     super.dispose();
   }
 
@@ -118,6 +121,16 @@ class _ClientEditPageState extends State<ClientEditPage>
       curve: Curves.fastOutSlowIn,
     );
 
+    _selectedDayExpandController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _selectedDayExpandAnimation = CurvedAnimation(
+      parent: _selectedDayExpandController,
+      curve: Curves.fastOutSlowIn,
+    );
+
     _paidExpandController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -132,7 +145,7 @@ class _ClientEditPageState extends State<ClientEditPage>
   }
 
   TimeOfDay _selectedDayTime(ClientEditState state) {
-    return state.client.trainingDays[_selectedDay] ?? _selectedTime;
+    return state.client.trainingDays[selectedDay] ?? _selectedTime;
   }
 
   String _selectedDayTimeString(ClientEditState state) {
@@ -268,6 +281,8 @@ class _ClientEditPageState extends State<ClientEditPage>
                   ),
                   child: Column(
                     children: [
+                      Column(
+                        children: [
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
@@ -325,27 +340,29 @@ class _ClientEditPageState extends State<ClientEditPage>
                           ),
                         ),
                       ),
-                      SizeTransition(
-                        sizeFactor: _birthdayExpandAnimation,
-                        child: SizedBox(
-                          height: 200,
-                          child: CupertinoDatePicker(
-                            initialDateTime: clientIsNew
-                                ? state.client.birthday
-                                : context
-                                    .read<SelectedClientCubit>()
-                                    .state
-                                    .client!
-                                    .birthday,
-                            dateOrder: DatePickerDateOrder.dmy,
-                            mode: CupertinoDatePickerMode.date,
-                            onDateTimeChanged: (DateTime value) {
-                              setState(() {
-                                _birthday = value;
-                              });
-                            },
+                          SizeTransition(
+                            sizeFactor: _birthdayExpandAnimation,
+                            child: SizedBox(
+                              height: 200,
+                              child: CupertinoDatePicker(
+                                initialDateTime: clientIsNew
+                                    ? state.client.birthday
+                                    : context
+                                        .read<SelectedClientCubit>()
+                                        .state
+                                        .client!
+                                        .birthday,
+                                dateOrder: DatePickerDateOrder.dmy,
+                                mode: CupertinoDatePickerMode.date,
+                                onDateTimeChanged: (DateTime value) {
+                                  setState(() {
+                                    _birthday = value;
+                                  });
+                                },
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                       const Divider(
                         height: 0,
@@ -505,66 +522,71 @@ class _ClientEditPageState extends State<ClientEditPage>
                           children:
                               state.client.trainingDays.entries.map((day) {
                             return DaySelector(
-                                clearTime: () {
-                                  Client client = state.client;
-                                  client.trainingDays[day.key] = null;
-                                  context
-                                      .read<ClientEditCubit>()
-                                      .update(client);
-                                },
-                                time: day.value,
-                                selectedDay: _selectedDay,
-                                onPressed: () {
-                                  setState(() {
-                                    _selectedDay = day.key;
-                                  });
-                                },
-                                day: day.key.substring(0, 3));
+                              clearTime: () {
+                                Client client = state.client;
+                                client.trainingDays[day.key] = null;
+                                context.read<ClientEditCubit>().update(client);
+                              },
+                              time: day.value,
+                              selectedDay: selectedDay,
+                              onPressed: () {
+                                if (selectedDay == '') {
+                                  _selectedDayExpandController.forward();
+                                }
+                                setState(() {
+                                  selectedDay = day.key;
+                                });
+                              },
+                              day: day.key.substring(0, 3),
+                            );
                           }).toList(),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              LocaleKeys.client_edit_page_time.tr(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                              ),
-                            ),
-                            CupertinoButton(
-                              padding: const EdgeInsets.all(8),
-                              color: FitnessColors.whiteShaded,
-                              onPressed: _selectedDay == ''
-                                  ? null
-                                  : () {
-                                      _scrollController.animateTo(
-                                        240,
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        curve: Curves.easeInOut,
-                                      );
-                                      setState(() {
-                                        _closeExpanded();
-                                        _timeExpanded = !_timeExpanded;
-                                      });
-                                      _reversePickerControllers();
-                                      if (_timeExpanded) {
-                                        _timeExpandController.forward();
-                                      }
-                                    },
-                              child: Text(
-                                _selectedDayTimeString(state),
-                                style: TextStyle(
-                                  color: FitnessColors.black,
+                      SizeTransition(
+                        sizeFactor: _selectedDayExpandAnimation,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                LocaleKeys.client_edit_page_time.tr(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 20,
                                 ),
                               ),
-                            ),
-                          ],
+                              CupertinoButton(
+                                padding: const EdgeInsets.all(8),
+                                color: FitnessColors.whiteShaded,
+                                onPressed: selectedDay == ''
+                                    ? null
+                                    : () {
+                                        _scrollController.animateTo(
+                                          160,
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          curve: Curves.easeInOut,
+                                        );
+                                        setState(() {
+                                          _closeExpanded();
+                                          _timeExpanded = !_timeExpanded;
+                                        });
+                                        _reversePickerControllers();
+                                        if (_timeExpanded) {
+                                          _timeExpandController.forward();
+                                        }
+                                      },
+                                child: Text(
+                                  _selectedDayTimeString(state),
+                                  style: TextStyle(
+                                    color: FitnessColors.black,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizeTransition(
@@ -576,7 +598,7 @@ class _ClientEditPageState extends State<ClientEditPage>
                             mode: CupertinoDatePickerMode.time,
                             onDateTimeChanged: (DateTime value) {
                               Client client = state.client;
-                              client.trainingDays[_selectedDay] =
+                              client.trainingDays[selectedDay] =
                                   TimeOfDay.fromDateTime(value);
                               context.read<ClientEditCubit>().update(client);
                             },
@@ -600,7 +622,7 @@ class _ClientEditPageState extends State<ClientEditPage>
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
                             _scrollController.animateTo(
-                              280,
+                              160,
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
                             );
@@ -681,7 +703,7 @@ class _ClientEditPageState extends State<ClientEditPage>
                   ),
                 ),
                 const SizedBox(
-                  height: 160,
+                  height: 80,
                 ),
               ],
             ),

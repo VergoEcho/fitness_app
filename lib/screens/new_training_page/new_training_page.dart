@@ -3,60 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/exercise_edit_cubit/exercise_edit_cubit.dart';
+import 'package:trainings/bloc/exercises_cubit/exercises_cubit.dart';
 import 'package:trainings/bloc/new_training_cubit/new_training_cubit.dart';
+import 'package:trainings/bloc/search_cubit/search_cubit.dart';
+import 'package:trainings/bloc/trainings_cubit/trainings_cubit.dart';
 import 'package:trainings/common_widgets/field_tile.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/models/exercise.dart';
-import 'package:trainings/models/training.dart';
 import 'package:trainings/screens/exercise_page/exercise_page.dart';
 import 'package:trainings/screens/exercise_search_page/exercises_search_page.dart';
 import 'package:trainings/screens/trainings_page/widgets/exercise_card.dart';
 
 import 'widgets/template_card.dart';
-
-List<Training> _trainings = [
-  Training(
-    id: 0,
-    title: 'Template Name',
-    description: 'Description here',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-  Training(
-    id: 1,
-    title: 'Template Name',
-    description: 'Description here',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-  Training(
-    id: 2,
-    title: 'Template Name',
-    description: 'Description here',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  ),
-];
-
-List<Exercise> _exercises = [
-  Exercise(
-    id: 0,
-    title: 'Exercise Name',
-    description: 'Distance (km)/Time (min)',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-  Exercise(
-    id: 1,
-    title: 'Exercise Name',
-    description: 'Distance (km)/Time (min)',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [],
-  ),
-];
 
 List<Exercise> _selectedExercises = [];
 
@@ -119,7 +78,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                           bottomRight: Radius.circular(24),
                           bottomLeft: Radius.circular(24))),
                   padding:
-                      const EdgeInsets.only(left: 16, right: 16, bottom: 32),
+                  const EdgeInsets.only(left: 16, right: 16, bottom: 32),
                   child: Column(
                     children: [
                       FieldTile(
@@ -128,8 +87,9 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                           if (text == null || text.isEmpty || text == '') {
                             return state is NewTrainingMode
                                 ? LocaleKeys.new_training_page_error_name_field
-                                    .tr()
-                                : LocaleKeys.new_template_page_error_name_field.tr();
+                                .tr()
+                                : LocaleKeys.new_template_page_error_name_field
+                                .tr();
                           }
                           return null;
                         },
@@ -158,7 +118,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            const EdgeInsets.symmetric(horizontal: 8.0),
                             child: ExerciseCard(
                               exercise: _selectedExercises[index],
                               selectable: true,
@@ -185,9 +145,9 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                             Text(
                               state is NewTrainingMode
                                   ? LocaleKeys.new_training_page_add_exercise
-                                      .tr()
+                                  .tr()
                                   : LocaleKeys.new_template_page_add_exercise
-                                      .tr(),
+                                  .tr(),
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -200,7 +160,6 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                                 Navigator.of(context, rootNavigator: true)
                                     .pushNamed(ExercisePage.route)
                                     .then((value) {
-                                  print(value);
                                   if (value != null) {
                                     setState(() {
                                       _selectedExercises.add(value as Exercise);
@@ -209,7 +168,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                                 });
                               },
                               child:
-                                  const Icon(CupertinoIcons.add_circled_solid),
+                              const Icon(CupertinoIcons.add_circled_solid),
                             ),
                           ],
                         ),
@@ -224,9 +183,9 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                               Text(
                                 state is NewTrainingMode
                                     ? LocaleKeys.new_training_page_add_template
-                                        .tr()
+                                    .tr()
                                     : LocaleKeys.new_template_page_add_template
-                                        .tr(),
+                                    .tr(),
                                 style: const TextStyle(
                                   fontSize: 16,
                                 ),
@@ -241,15 +200,19 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                       ),
                       SizedBox(
                         height: 76,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _trainings.length,
-                          itemBuilder: (context, index) {
-                            return TemplateCard(
-                              fixedWidth: 240,
-                              template: _trainings[index],
-                              onTap: () {},
+                        child: BlocBuilder<TrainingsCubit, TrainingsState>(
+                          builder: (context, state) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.trainings.length,
+                              itemBuilder: (context, index) {
+                                return TemplateCard(
+                                  fixedWidth: 240,
+                                  template: state.trainings[index],
+                                  onTap: () {},
+                                );
+                              },
                             );
                           },
                         ),
@@ -260,7 +223,7 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                             context,
                             rootNavigator: true,
                           ).pushNamed(ExercisesSearchPage.route).then((value) {
-                            print(value);
+                            context.read<SearchCubit>().clear();
                             if (value != null) {
                               setState(() {
                                 _selectedExercises.add(value as Exercise);
@@ -277,9 +240,9 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                               Text(
                                 state is NewTrainingMode
                                     ? LocaleKeys.new_training_page_add_previous
-                                        .tr()
+                                    .tr()
                                     : LocaleKeys.new_template_page_add_previous
-                                        .tr(),
+                                    .tr(),
                                 style: const TextStyle(
                                   fontSize: 16,
                                 ),
@@ -294,49 +257,55 @@ class _NewTrainingPageState extends State<NewTrainingPage> {
                       ),
                       SizedBox(
                         height: 76,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _exercises.length,
-                          itemBuilder: (context, index) {
-                            return ExerciseCard(
-                              marginTopDisabled: true,
-                              fixedWidth: 240,
-                              onTap: () {},
-                              exercise: _exercises[index],
+                        child: BlocBuilder<ExercisesCubit, ExercisesState>(
+                          builder: (context, state) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.exercises.length,
+                              itemBuilder: (context, index) {
+                                return ExerciseCard(
+                                  marginTopDisabled: true,
+                                  fixedWidth: 240,
+                                  onTap: () {},
+                                  exercise: state.exercises[index],
+                                );
+                              },
                             );
                           },
                         ),
                       ),
-                      const SizedBox(height: 160,),
+
+                      Padding(
+                        padding:
+                        const EdgeInsets.only(
+                            left: 16, right: 16, bottom: 16, top: 32),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          onPressed: () {
+                            bool valid = _formKey.currentState!.validate();
+                            if (valid) {
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Text(
+                            state is NewTrainingMode
+                                ? LocaleKeys.new_training_page_create.tr()
+                                : LocaleKeys.new_template_page_create.tr(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 80,),
                     ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    onPressed: () {
-                      bool valid = _formKey.currentState!.validate();
-                      if (valid) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text(
-                      state is NewTrainingMode
-                          ? LocaleKeys.new_training_page_create.tr()
-                          : LocaleKeys.new_template_page_create.tr(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
                   ),
                 ),
               ],

@@ -64,7 +64,7 @@ List<Client> _clients = [
     paidTrainings: 12,
   ),
   Client(
-    id: 2,
+    id: 3,
     name: "Contact Name",
     clientNote: "Comment About",
     clientGoal: "Clients goal here",
@@ -93,7 +93,11 @@ class ClientsCubit extends Cubit<ClientsState> {
 
   void addClient(Client client) {
     _clients.add(client);
-    print(_clients.length);
     emit(ClientsState(status: ClientsStatus.success, clients: _clients));
+  }
+
+  void archiveClient(int id) {
+    int index = _clients.indexWhere((client) => client.id == id);
+    _clients[index] = _clients[index].copyWith(isArchive: true);
   }
 }
