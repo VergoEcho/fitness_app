@@ -176,6 +176,45 @@ class CodegenLoader extends AssetLoader{
     "add": "Add Exercise",
     "new_exercise": "New Exercise",
     "no_exercise_label": "Looks like there is no exercise you are looking for. Create a new one?"
+  },
+  "offer_page": {
+    "title": "Unlock",
+    "subtitle": "Trainer's Board for PRO",
+    "features": {
+      "title": "Unlock unlimited feature with PRO Account:",
+      "unlimited_templates": "Add UNLIMITED training templates",
+      "archive_clients": "Move your clients to the archive",
+      "unlimited_clients": "Add UNLIMITED clients"
+    },
+    "subscribe": "Subscribe for 4,99 USD / Month",
+    "cancel": "Continue using for Free"
+  },
+  "settings_page": {
+    "title": "Settings",
+    "first_weekday": {
+      "title": "First weekday",
+      "monday": "Monday",
+      "sunday": "Sunday"
+    },
+    "time_format": {
+      "title": "Time format",
+      "12": "12-hours",
+      "24": "24-hours"
+    },
+    "units": {
+      "title": "Units",
+      "metric": "Metric systems (kg, cm, km)",
+      "imperial": "Imperial systems (lb, in, ml)"
+    },
+    "support": {
+      "title": "Support",
+      "text": "Unlock PRO version"
+    },
+    "help": {
+      "title": "Help",
+      "feedback": "Send Feedback",
+      "terms": "Terms and Privacy"
+    }
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": en};

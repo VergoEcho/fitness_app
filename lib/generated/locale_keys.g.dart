@@ -135,5 +135,36 @@ abstract class  LocaleKeys {
   static const search_exercise_page_new_exercise = 'search_exercise_page.new_exercise';
   static const search_exercise_page_no_exercise_label = 'search_exercise_page.no_exercise_label';
   static const search_exercise_page = 'search_exercise_page';
+  static const offer_page_title = 'offer_page.title';
+  static const offer_page_subtitle = 'offer_page.subtitle';
+  static const offer_page_features_title = 'offer_page.features.title';
+  static const offer_page_features_unlimited_templates = 'offer_page.features.unlimited_templates';
+  static const offer_page_features_archive_clients = 'offer_page.features.archive_clients';
+  static const offer_page_features_unlimited_clients = 'offer_page.features.unlimited_clients';
+  static const offer_page_features = 'offer_page.features';
+  static const offer_page_subscribe = 'offer_page.subscribe';
+  static const offer_page_cancel = 'offer_page.cancel';
+  static const offer_page = 'offer_page';
+  static const settings_page_title = 'settings_page.title';
+  static const settings_page_first_weekday_title = 'settings_page.first_weekday.title';
+  static const settings_page_first_weekday_monday = 'settings_page.first_weekday.monday';
+  static const settings_page_first_weekday_sunday = 'settings_page.first_weekday.sunday';
+  static const settings_page_first_weekday = 'settings_page.first_weekday';
+  static const settings_page_time_format_title = 'settings_page.time_format.title';
+  static const settings_page_time_format_12 = 'settings_page.time_format.12';
+  static const settings_page_time_format_24 = 'settings_page.time_format.24';
+  static const settings_page_time_format = 'settings_page.time_format';
+  static const settings_page_units_title = 'settings_page.units.title';
+  static const settings_page_units_metric = 'settings_page.units.metric';
+  static const settings_page_units_imperial = 'settings_page.units.imperial';
+  static const settings_page_units = 'settings_page.units';
+  static const settings_page_support_title = 'settings_page.support.title';
+  static const settings_page_support_text = 'settings_page.support.text';
+  static const settings_page_support = 'settings_page.support';
+  static const settings_page_help_title = 'settings_page.help.title';
+  static const settings_page_help_feedback = 'settings_page.help.feedback';
+  static const settings_page_help_terms = 'settings_page.help.terms';
+  static const settings_page_help = 'settings_page.help';
+  static const settings_page = 'settings_page';
 
 }

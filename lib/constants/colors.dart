@@ -15,4 +15,8 @@ class FitnessColors {
   static Color darkGreen = const Color(0xff34c759);
   static Color violet = const Color(0xff9747FF);
   static Color orange = const Color(0xffFF9500);
+  static LinearGradient blueGradient = const LinearGradient(colors: [
+    Color(0xff065CBD),
+    Color(0xff097EFF),
+  ]);
 }

@@ -15,6 +15,7 @@ import 'package:trainings/bloc/search_cubit/search_cubit.dart';
 import 'package:trainings/bloc/selected_client_cubit/selected_client_cubit.dart';
 import 'package:trainings/bloc/selected_exercise_cubit/selected_exercise_cubit.dart';
 import 'package:trainings/bloc/selected_training_cubit/selected_training_cubit.dart';
+import 'package:trainings/bloc/settings_cubit/settings_cubit.dart';
 import 'package:trainings/bloc/trainings_cubit/trainings_cubit.dart';
 import 'package:trainings/constants/colors.dart';
 import 'package:trainings/generated/locale_keys.g.dart';
@@ -25,6 +26,8 @@ import 'package:trainings/screens/clients_page/clients_page.dart';
 import 'package:trainings/screens/exercise_page/exercise_page.dart';
 import 'package:trainings/screens/exercise_search_page/exercises_search_page.dart';
 import 'package:trainings/screens/new_training_page/new_training_page.dart';
+import 'package:trainings/screens/offer_page.dart';
+import 'package:trainings/screens/settings_page.dart';
 import 'package:trainings/screens/trainings_page/trainings_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/screens/trainings_search.dart';
@@ -62,6 +65,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => SearchCubit()),
         BlocProvider(create: (context) => SearchCubit()),
         BlocProvider(create: (context) => TrainingsCubit()..fetchTrainings()),
+        BlocProvider(create: (context) => SettingsCubit()),
       ],
       child: CupertinoApp(
         localizationsDelegates: context.localizationDelegates,
@@ -83,6 +87,8 @@ class App extends StatelessWidget {
           NewTrainingPage.route: (context) => const NewTrainingPage(),
           ExercisesSearchPage.route: (context) => const ExercisesSearchPage(),
           TrainingsSearchPage.route: (context) => const TrainingsSearchPage(),
+          SettingsPage.route: (context) => SettingsPage(),
+          OfferPage.route: (context)=> const OfferPage(),
         },
         home: Builder(
             builder: (context) {

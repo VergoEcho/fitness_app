@@ -12,6 +12,7 @@ import 'package:trainings/common_widgets/filled_button.dart';
 import 'package:trainings/screens/client_edit_page/client_edit_page.dart';
 import 'package:trainings/screens/clients_page/widgets/archived_client_card.dart';
 import 'package:trainings/screens/clients_page/widgets/current_client_card.dart';
+import 'package:trainings/screens/settings_page.dart';
 
 class ClientsPage extends StatelessWidget {
   const ClientsPage({Key? key}) : super(key: key);
@@ -80,7 +81,7 @@ class ClientsPage extends StatelessWidget {
                               ),
                               CupertinoButton(
                                 padding: const EdgeInsets.symmetric(vertical: 0),
-                                onPressed: () {},
+                                onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(SettingsPage.route),
                                 child: SvgPicture.asset(
                                   'assets/images/cog.svg',
                                   height: 20,
