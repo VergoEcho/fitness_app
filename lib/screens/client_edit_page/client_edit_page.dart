@@ -9,7 +9,9 @@ import 'package:trainings/generated/locale_keys.g.dart';
 import 'package:trainings/common_widgets/field_tile.dart';
 import 'package:trainings/models/client.dart';
 
-import 'widgets/day_selector.dart';
+import 'widgets/birthday_weight_picker.dart';
+import 'widgets/day_time_picker.dart';
+import 'widgets/paid_trainings_picker.dart';
 
 class ClientEditPage extends StatefulWidget {
   const ClientEditPage({Key? key}) : super(key: key);
@@ -29,27 +31,19 @@ class _ClientEditPageState extends State<ClientEditPage>
   late DateTime _birthday;
   bool _birthdayExpanded = false;
   late final AnimationController _birthdayExpandController;
-  late final Animation<double> _birthdayExpandAnimation;
-  late int _weight;
+  late double _weight;
   bool _weightExpanded = false;
   late final AnimationController _weightExpandController;
-  late final Animation<double> _weightExpandAnimation;
   late int _paidTrainings;
   bool _paidTrainingsExpanded = false;
   late final AnimationController _paidExpandController;
-  late final Animation<double> _paidExpandAnimation;
   String? editDay;
-  late TimeOfDay _selectedTime;
   bool _timeExpanded = false;
   late final AnimationController _timeExpandController;
-  late final Animation<double> _timeExpandAnimation;
   bool clientInitialized = false;
-  String selectedDay = '';
   final ScrollController _scrollController = ScrollController();
 
   late final AnimationController _selectedDayExpandController;
-  late final Animation<double> _selectedDayExpandAnimation;
-
 
   final _formKey = GlobalKey<FormState>();
 
@@ -89,16 +83,10 @@ class _ClientEditPageState extends State<ClientEditPage>
     _birthday = DateTime.now();
     _weight = 70;
     _paidTrainings = 0;
-    _selectedTime = const TimeOfDay(hour: 0, minute: 00);
 
     _birthdayExpandController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
-    );
-
-    _birthdayExpandAnimation = CurvedAnimation(
-      parent: _birthdayExpandController,
-      curve: Curves.fastOutSlowIn,
     );
 
     _weightExpandController = AnimationController(
@@ -106,19 +94,9 @@ class _ClientEditPageState extends State<ClientEditPage>
       vsync: this,
     );
 
-    _weightExpandAnimation = CurvedAnimation(
-      parent: _weightExpandController,
-      curve: Curves.fastOutSlowIn,
-    );
-
     _timeExpandController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
-    );
-
-    _timeExpandAnimation = CurvedAnimation(
-      parent: _timeExpandController,
-      curve: Curves.fastOutSlowIn,
     );
 
     _selectedDayExpandController = AnimationController(
@@ -126,31 +104,35 @@ class _ClientEditPageState extends State<ClientEditPage>
       vsync: this,
     );
 
-    _selectedDayExpandAnimation = CurvedAnimation(
-      parent: _selectedDayExpandController,
-      curve: Curves.fastOutSlowIn,
-    );
-
     _paidExpandController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
 
-    _paidExpandAnimation = CurvedAnimation(
-      parent: _paidExpandController,
-      curve: Curves.fastOutSlowIn,
-    );
-
     super.initState();
   }
 
-  TimeOfDay _selectedDayTime(ClientEditState state) {
-    return state.client.trainingDays[selectedDay] ?? _selectedTime;
-  }
-
-  String _selectedDayTimeString(ClientEditState state) {
-    TimeOfDay time = _selectedDayTime(state);
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  _submitForm(BuildContext context) {
+    bool valid = _formKey.currentState!.validate();
+    if (valid) {
+      bool clientIsNew =
+      context.read<SelectedClientCubit>().state is SelectedClientNone;
+      // Validation passed
+      if (clientIsNew) {
+        // Client newClient = state.client.copyWith(
+        //   id: context.read<ClientsCubit>().state.clients.length,
+        //   name: _nameController.text,
+        //   phone: _phoneController.text,
+        //   birthday: _birthday,
+        //   weight: _weight.toDouble(),
+        //   clientGoal: _goalController.text,
+        //   clientNote: _noteController.text,
+        //   paidTrainings: _paidTrainings,
+        // );
+        // context.read<ClientsCubit>().addClient(newClient);
+      }
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -163,7 +145,7 @@ class _ClientEditPageState extends State<ClientEditPage>
         if (!clientInitialized) {
           if (!clientIsNew) {
             Client client = context.read<SelectedClientCubit>().state.client!;
-            _weight = client.weight.toInt();
+            _weight = client.weight;
             _birthday = client.birthday;
             _paidTrainings = client.paidTrainings;
             Client formClient =
@@ -171,7 +153,7 @@ class _ClientEditPageState extends State<ClientEditPage>
             Future.delayed(const Duration(milliseconds: 100),
                 () => context.read<ClientEditCubit>().update(formClient));
           } else {
-            _weight = state.client.weight.toInt();
+            _weight = state.client.weight;
             _birthday = state.client.birthday;
           }
           clientInitialized = true;
@@ -217,26 +199,7 @@ class _ClientEditPageState extends State<ClientEditPage>
                   ),
                 ),
               ),
-              onPressed: () {
-                bool valid = _formKey.currentState!.validate();
-                if (valid) {
-                  // Validation passed
-                  if (clientIsNew) {
-                    // Client newClient = state.client.copyWith(
-                    //   id: context.read<ClientsCubit>().state.clients.length,
-                    //   name: _nameController.text,
-                    //   phone: _phoneController.text,
-                    //   birthday: _birthday,
-                    //   weight: _weight.toDouble(),
-                    //   clientGoal: _goalController.text,
-                    //   clientNote: _noteController.text,
-                    //   paidTrainings: _paidTrainings,
-                    // );
-                    // context.read<ClientsCubit>().addClient(newClient);
-                  }
-                  Navigator.pop(context);
-                }
-              },
+              onPressed: () => _submitForm(context),
             ),
           ),
           child: Padding(
@@ -273,192 +236,69 @@ class _ClientEditPageState extends State<ClientEditPage>
                             .phone,
                   text: LocaleKeys.client_edit_page_phone.tr(),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: FitnessColors.white,
-                  ),
-                  child: Column(
-                    children: [
-                      Column(
-                        children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          _scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          setState(() {
-                            _closeExpanded();
-                            _birthdayExpanded = !_birthdayExpanded;
-                          });
-                          _reversePickerControllers();
-                          if (_birthdayExpanded) {
-                            _birthdayExpandController.forward();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                LocaleKeys.client_edit_page_birthday.tr(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    DateFormat('dd MMM yyy',
-                                            context.locale.languageCode)
-                                        .format(_birthday),
-                                    style: TextStyle(
-                                        color: FitnessColors.blindGray,
-                                        fontSize: 16),
-                                  ),
-                                  CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: null,
-                                    child: AnimatedRotation(
-                                      turns: _birthdayExpanded ? .25 : 0,
-                                      curve: Curves.easeInOut,
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      child: const Icon(
-                                        CupertinoIcons.chevron_forward,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                          SizeTransition(
-                            sizeFactor: _birthdayExpandAnimation,
-                            child: SizedBox(
-                              height: 200,
-                              child: CupertinoDatePicker(
-                                initialDateTime: clientIsNew
-                                    ? state.client.birthday
-                                    : context
-                                        .read<SelectedClientCubit>()
-                                        .state
-                                        .client!
-                                        .birthday,
-                                dateOrder: DatePickerDateOrder.dmy,
-                                mode: CupertinoDatePickerMode.date,
-                                onDateTimeChanged: (DateTime value) {
-                                  setState(() {
-                                    _birthday = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        height: 0,
-                      ),
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          _scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                          setState(() {
-                            _closeExpanded();
-                            _weightExpanded = !_weightExpanded;
-                          });
-                          _reversePickerControllers();
-                          if (_weightExpanded) {
-                            _weightExpandController.forward();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                LocaleKeys.client_edit_page_weight.tr(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    _weight.toString(),
-                                    style: TextStyle(
-                                        color: FitnessColors.blindGray,
-                                        fontSize: 16),
-                                  ),
-                                  CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: null,
-                                    child: AnimatedRotation(
-                                      turns: _weightExpanded ? .25 : 0,
-                                      curve: Curves.easeInOut,
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      child: const Icon(
-                                        CupertinoIcons.chevron_forward,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizeTransition(
-                        sizeFactor: _weightExpandAnimation,
-                        child: SizedBox(
-                          height: 200,
-                          child: CupertinoPicker(
-                            scrollController: FixedExtentScrollController(
-                              initialItem: clientIsNew
-                                  ? state.client.weight.toInt() - 1
-                                  : context
-                                          .read<SelectedClientCubit>()
-                                          .state
-                                          .client!
-                                          .weight
-                                          .toInt() -
-                                      1,
-                            ),
-                            itemExtent: 32,
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-                                _weight = index + 1;
-                              });
-                            },
-                            children: List<Widget>.generate(300, (int index) {
-                              return Center(
-                                child: Text(
-                                  '${index + 1} kg',
-                                  style: TextStyle(
-                                    color: FitnessColors.black,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                BirthdayWeightPicker(
+                  onBirthdayTapped: () {
+                    _scrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                    setState(() {
+                      _closeExpanded();
+                      _birthdayExpanded = !_birthdayExpanded;
+                    });
+                    _reversePickerControllers();
+                    if (_birthdayExpanded) {
+                      _birthdayExpandController.forward();
+                    }
+                  },
+                  birthday: _birthday,
+                  birthdayExpanded: _birthdayExpanded,
+                  birthdayExpandController: _birthdayExpandController,
+                  onBirthdayDateChanged: (DateTime value) {
+                    setState(() {
+                      _birthday = value;
+                    });
+                  },
+                  initialBirthdayDate: clientIsNew
+                      ? state.client.birthday
+                      : context
+                          .read<SelectedClientCubit>()
+                          .state
+                          .client!
+                          .birthday,
+                  weightExpandController: _weightExpandController,
+                  onWeightTapped: () {
+                    _scrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                    setState(() {
+                      _closeExpanded();
+                      _weightExpanded = !_weightExpanded;
+                    });
+                    _reversePickerControllers();
+                    if (_weightExpanded) {
+                      _weightExpandController.forward();
+                    }
+                  },
+                  initialWeight: clientIsNew
+                      ? state.client.weight.toInt() - 1
+                      : context
+                              .read<SelectedClientCubit>()
+                              .state
+                              .client!
+                              .weight
+                              .toInt() -
+                          1,
+                  weightExpanded: _weightExpanded,
+                  weight: _weight,
+                  onWeightValueChanged: (index) {
+                    setState(() {
+                      _weight = index + 1;
+                    });
+                  },
                 ),
                 FieldTile(
                   text: LocaleKeys.client_edit_page_goal.tr(),
@@ -498,209 +338,61 @@ class _ClientEditPageState extends State<ClientEditPage>
                     ),
                   ],
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: FitnessColors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        LocaleKeys.client_edit_page_schedule.tr(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: FitnessColors.blindGray,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:
-                              state.client.trainingDays.entries.map((day) {
-                            return DaySelector(
-                              clearTime: () {
-                                Client client = state.client;
-                                client.trainingDays[day.key] = null;
-                                context.read<ClientEditCubit>().update(client);
-                              },
-                              time: day.value,
-                              selectedDay: selectedDay,
-                              onPressed: () {
-                                if (selectedDay == '') {
-                                  _selectedDayExpandController.forward();
-                                }
-                                setState(() {
-                                  selectedDay = day.key;
-                                });
-                              },
-                              day: day.key.substring(0, 3),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      SizeTransition(
-                        sizeFactor: _selectedDayExpandAnimation,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                LocaleKeys.client_edit_page_time.tr(),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              CupertinoButton(
-                                padding: const EdgeInsets.all(8),
-                                color: FitnessColors.whiteShaded,
-                                onPressed: selectedDay == ''
-                                    ? null
-                                    : () {
-                                        _scrollController.animateTo(
-                                          160,
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          curve: Curves.easeInOut,
-                                        );
-                                        setState(() {
-                                          _closeExpanded();
-                                          _timeExpanded = !_timeExpanded;
-                                        });
-                                        _reversePickerControllers();
-                                        if (_timeExpanded) {
-                                          _timeExpandController.forward();
-                                        }
-                                      },
-                                child: Text(
-                                  _selectedDayTimeString(state),
-                                  style: TextStyle(
-                                    color: FitnessColors.black,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizeTransition(
-                        sizeFactor: _timeExpandAnimation,
-                        child: SizedBox(
-                          height: 200,
-                          child: CupertinoDatePicker(
-                            use24hFormat: true,
-                            mode: CupertinoDatePickerMode.time,
-                            onDateTimeChanged: (DateTime value) {
-                              Client client = state.client;
-                              client.trainingDays[selectedDay] =
-                                  TimeOfDay.fromDateTime(value);
-                              context.read<ClientEditCubit>().update(client);
-                            },
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                DayTimePicker(
+                  selectedDayExpandController: _selectedDayExpandController,
+                  timeExpandController: _timeExpandController,
+                  onDaySelectorPressed: (String day) {
+                    if (state.selectedDay == '') {
+                      _selectedDayExpandController.forward();
+                    }
+                    context.read<ClientEditCubit>().selectDay(day);
+                  },
+                  onTimePressed: () {
+                    _scrollController.animateTo(
+                      160,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                    setState(() {
+                      _closeExpanded();
+                      _timeExpanded = !_timeExpanded;
+                    });
+                    _reversePickerControllers();
+                    if (_timeExpanded) {
+                      _timeExpandController.forward();
+                    }
+                  },
+                  onDateTimeChanged: (DateTime value) {
+                    Client client = state.client;
+                    client.trainingDays[state.selectedDay] =
+                        TimeOfDay.fromDateTime(value);
+                    context.read<ClientEditCubit>().update(client);
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 16),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: FitnessColors.white,
-                    ),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            _scrollController.animateTo(
-                              160,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                            setState(() {
-                              _closeExpanded();
-                              _paidTrainingsExpanded = !_paidTrainingsExpanded;
-                            });
-                            _reversePickerControllers();
-                            if (_paidTrainingsExpanded) {
-                              _paidExpandController.forward();
-                            }
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                LocaleKeys.client_edit_page_paid_training.tr(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    _paidTrainings.toString(),
-                                    style: TextStyle(
-                                      color: FitnessColors.blindGray,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: null,
-                                    child: AnimatedRotation(
-                                      turns: _paidTrainingsExpanded ? .25 : 0,
-                                      curve: Curves.easeInOut,
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      child: const Icon(
-                                        CupertinoIcons.chevron_forward,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        SizeTransition(
-                          sizeFactor: _paidExpandAnimation,
-                          child: SizedBox(
-                            height: 200,
-                            child: CupertinoPicker(
-                              scrollController: FixedExtentScrollController(
-                                initialItem: _paidTrainings,
-                              ),
-                              itemExtent: 32,
-                              onSelectedItemChanged: (index) {
-                                setState(() {
-                                  _paidTrainings = index;
-                                });
-                              },
-                              children: List<Widget>.generate(100, (int index) {
-                                return Center(
-                                  child: Text(
-                                    '$index paid',
-                                    style: TextStyle(
-                                      color: FitnessColors.black,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                PaidTrainingsPicker(
+                  paidTrainings: _paidTrainings,
+                  expanded: _paidTrainingsExpanded,
+                  expandController: _paidExpandController,
+                  onTap: () {
+                    _scrollController.animateTo(
+                      160,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                    setState(() {
+                      _closeExpanded();
+                      _paidTrainingsExpanded = !_paidTrainingsExpanded;
+                    });
+                    _reversePickerControllers();
+                    if (_paidTrainingsExpanded) {
+                      _paidExpandController.forward();
+                    }
+                  },
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      _paidTrainings = index;
+                    });
+                  },
                 ),
                 const SizedBox(
                   height: 80,
