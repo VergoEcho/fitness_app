@@ -35,6 +35,35 @@ class TrainingsSearchPage extends StatelessWidget {
     }).toList();
   }
 
+  void _onSearchChanged(BuildContext context, String value) {
+    context.read<SearchCubit>().update(value);
+  }
+
+  Widget? _templateCardBuilder(context, index) {
+    Training item = trainingsList(context)[index];
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 8.0, right: 8, top: 16),
+      child: TrainingTemplateCard(
+        template: item,
+      ),
+    );
+  }
+
+  Widget? _exerciseCardBuilder(context, index) {
+    Exercise exercise = exercisesList(context)[index];
+    return ExerciseCard(
+      exercise: exercise,
+      onTap: () {
+        context
+            .read<ExerciseEditCubit>()
+            .changeMode(ExerciseEditMode());
+        Navigator.of(context, rootNavigator: true)
+            .pushNamed(ExercisePage.route);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -65,9 +94,7 @@ class TrainingsSearchPage extends StatelessWidget {
                       color: FitnessColors.blindGray,
                     ),
                     suffixMode: OverlayVisibilityMode.always,
-                    onChanged: (value) {
-                      context.read<SearchCubit>().update(value);
-                    },
+                    onChanged: (value) => _onSearchChanged(context, value),
                     onSuffixTap: () {},
                   ),
                 ),
@@ -80,9 +107,7 @@ class TrainingsSearchPage extends StatelessWidget {
                   LocaleKeys.trainings_page_search_cancel.tr(),
                   style: const TextStyle(fontSize: 17),
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
               )
             ],
           ),
@@ -131,16 +156,7 @@ class TrainingsSearchPage extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: trainingsList(context).length,
                         shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          Training item = trainingsList(context)[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, right: 8, top: 16),
-                            child: TrainingTemplateCard(
-                              template: item,
-                            ),
-                          );
-                        },
+                        itemBuilder: _templateCardBuilder,
                       ),
                       exercisesList(context).isEmpty
                           ? const SizedBox()
@@ -163,19 +179,7 @@ class TrainingsSearchPage extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: exercisesList(context).length,
                         shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          Exercise exercise = exercisesList(context)[index];
-                          return ExerciseCard(
-                            exercise: exercise,
-                            onTap: () {
-                              context
-                                  .read<ExerciseEditCubit>()
-                                  .changeMode(ExerciseEditMode());
-                              Navigator.of(context, rootNavigator: true)
-                                  .pushNamed(ExercisePage.route);
-                            },
-                          );
-                        },
+                        itemBuilder: _exerciseCardBuilder,
                       ),
                     ],
                   ),

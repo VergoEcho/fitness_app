@@ -22,21 +22,23 @@ class CurrentClientCard extends StatelessWidget {
   //   return '${startTime.format(context)} - ${startTime.replacing(hour: startTime.hour + 1).format(context)}';
   // }
 
+  _onClientTapped(BuildContext context) {
+    context.read<SelectedClientCubit>().select(client);
+    Navigator.of(context, rootNavigator: true)
+        .pushNamed(ClientProfilePage.route)
+        .then(
+          (value) {
+        Future.delayed(const Duration(milliseconds: 500),
+                () => context.read<SelectedClientCubit>().clear());
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () {
-        context.read<SelectedClientCubit>().select(client);
-        Navigator.of(context, rootNavigator: true)
-            .pushNamed(ClientProfilePage.route)
-            .then(
-          (value) {
-            Future.delayed(const Duration(milliseconds: 500),
-                () => context.read<SelectedClientCubit>().clear());
-          },
-        );
-      },
+      onTap: () => _onClientTapped(context),
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
         padding: const EdgeInsets.symmetric(vertical: 16),

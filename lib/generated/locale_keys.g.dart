@@ -98,6 +98,7 @@ abstract class  LocaleKeys {
   static const exercise_page_title_edit = 'exercise_page.title.edit';
   static const exercise_page_title_new = 'exercise_page.title.new';
   static const exercise_page_title = 'exercise_page.title';
+  static const exercise_page_cancel = 'exercise_page.cancel';
   static const exercise_page_edit = 'exercise_page.edit';
   static const exercise_page_save = 'exercise_page.save';
   static const exercise_page_name = 'exercise_page.name';

@@ -190,12 +190,14 @@ class _ClientEditPageState extends State<ClientEditPage>
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-    setState(() {
-      _closeExpanded();
-      _birthdayExpanded = !_birthdayExpanded;
-    });
     _reversePickerControllers();
     if (_birthdayExpanded) {
+      _closeExpanded();
+    } else {
+      _closeExpanded();
+      setState(() {
+        _birthdayExpanded = true;
+      });
       _birthdayExpandController.forward();
     }
   }
@@ -218,12 +220,14 @@ class _ClientEditPageState extends State<ClientEditPage>
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-    setState(() {
-      _closeExpanded();
-      _weightExpanded = !_weightExpanded;
-    });
     _reversePickerControllers();
     if (_weightExpanded) {
+      _closeExpanded();
+    } else {
+      _closeExpanded();
+      setState(() {
+        _weightExpanded = true;
+      });
       _weightExpandController.forward();
     }
   }
@@ -253,12 +257,14 @@ class _ClientEditPageState extends State<ClientEditPage>
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-    setState(() {
-      _closeExpanded();
-      _timeExpanded = !_timeExpanded;
-    });
     _reversePickerControllers();
     if (_timeExpanded) {
+      _closeExpanded();
+    } else {
+      _closeExpanded();
+      setState(() {
+        _timeExpanded = true;
+      });
       _timeExpandController.forward();
     }
   }
@@ -276,12 +282,14 @@ class _ClientEditPageState extends State<ClientEditPage>
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-    setState(() {
-      _closeExpanded();
-      _paidTrainingsExpanded = !_paidTrainingsExpanded;
-    });
     _reversePickerControllers();
     if (_paidTrainingsExpanded) {
+      _closeExpanded();
+    } else {
+      _closeExpanded();
+      setState(() {
+        _paidTrainingsExpanded = true;
+      });
       _paidExpandController.forward();
     }
   }
@@ -348,10 +356,18 @@ class _ClientEditPageState extends State<ClientEditPage>
                     formKey: _formKey,
                     controller: _nameController,
                     text: LocaleKeys.client_edit_page_name.tr(),
+                    onTap: () {
+                      _reversePickerControllers();
+                      _closeExpanded();
+                    },
                   ),
                   FieldTile(
                     controller: _phoneController,
                     text: LocaleKeys.client_edit_page_phone.tr(),
+                    onTap: () {
+                      _reversePickerControllers();
+                      _closeExpanded();
+                    },
                   ),
                   BirthdayWeightPicker(
                     onBirthdayTapped: _onBirthdayTapped,
@@ -368,11 +384,19 @@ class _ClientEditPageState extends State<ClientEditPage>
                     onWeightValueChanged: _onWeightValueChanged,
                   ),
                   FieldTile(
+                    onTap: () {
+                      _reversePickerControllers();
+                      _closeExpanded();
+                    },
                       text: LocaleKeys.client_edit_page_goal.tr(),
                       controller: _goalController),
                   FieldTile(
                     text: LocaleKeys.client_edit_page_note.tr(),
                     controller: _noteController,
+                    onTap: () {
+                      _reversePickerControllers();
+                      _closeExpanded();
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

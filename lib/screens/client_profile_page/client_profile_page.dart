@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trainings/bloc/client_edit_cubit/client_edit_cubit.dart';
 import 'package:trainings/bloc/client_profile_page_bloc/client_profile_page_bloc.dart';
@@ -16,6 +17,28 @@ class ClientProfilePage extends StatelessWidget {
   const ClientProfilePage({Key? key}) : super(key: key);
 
   static const route = '/client/profile';
+
+  void _editClient(BuildContext context) {
+    Navigator.of(context, rootNavigator: true)
+        .pushNamed(ClientEditPage.route)
+        .then(
+          (_) => Future.delayed(
+            const Duration(milliseconds: 500),
+            () => context.read<ClientEditCubit>().clear(),
+          ),
+        );
+  }
+
+  String _paidTill(BuildContext context) {
+    SelectedClientState state = context.read<SelectedClientCubit>().state;
+    return '${LocaleKeys.client_profile_page_paid_till.tr()}: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${state.client!.paidTrainings} ${LocaleKeys.client_profile_page_workouts.tr()})';
+  }
+
+  String? _dayTime(MapEntry<String, TimeOfDay?> day) {
+    return day.value == null
+        ? null
+        : '${day.value!.hour.toString().padLeft(2, '0')}:${day.value!.minute.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,25 +61,19 @@ class ClientProfilePage extends StatelessWidget {
               Text(LocaleKeys.back.tr())
             ],
           ),
-          onPressed: () async {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         middle: Text(LocaleKeys.client_profile_page_title.tr()),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Padding(
             padding: const EdgeInsets.only(right: 8.0),
-            child: Text(LocaleKeys.client_profile_page_edit.tr()),
+            child: Text(
+              LocaleKeys.client_profile_page_edit.tr(),
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
-          onPressed: () => Navigator.of(context, rootNavigator: true)
-              .pushNamed(ClientEditPage.route)
-              .then(
-                (_) => Future.delayed(
-                  const Duration(milliseconds: 500),
-                  () => context.read<ClientEditCubit>().clear(),
-                ),
-              ),
+          onPressed: () => _editClient(context),
         ),
       ),
       child: BlocBuilder<ClientProfilePageBloc, TrainingsOrInfo>(
@@ -90,7 +107,7 @@ class ClientProfilePage extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  '${LocaleKeys.client_profile_page_paid_till.tr()}: ${DateFormat('dd MMM yyy').format(DateTime.now()).toString()} (${state.client!.paidTrainings} ${LocaleKeys.client_profile_page_workouts.tr()})',
+                                  _paidTill(context),
                                   style:
                                       TextStyle(color: FitnessColors.blindGray),
                                 ),
@@ -106,10 +123,8 @@ class ClientProfilePage extends StatelessWidget {
                                 children: state.client!.trainingDays.entries
                                     .map((day) {
                                   return DayCard(
-                                      day: day.key.substring(0,3),
-                                      time: day.value == null
-                                          ? null
-                                          : '${day.value!.hour.toString().padLeft(2, '0')}:${day.value!.minute.toString().padLeft(2, '0')}');
+                                      day: day.key.substring(0, 3),
+                                      time: _dayTime(day));
                                 }).toList(),
                               ),
                             ),

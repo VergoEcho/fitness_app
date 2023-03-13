@@ -11,12 +11,20 @@ class DayCard extends StatelessWidget {
   final String? time;
   final String day;
 
+  Color? _boxColor() {
+    return time != null ? FitnessColors.primary : null;
+  }
+
+  Color? _textColor() {
+    return time != null ? FitnessColors.white : FitnessColors.ghostGray;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: time != null ? CupertinoTheme.of(context).primaryColor : null,
+        color: _boxColor(),
       ),
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -24,21 +32,20 @@ class DayCard extends StatelessWidget {
           Text(
             day.toUpperCase(),
             style: TextStyle(
-                color: time != null
-                    ? FitnessColors.white
-                    : FitnessColors.ghostGray,
-                fontWeight: FontWeight.w600,
-                fontSize: 14),
+              color: _textColor(),
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
           ),
           time != null
               ? Text(
-            time!,
-            style: TextStyle(
-              color: FitnessColors.white.withOpacity(.7),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          )
+                  time!,
+                  style: TextStyle(
+                    color: FitnessColors.white.withOpacity(.7),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
               : const SizedBox(),
         ],
       ),

@@ -28,6 +28,83 @@ class BaseCalendar extends StatefulWidget {
 class _BaseCalendarState extends State<BaseCalendar> {
   late PageController pageController;
 
+  bool isTodayHighlighted() => widget.focusedDay == null ? true : false;
+
+  Widget? _headerTitleBuilder(BuildContext context, DateTime date) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 14,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              DateFormat('MMMM yyyy', context.locale.languageCode).format(date),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: CupertinoTheme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          CupertinoButton(
+            onPressed: () {
+              pageController.previousPage(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut);
+            },
+            child: const Icon(CupertinoIcons.chevron_back),
+          ),
+          CupertinoButton(
+            onPressed: () {
+              pageController.nextPage(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut);
+            },
+            child: const Icon(CupertinoIcons.chevron_forward),
+          ),
+        ],
+      ),
+    );
+  }
+
+  CalendarFormat _calendarFormat() =>
+      widget.monthCalendar ? CalendarFormat.month : CalendarFormat.week;
+
+  DateTime _lastDay() => DateTime.now().add(const Duration(days: 365 * 10));
+
+  DateTime _firstDay() =>
+      DateTime.now().subtract(const Duration(days: 365 * 5));
+
+  Widget _markerBuilder(
+      BuildContext context, DateTime date, List<dynamic> list) {
+    List<Widget> markers = [];
+    int index = 0;
+    for (var _ in list) {
+      if (index == 3) break;
+      markers.add(
+        Container(
+          margin: const EdgeInsets.only(left: 2, right: 2),
+          height: 4,
+          width: 4,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: index == 0
+                ? FitnessColors.violet
+                : index == 1
+                    ? FitnessColors.orange
+                    : FitnessColors.lightGreen,
+          ),
+        ),
+      );
+      index++;
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: markers,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
@@ -39,87 +116,16 @@ class _BaseCalendarState extends State<BaseCalendar> {
       rowHeight: 64,
       locale: context.locale.languageCode,
       // availableGestures: AvailableGestures.none,
-      firstDay: DateTime.now().subtract(const Duration(days: 365 * 5)),
-      lastDay: DateTime.now().add(const Duration(days: 365 * 10)),
+      firstDay: _firstDay(),
+      lastDay: _lastDay(),
       focusedDay: widget.focusedDay ?? DateTime.now(),
       selectedDayPredicate: (day) => isSameDay(widget.focusedDay, day),
       headerVisible: widget.headerVisible,
-      calendarFormat:
-          widget.monthCalendar ? CalendarFormat.month : CalendarFormat.week,
+      calendarFormat: _calendarFormat(),
       startingDayOfWeek: StartingDayOfWeek.monday,
       calendarBuilders: CalendarBuilders(
-        // singleMarkerBuilder: (context, date, client) {
-        //   return Container(
-        //     margin: const EdgeInsets.only(left: 2, right: 2, top: 20),
-        //     height: 4,
-        //     width: 4,
-        //     decoration: BoxDecoration(
-        //       shape: BoxShape.circle,
-        //       color: FitnessColors.violet,
-        //     ),
-        //   );
-        // },
-        markerBuilder: (context, date, list) {
-          List<Widget> markers = [];
-          int index = 0;
-          for (var _ in list) {
-            if (index == 3) break;
-            markers.add(
-              Container(
-                margin: const EdgeInsets.only(left: 2, right: 2),
-                height: 4,
-                width: 4,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color:  index == 0 ? FitnessColors.violet : index == 1 ? FitnessColors.orange : FitnessColors.lightGreen,
-                ),
-              ),
-            );
-            index++;
-          }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: markers,
-          );
-        },
-        headerTitleBuilder: (context, date) {
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 14,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    DateFormat('MMMM yyyy', context.locale.languageCode)
-                        .format(date),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: CupertinoTheme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-                CupertinoButton(
-                  onPressed: () {
-                    pageController.previousPage(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut);
-                  },
-                  child: const Icon(CupertinoIcons.chevron_back),
-                ),
-                CupertinoButton(
-                  onPressed: () {
-                    pageController.nextPage(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut);
-                  },
-                  child: const Icon(CupertinoIcons.chevron_forward),
-                ),
-              ],
-            ),
-          );
-        },
+        markerBuilder: _markerBuilder,
+        headerTitleBuilder: _headerTitleBuilder,
       ),
       headerStyle: const HeaderStyle(
         rightChevronVisible: false,
@@ -134,16 +140,18 @@ class _BaseCalendarState extends State<BaseCalendar> {
               .substring(0, widget.oneLetter ? 1 : 3);
         },
         weekdayStyle: TextStyle(
-          fontSize: 12,
+          fontSize: 13,
           color: FitnessColors.ghostGray,
+          fontWeight: FontWeight.w600,
         ),
         weekendStyle: TextStyle(
-          fontSize: 12,
+          fontSize: 13,
           color: FitnessColors.ghostGray,
+          fontWeight: FontWeight.w600,
         ),
       ),
       calendarStyle: CalendarStyle(
-        isTodayHighlighted: widget.focusedDay == null ? true : false,
+        isTodayHighlighted: isTodayHighlighted(),
         selectedDecoration: BoxDecoration(
           color: FitnessColors.primary,
           shape: BoxShape.circle,

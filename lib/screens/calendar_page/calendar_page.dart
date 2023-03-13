@@ -37,6 +37,29 @@ class CalendarPage extends StatelessWidget {
         .toList();
   }
 
+  Widget _cardBuilder(BuildContext context, int index) {
+    CalendarPageState state = context.read<CalendarPageCubit>().state;
+    Client client = _selectedClients(context, state.selectedDay)[index];
+    return CalendarCard(
+      client: client,
+      onTap: () {
+        context
+            .read<SelectedTrainingCubit>()
+            .select(selectedDay: state.selectedDay, client: client);
+        Navigator.of(context, rootNavigator: true)
+            .pushNamed(
+              CalendarTrainingPage.route,
+            )
+            .then(
+              (value) => Future.delayed(
+                const Duration(milliseconds: 500),
+                () => context.read<SelectedTrainingCubit>().clear(),
+              ),
+            );
+      },
+    );
+  }
+
   showModal(BuildContext context) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -57,7 +80,8 @@ class CalendarPage extends StatelessWidget {
               controller: controller,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -71,11 +95,12 @@ class CalendarPage extends StatelessWidget {
                       CupertinoButton(
                         padding: EdgeInsets.zero,
                         child: CircleAvatar(
+                          maxRadius: 15,
                           backgroundColor: FitnessColors.whiteShaded,
                           child: Icon(
                             Icons.close,
                             weight: 200,
-                            size: 24,
+                            size: 16,
                             color: FitnessColors.darkGray,
                           ),
                         ),
@@ -84,18 +109,17 @@ class CalendarPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Divider(height: 0,),
+                const Divider(
+                  height: 0,
+                ),
                 BlocBuilder<CalendarPageCubit, CalendarPageState>(
                   builder: (context, state) {
                     return BaseCalendar(
-                      onDaySelected: (newDate, oldDate) {
-                        context.read<CalendarPageCubit>().selectDate(newDate);
-                      },
+                      onDaySelected: (newDate, oldDate) =>
+                          context.read<CalendarPageCubit>().selectDate(newDate),
                       focusedDay: state.selectedDay,
                       headerVisible: true,
-                      eventLoader: (date) {
-                        return _selectedClients(context, date);
-                      },
+                      eventLoader: (date) => _selectedClients(context, date),
                     );
                   },
                 ),
@@ -106,29 +130,7 @@ class CalendarPage extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount:
                           _selectedClients(context, state.selectedDay).length,
-                      itemBuilder: (BuildContext context, int index) {
-                        Client client =
-                            _selectedClients(context, state.selectedDay)[index];
-                        return CalendarCard(
-                          client: client,
-                          onTap: () {
-                            context.read<SelectedTrainingCubit>().select(
-                                selectedDay: state.selectedDay, client: client);
-                            Navigator.of(context, rootNavigator: true)
-                                .pushNamed(
-                                  CalendarTrainingPage.route,
-                                )
-                                .then(
-                                  (value) => Future.delayed(
-                                    const Duration(milliseconds: 500),
-                                    () => context
-                                        .read<SelectedTrainingCubit>()
-                                        .clear(),
-                                  ),
-                                );
-                          },
-                        );
-                      },
+                      itemBuilder: _cardBuilder,
                     );
                   },
                 ),
@@ -177,9 +179,16 @@ class CalendarPage extends StatelessWidget {
                           children: [
                             BlocBuilder<CalendarPageCubit, CalendarPageState>(
                               builder: (context, state) {
-                                return Text(DateFormat('MMMM, yyyy',
-                                        context.locale.languageCode)
-                                    .format(state.selectedDay));
+                                return Text(
+                                  DateFormat('MMMM, yyyy',
+                                          context.locale.languageCode)
+                                      .format(state.selectedDay),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17,
+                                    letterSpacing: -0.41,
+                                  ),
+                                );
                               },
                             ),
                             const SizedBox(
@@ -216,29 +225,7 @@ class CalendarPage extends StatelessWidget {
                   return ListView.builder(
                     itemCount:
                         _selectedClients(context, state.selectedDay).length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Client client =
-                          _selectedClients(context, state.selectedDay)[index];
-                      return CalendarCard(
-                        client: client,
-                        onTap: () {
-                          context.read<SelectedTrainingCubit>().select(
-                              selectedDay: state.selectedDay, client: client);
-                          Navigator.of(context, rootNavigator: true)
-                              .pushNamed(
-                                CalendarTrainingPage.route,
-                              )
-                              .then(
-                                (value) => Future.delayed(
-                                  const Duration(milliseconds: 500),
-                                  () => context
-                                      .read<SelectedTrainingCubit>()
-                                      .clear(),
-                                ),
-                              );
-                        },
-                      );
-                    },
+                    itemBuilder: _cardBuilder,
                   );
                 },
               ),

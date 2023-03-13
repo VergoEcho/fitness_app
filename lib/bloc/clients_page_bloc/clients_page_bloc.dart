@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 part 'clients_page_event.dart';
 
-enum ClientState { current, archived }
+enum ClientsPageState { current, archived }
 
-class ClientsPageBloc extends Bloc<ClientsPageEvent, ClientState> {
-  ClientsPageBloc() : super(ClientState.current) {
+class ClientsPageBloc extends Bloc<ClientsPageEvent, ClientsPageState> {
+  ClientsPageBloc() : super(ClientsPageState.current) {
     on<ClientsPageModeChanged>(_clientsPageModeChanged);
   }
 
   void _clientsPageModeChanged(
-      ClientsPageModeChanged event, Emitter<ClientState> emit) async {
+      ClientsPageModeChanged event, Emitter<ClientsPageState> emit) async {
 
     if (event.value != state) {
       emit(event.value);

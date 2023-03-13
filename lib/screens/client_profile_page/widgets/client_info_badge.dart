@@ -29,6 +29,7 @@ class ClientInfoBadge extends StatelessWidget {
               style: TextStyle(
                 color: color,
                 fontWeight: FontWeight.w700,
+                fontSize: 16
               ),
             ),
             Padding(
@@ -36,6 +37,7 @@ class ClientInfoBadge extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
+                  fontSize: 14,
                   color: color,
                   fontWeight: FontWeight.w500,
                 ),

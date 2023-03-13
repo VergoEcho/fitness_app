@@ -30,6 +30,33 @@ class SetCard extends StatefulWidget {
 }
 
 class _SetCardState extends State<SetCard> {
+  _toggleSeriesId(Series series) {
+    if (widget.selectedSeriesId == series.id) {
+      widget.changeSeriesId!();
+      widget.togglePicker!(expanded: false);
+    } else {
+      widget.changeSeriesId!(seriesId: series.id);
+      widget.togglePicker!(expanded: true);
+    }
+  }
+
+  Color? _seriesRowColor(Series series) {
+    return widget.selectedSeriesId == series.id ? FitnessColors.black : null;
+  }
+
+  VoidCallback? removeSeries(Series series) {
+    return widget.selectedSeriesId == series.id
+        ? () {
+            widget.removeSeriesById!(series.id);
+            widget.togglePicker!(expanded: false);
+          }
+        : null;
+  }
+
+  double _removeIconWidth(Series series) {
+    return widget.selectedSeriesId == series.id ? 32 : 0;
+  }
+
   List<Widget> _getSeriesRows() {
     List<Widget> rows = [];
     RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
@@ -43,10 +70,11 @@ class _SetCardState extends State<SetCard> {
                       ? FitnessColors.white
                       : null,
                 ),
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   right: 12,
                   top: 4,
                   bottom: 4,
+                  left: widget.selectedSeriesId == series.id ? 0 : 12,
                 ),
                 margin: const EdgeInsets.only(left: 8, right: 8),
                 child: SizedBox(
@@ -55,42 +83,27 @@ class _SetCardState extends State<SetCard> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 32,
+                        width: _removeIconWidth(series),
                         child: CupertinoButton(
                           padding: EdgeInsets.zero,
-                          onPressed: widget.selectedSeriesId == series.id
-                              ? () {
-                                  widget.removeSeriesById!(series.id);
-                                  widget.togglePicker!(expanded: false);
-                                }
-                              : null,
-                          child: Icon(
-                            CupertinoIcons.minus_circle_fill,
-                            color: widget.selectedSeriesId == series.id
-                                ? FitnessColors.red
-                                : FitnessColors.red.withOpacity(0),
-                          ),
+                          onPressed: removeSeries(series),
+                          child: widget.selectedSeriesId == series.id
+                              ? Icon(
+                                  CupertinoIcons.minus_circle_fill,
+                                  color: FitnessColors.red,
+                                )
+                              : const SizedBox(),
                         ),
                       ),
                       CupertinoButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () {
-                          if (widget.selectedSeriesId == series.id) {
-                            widget.changeSeriesId!();
-                            widget.togglePicker!(expanded: false);
-                          } else {
-                            widget.changeSeriesId!(seriesId: series.id);
-                            widget.togglePicker!(expanded: true);
-                          }
-                        },
+                        onPressed: () => _toggleSeriesId(series),
                         child: Text(
                           '${series.effort.toString().replaceAll(regex, '')} kg x ${series.quantity} Reps',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: widget.selectedSeriesId == series.id
-                                ? FitnessColors.black
-                                : null,
+                            color: _seriesRowColor(series),
                           ),
                         ),
                       ),
@@ -114,6 +127,25 @@ class _SetCardState extends State<SetCard> {
     return rows;
   }
 
+  String _setDate() {
+    return widget.editable
+        ? LocaleKeys.calendar_training_page_today.tr().toUpperCase()
+        : DateFormat('dd.MM.yy', context.locale.languageCode)
+            .format(DateTime.now());
+  }
+
+  void _addConfirmSeries() {
+    if (widget.selectedSeriesId == null) {
+      setState(() {
+        widget.addNewSeries!();
+        widget.togglePicker!(expanded: true);
+      });
+    } else {
+      widget.changeSeriesId!();
+      widget.togglePicker!(expanded: false);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -131,7 +163,7 @@ class _SetCardState extends State<SetCard> {
               borderRadius: BorderRadius.circular(8),
               color: FitnessColors.whiteBlue),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               const SizedBox(height: 12),
               ..._getSeriesRows(),
@@ -147,10 +179,7 @@ class _SetCardState extends State<SetCard> {
                 color: FitnessColors.primary,
                 borderRadius: BorderRadius.circular(100)),
             child: Text(
-              widget.editable
-                  ? LocaleKeys.calendar_training_page_today.tr().toUpperCase()
-                  : DateFormat('dd.MM.yy', context.locale.languageCode)
-                      .format(DateTime.now()),
+              _setDate(),
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
@@ -165,17 +194,7 @@ class _SetCardState extends State<SetCard> {
                 top: -4,
                 child: CupertinoButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {
-                    if (widget.selectedSeriesId == null) {
-                      setState(() {
-                        widget.addNewSeries!();
-                        widget.togglePicker!(expanded: true);
-                      });
-                    } else {
-                      widget.changeSeriesId!();
-                      widget.togglePicker!(expanded: false);
-                    }
-                  },
+                  onPressed: _addConfirmSeries,
                   child: widget.selectedSeriesId == null
                       ? const Icon(
                           CupertinoIcons.add_circled_solid,

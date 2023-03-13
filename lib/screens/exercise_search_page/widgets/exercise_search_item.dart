@@ -16,6 +16,12 @@ class ExerciseSearchItem extends StatelessWidget {
   final int index;
   final int? selectedIndex;
 
+  Color _borderColor() {
+    return selectedIndex == index
+        ? FitnessColors.primary
+        : FitnessColors.white;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -31,9 +37,7 @@ class ExerciseSearchItem extends StatelessWidget {
           color: FitnessColors.white,
           borderRadius: BorderRadius.circular(13),
           border: Border.all(
-            color: selectedIndex == index
-                ? FitnessColors.primary
-                : FitnessColors.white,
+            color: _borderColor(),
           ),
         ),
         child: Row(

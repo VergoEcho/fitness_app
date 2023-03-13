@@ -19,11 +19,47 @@ class ClientsPage extends StatelessWidget {
 
   static const String route = '/clients';
 
-  List<Client> selectedClients(
-      {required BuildContext context, required ClientState state}) {
+  Future<void> _addNewClient (BuildContext context) {
+    return Navigator.of(context, rootNavigator: true)
+          .pushNamed(ClientEditPage.route)
+          .then(
+            (_) => Future.delayed(
+          const Duration(milliseconds: 500),
+              () => context
+              .read<ClientEditCubit>()
+              .clear(),
+        ),
+      );
+  }
+
+  void _openSettings(BuildContext context) {
+    Navigator.of(context, rootNavigator: true)
+          .pushNamed(SettingsPage.route);
+  }
+
+  _changePageMode (BuildContext context, ClientsPageState value) {
+    context
+        .read<ClientsPageBloc>()
+        .add(ClientsPageModeChanged(value));
+  }
+
+  Widget? _clientsCardBuilder(BuildContext context, int index) {
+    ClientsPageState state = context.read<ClientsPageBloc>().state;
+    Client client = selectedClients(
+        context: context, state: state)[index];
+    if (state == ClientsPageState.current) {
+      return CurrentClientCard(client: client);
+    }
+    return ArchivedClientCard(client: client);
+  }
+
+  List<Client> selectedClients({
+    required BuildContext context,
+    required ClientsPageState state,
+  }) {
     List<Client> clients = context.read<ClientsCubit>().state.clients;
     return clients.where((client) {
-      if (state == ClientState.current) {
+      if (state == ClientsPageState.current) {
         return client.isArchive == false;
       }
       return client.isArchive == true;
@@ -67,21 +103,12 @@ class ClientsPage extends StatelessWidget {
                             children: [
                               AppleFilledButton(
                                 text: LocaleKeys.clients_page_new_client.tr(),
-                                onPressed: () =>
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pushNamed(ClientEditPage.route)
-                                        .then(
-                                          (_) => Future.delayed(
-                                            const Duration(milliseconds: 500),
-                                            () => context
-                                                .read<ClientEditCubit>()
-                                                .clear(),
-                                          ),
-                                        ),
+                                onPressed: () => _addNewClient(context),
                               ),
                               CupertinoButton(
-                                padding: const EdgeInsets.symmetric(vertical: 0),
-                                onPressed: () => Navigator.of(context, rootNavigator: true).pushNamed(SettingsPage.route),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 0),
+                                onPressed: () => _openSettings(context),
                                 child: SvgPicture.asset(
                                   'assets/images/cog.svg',
                                   height: 20,
@@ -99,30 +126,26 @@ class ClientsPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: SizedBox(
                       width: double.infinity,
-                      child: BlocBuilder<ClientsPageBloc, ClientState>(
+                      child: BlocBuilder<ClientsPageBloc, ClientsPageState>(
                         builder: (context, state) {
-                          return CupertinoSlidingSegmentedControl<ClientState>(
+                          return CupertinoSlidingSegmentedControl<ClientsPageState>(
                             thumbColor: FitnessColors.white,
                             groupValue: state,
-                            children: <ClientState, Widget>{
-                              ClientState.current: Text(
+                            children: <ClientsPageState, Widget>{
+                              ClientsPageState.current: Text(
                                 '${LocaleKeys.clients_page_current.tr()} (${selectedClients(
                                   context: context,
-                                  state: ClientState.current,
+                                  state: ClientsPageState.current,
                                 ).length})',
                               ),
-                              ClientState.archived: Text(
+                              ClientsPageState.archived: Text(
                                 '${LocaleKeys.clients_page_archive.tr()} (${selectedClients(
                                   context: context,
-                                  state: ClientState.archived,
+                                  state: ClientsPageState.archived,
                                 ).length})',
                               ),
                             },
-                            onValueChanged: (value) {
-                              context
-                                  .read<ClientsPageBloc>()
-                                  .add(ClientsPageModeChanged(value!));
-                            },
+                            onValueChanged: (value) => _changePageMode(context, value!),
                           );
                         },
                       ),
@@ -135,21 +158,15 @@ class ClientsPage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  BlocBuilder<ClientsPageBloc, ClientState>(
+                  BlocBuilder<ClientsPageBloc, ClientsPageState>(
                     builder: (context, state) {
                       return ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount:
-                            selectedClients(context: context, state: state).length,
-                        itemBuilder: (context, index) {
-                          Client client = selectedClients(
-                              context: context, state: state)[index];
-                          if (state == ClientState.current) {
-                            return CurrentClientCard(client: client);
-                          }
-                          return ArchivedClientCard(client: client);
-                        },
+                            selectedClients(context: context, state: state)
+                                .length,
+                        itemBuilder: _clientsCardBuilder,
                       );
                     },
                   ),

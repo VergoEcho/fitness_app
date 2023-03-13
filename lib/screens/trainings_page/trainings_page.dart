@@ -24,6 +24,57 @@ class TrainingsPage extends StatelessWidget {
 
   static const String route = '/trainings';
 
+  _createNewTemplate(BuildContext context) {
+    context.read<NewTrainingCubit>().changeMode(NewTemplateMode());
+    Navigator.of(context, rootNavigator: true).pushNamed(NewTrainingPage.route);
+  }
+
+  _openSearch(BuildContext context) {
+    Navigator.of(context, rootNavigator: true)
+        .pushNamed(TrainingsSearchPage.route)
+        .then(
+          (value) => context.read<SearchCubit>().clear(),
+        );
+  }
+
+  _changePageMode(BuildContext context, TemplateOrExercise value) {
+    context.read<TrainingPageBloc>().add(TrainingPageModeChanged(value));
+  }
+
+  List selectedList(BuildContext context) {
+    TemplateOrExercise state = context.read<TrainingPageBloc>().state;
+    if (state == TemplateOrExercise.template) {
+      return context.read<TrainingsCubit>().state.trainings;
+    }
+    return context.read<ExercisesCubit>().state.exercises;
+  }
+
+  Widget? _tileBuilder(BuildContext context, int index) {
+    TemplateOrExercise state = context.read<TrainingPageBloc>().state;
+
+    if (state == TemplateOrExercise.template) {
+      Training item = selectedList(context)[index];
+      return Padding(
+        padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
+        child: TrainingTemplateCard(
+          template: item,
+        ),
+      );
+    }
+    Exercise item = selectedList(context)[index];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: ExerciseCard(
+        exercise: item,
+        onTap: () {
+          context.read<ExerciseEditCubit>().changeMode(ExerciseEditMode());
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed(ExercisePage.route);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -56,13 +107,7 @@ class TrainingsPage extends StatelessWidget {
                         text: LocaleKeys.trainings_page_new_template
                             .tr()
                             .toUpperCase(),
-                        onPressed: () {
-                          context
-                              .read<NewTrainingCubit>()
-                              .changeMode(NewTemplateMode());
-                          Navigator.of(context, rootNavigator: true)
-                              .pushNamed(NewTrainingPage.route);
-                        },
+                        onPressed: () => _createNewTemplate(context),
                       )
                     ],
                   ),
@@ -82,13 +127,7 @@ class TrainingsPage extends StatelessWidget {
                         color: FitnessColors.blindGray,
                       ),
                       suffixMode: OverlayVisibilityMode.always,
-                      onTap: () {
-                        Navigator.of(context, rootNavigator: true)
-                            .pushNamed(TrainingsSearchPage.route)
-                            .then(
-                              (value) => context.read<SearchCubit>().clear(),
-                            );
-                      },
+                      onTap: () => _openSearch(context),
                       onSuffixTap: () {},
                     ),
                   ),
@@ -107,11 +146,8 @@ class TrainingsPage extends StatelessWidget {
                             TemplateOrExercise.exercise:
                                 Text(LocaleKeys.trainings_page_exercises.tr()),
                           },
-                          onValueChanged: (value) {
-                            context
-                                .read<TrainingPageBloc>()
-                                .add(TrainingPageModeChanged(value!));
-                          },
+                          onValueChanged: (value) =>
+                              _changePageMode(context, value!),
                         );
                       },
                     ),
@@ -123,42 +159,10 @@ class TrainingsPage extends StatelessWidget {
             Expanded(
               child: BlocBuilder<TrainingPageBloc, TemplateOrExercise>(
                 builder: (context, state) {
-                  List selectedList() {
-                    if (state == TemplateOrExercise.template) {
-                      return context.read<TrainingsCubit>().state.trainings;
-                    }
-                    return context.read<ExercisesCubit>().state.exercises;
-                  }
-
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: selectedList().length,
-                    itemBuilder: (context, index) {
-                      if (state == TemplateOrExercise.template) {
-                        Training item = selectedList()[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              top: 16.0, left: 16, right: 16),
-                          child: TrainingTemplateCard(
-                            template: item,
-                          ),
-                        );
-                      }
-                      Exercise item = selectedList()[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ExerciseCard(
-                          exercise: item,
-                          onTap: () {
-                            context
-                                .read<ExerciseEditCubit>()
-                                .changeMode(ExerciseEditMode());
-                            Navigator.of(context, rootNavigator: true)
-                                .pushNamed(ExercisePage.route);
-                          },
-                        ),
-                      );
-                    },
+                    itemCount: selectedList(context).length,
+                    itemBuilder: _tileBuilder,
                   );
                 },
               ),

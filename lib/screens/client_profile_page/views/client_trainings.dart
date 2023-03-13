@@ -12,6 +12,13 @@ import 'package:trainings/screens/new_training_page/new_training_page.dart';
 class ClientTrainings extends StatelessWidget {
   const ClientTrainings({Key? key}) : super(key: key);
 
+  _createNewTraining(BuildContext context) {
+    context.read<NewTrainingCubit>().changeMode(
+        NewTrainingMode());
+    Navigator.of(context, rootNavigator: true)
+        .pushNamed(NewTrainingPage.route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TrainingsCubit, TrainingsState>(
@@ -39,7 +46,7 @@ class ClientTrainings extends StatelessWidget {
                     vertical: 16,
                   ),
                 ),
-                onPressed: () {},
+                onPressed: _createNewTraining(context),
                 child: Text(
                   LocaleKeys.client_profile_page_trainings_add.tr(),
                   style: const TextStyle(
@@ -67,12 +74,7 @@ class ClientTrainings extends StatelessWidget {
                           .client_profile_page_trainings_new_training
                           .tr()
                           .toUpperCase(),
-                      onPressed: () {
-                        context.read<NewTrainingCubit>().changeMode(
-                            NewTrainingMode());
-                        Navigator.of(context, rootNavigator: true)
-                            .pushNamed(NewTrainingPage.route);
-                      },
+                      onPressed: () => _createNewTraining(context),
                     ),
                   ],
                 ),

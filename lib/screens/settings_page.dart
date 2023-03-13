@@ -29,6 +29,56 @@ class SettingsPage extends StatelessWidget {
     TimeFormat.twentyFour: LocaleKeys.settings_page_units_imperial.tr(),
   };
 
+  Widget _separatorBuilder(BuildContext context, int index) {
+    return Divider(
+      color: FitnessColors.blindGray,
+      height: 1,
+    );
+  }
+
+  Widget? _firstWeekdayBuilder(BuildContext context, int index) {
+    SettingsState state = context.read<SettingsCubit>().state;
+    return RadioItem(
+      onTap: () {
+        context.read<SettingsCubit>().update(state.copyWith(
+          weekday: FirstWeekday.values[index],
+        ));
+      },
+      index: index,
+      selectedIndex: state.weekday.index,
+      label: weekdayText.values.toList()[index],
+    );
+  }
+
+  Widget? _timeFormatsBuilder(BuildContext context, int index) {
+    SettingsState state = context.read<SettingsCubit>().state;
+    return RadioItem(
+      onTap: () {
+        context.read<SettingsCubit>().update(state.copyWith(
+          timeFormat: TimeFormat.values[index],
+        ));
+      },
+      index: index,
+      selectedIndex: state.timeFormat.index,
+      label: timeFormatText.values.toList()[index],
+    );
+  }
+
+  Widget? _unitsBuilder(BuildContext context, int index) {
+    SettingsState state = context.read<SettingsCubit>().state;
+
+    return RadioItem(
+      onTap: () {
+        context.read<SettingsCubit>().update(state.copyWith(
+          units: Units.values[index],
+        ));
+      },
+      index: index,
+      selectedIndex: state.units.index,
+      label: unitsText.values.toList()[index],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -68,7 +118,7 @@ class SettingsPage extends StatelessWidget {
                     top: 16,
                   ),
                   child: Text(
-                    LocaleKeys.settings_page_first_weekday_title
+                    LocaleKeys.settings_page_time_format_title
                         .tr()
                         .toUpperCase(),
                     style: TextStyle(
@@ -87,24 +137,8 @@ class SettingsPage extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: weekdayText.length,
-                    itemBuilder: (context, index) {
-                      return RadioItem(
-                        onTap: () {
-                          context.read<SettingsCubit>().update(state.copyWith(
-                                weekday: FirstWeekday.values[index],
-                              ));
-                        },
-                        index: index,
-                        selectedIndex: state.weekday.index,
-                        label: weekdayText.values.toList()[index],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        color: FitnessColors.blindGray,
-                        height: 1,
-                      );
-                    },
+                    itemBuilder: _firstWeekdayBuilder,
+                    separatorBuilder: _separatorBuilder,
                   ),
                 ),
                 Padding(
@@ -132,24 +166,8 @@ class SettingsPage extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: timeFormatText.length,
-                    itemBuilder: (context, index) {
-                      return RadioItem(
-                        onTap: () {
-                          context.read<SettingsCubit>().update(state.copyWith(
-                                timeFormat: TimeFormat.values[index],
-                              ));
-                        },
-                        index: index,
-                        selectedIndex: state.timeFormat.index,
-                        label: timeFormatText.values.toList()[index],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        color: FitnessColors.blindGray,
-                        height: 1,
-                      );
-                    },
+                    itemBuilder: _timeFormatsBuilder,
+                    separatorBuilder: _separatorBuilder,
                   ),
                 ),
                 Padding(
@@ -158,7 +176,7 @@ class SettingsPage extends StatelessWidget {
                     top: 16,
                   ),
                   child: Text(
-                    LocaleKeys.settings_page_first_weekday_title
+                    LocaleKeys.settings_page_units_title
                         .tr()
                         .toUpperCase(),
                     style: TextStyle(
@@ -177,24 +195,8 @@ class SettingsPage extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: unitsText.length,
-                    itemBuilder: (context, index) {
-                      return RadioItem(
-                        onTap: () {
-                          context.read<SettingsCubit>().update(state.copyWith(
-                                units: Units.values[index],
-                              ));
-                        },
-                        index: index,
-                        selectedIndex: state.units.index,
-                        label: unitsText.values.toList()[index],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Divider(
-                        color: FitnessColors.blindGray,
-                        height: 1,
-                      );
-                    },
+                    itemBuilder: _unitsBuilder,
+                    separatorBuilder: _separatorBuilder,
                   ),
                 ),
                 Padding(
@@ -275,9 +277,7 @@ class SettingsPage extends StatelessWidget {
                     children: [
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                        onTap: () => Navigator.pop(context),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16),
@@ -314,9 +314,7 @@ class SettingsPage extends StatelessWidget {
                       const Divider(height: 1),
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                        onTap: () => Navigator.pop(context),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16),

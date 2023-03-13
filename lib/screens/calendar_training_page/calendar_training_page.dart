@@ -89,11 +89,16 @@ class CalendarTrainingPage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    LocaleKeys.calendar_training_page_training_notes.tr(),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: FitnessColors.blindGray,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width*.7,
+                    child: Expanded(
+                      child: Text(
+                        LocaleKeys.calendar_training_page_training_notes.tr(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: FitnessColors.blindGray,
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -10,22 +10,6 @@ import 'package:trainings/models/exercise.dart';
 
 import 'widget/radio_item.dart';
 
-List<String> units = [
-  LocaleKeys.exercise_page_units_weight_reps.tr(),
-  LocaleKeys.exercise_page_units_distance_time.tr(),
-  LocaleKeys.exercise_page_units_reps_time.tr(),
-  LocaleKeys.exercise_page_units_custom.tr(),
-];
-
-Exercise _templateExercise = Exercise(
-  id: 0,
-  title: 'Exercise Name',
-  description: 'Distance (km)/Time (min)',
-  reps: const [],
-  createdAt: DateTime.now(),
-  updatedAt: DateTime.now(),
-);
-
 class ExercisePage extends StatefulWidget {
   const ExercisePage({Key? key}) : super(key: key);
 
@@ -46,8 +30,40 @@ class _ExercisePageState extends State<ExercisePage> {
   void _submitForm() {
     bool valid = _formKey.currentState!.validate();
     if (valid) {
-      Navigator.pop(context, _templateExercise);
+      Navigator.pop(context, templateExercise);
     }
+  }
+
+  String _titleText(BuildContext context) {
+    return context.read<ExerciseEditCubit>().state is ExerciseEditMode
+        ? LocaleKeys.exercise_page_title_edit.tr()
+        : LocaleKeys.exercise_page_title_new.tr();
+  }
+
+  String? _nameValidator(String? text) {
+    if (text == null || text.isEmpty || text == '') {
+      return LocaleKeys.exercise_page_error_name_field.tr();
+    }
+    return null;
+  }
+
+  Widget? _unitsBuilder (BuildContext context, int index) {
+    return RadioItem(
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+      index: index,
+      selectedIndex: _selectedIndex,
+      label: units[index],
+    );
+  }
+
+  Widget _unitsSeparatorBuilder (BuildContext context, int index) {
+    return const Divider(
+      height: 1,
+    );
   }
 
   @override
@@ -76,11 +92,7 @@ class _ExercisePageState extends State<ExercisePage> {
                 Navigator.pop(context);
               },
             ),
-            middle: Text(
-              state is ExerciseEditMode
-                  ? LocaleKeys.exercise_page_title_edit.tr()
-                  : LocaleKeys.exercise_page_title_new.tr(),
-            ),
+            middle: Text(_titleText(context)),
             trailing: state is ExerciseEditMode
                 ? CupertinoButton(
                     padding: EdgeInsets.zero,
@@ -89,6 +101,10 @@ class _ExercisePageState extends State<ExercisePage> {
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Text(
                         LocaleKeys.exercise_page_edit.tr(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                        ),
                       ),
                     ),
                   )
@@ -113,13 +129,7 @@ class _ExercisePageState extends State<ExercisePage> {
                           children: [
                             FieldTile(
                               formKey: _formKey,
-                              validator: (String? text) {
-                                if (text == null || text.isEmpty || text == '') {
-                                  return LocaleKeys.exercise_page_error_name_field
-                                      .tr();
-                                }
-                                return null;
-                              },
+                              validator: _nameValidator,
                               withBorder: true,
                               text: LocaleKeys.exercise_page_name.tr(),
                               controller: _name,
@@ -136,7 +146,9 @@ class _ExercisePageState extends State<ExercisePage> {
                         padding:
                             const EdgeInsets.only(top: 24, right: 16, left: 16),
                         child: Text(
-                          LocaleKeys.exercise_page_units_title.tr().toUpperCase(),
+                          LocaleKeys.exercise_page_units_title
+                              .tr()
+                              .toUpperCase(),
                           style: TextStyle(
                               fontSize: 12, color: FitnessColors.blindGray),
                         ),
@@ -152,47 +164,35 @@ class _ExercisePageState extends State<ExercisePage> {
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: units.length,
-                          itemBuilder: (context, index) {
-                            return RadioItem(
-                              onTap: () {
-                                setState(() {
-                                  _selectedIndex = index;
-                                });
-                              },
-                              index: index,
-                              selectedIndex: _selectedIndex,
-                              label: units[index],
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const Divider(
-                              height: 1,
-                            );
-                          },
+                          itemBuilder: _unitsBuilder,
+                          separatorBuilder: _unitsSeparatorBuilder,
                         ),
                       ),
                     ],
                   ),
                 ),
-                state is ExerciseEditMode ? const SizedBox() : Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                state is ExerciseEditMode
+                    ? const SizedBox()
+                    : Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16, right: 16, bottom: 16),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          onPressed: _submitForm,
+                          child: Text(
+                            LocaleKeys.exercise_page_save.tr(),
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    onPressed: _submitForm,
-                    child: Text(
-                      LocaleKeys.exercise_page_save.tr(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

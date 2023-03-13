@@ -11,6 +11,14 @@ import '../widgets/client_info_tile.dart';
 class ClientInfo extends StatelessWidget {
   const ClientInfo({Key? key}) : super(key: key);
 
+  _archiveClient(BuildContext context) {
+    // TODO: Implement archivation of a client
+    // context
+    //     .read<ClientsCubit>()
+    //     .archiveClient(state.client!.id);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SelectedClientCubit, SelectedClientState>(
@@ -60,13 +68,7 @@ class ClientInfo extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement archivation of a client
-                    // context
-                    //     .read<ClientsCubit>()
-                    //     .archiveClient(state.client!.id);
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => _archiveClient(context),
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     backgroundColor: FitnessColors.whiteShaded,

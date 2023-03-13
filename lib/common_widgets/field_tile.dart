@@ -10,7 +10,8 @@ class FieldTile extends StatelessWidget {
       this.withBorder = false,
       this.onChanged,
       this.validator,
-      this.formKey})
+      this.formKey,
+      this.onTap})
       : super(key: key);
 
   final String text;
@@ -19,6 +20,11 @@ class FieldTile extends StatelessWidget {
   final bool withBorder;
   final String? Function(String?)? validator;
   final GlobalKey<FormState>? formKey;
+  final VoidCallback? onTap;
+
+  Border? fieldBorder() {
+    return withBorder ? Border.all(color: FitnessColors.blindGray) : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,7 @@ class FieldTile extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
-        border: withBorder ? Border.all(color: FitnessColors.blindGray) : null,
+        border: fieldBorder(),
         color: FitnessColors.white,
         borderRadius: BorderRadius.circular(12),
       ),
@@ -46,6 +52,7 @@ class FieldTile extends StatelessWidget {
           Form(
             key: formKey,
             child: CupertinoTextFormFieldRow(
+              onTap: onTap,
               scrollPadding: EdgeInsets.zero,
               onChanged: onChanged,
               controller: controller,

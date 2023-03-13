@@ -132,6 +132,7 @@ class CodegenLoader extends AssetLoader{
       "edit": "Exercise",
       "new": "New Exercise"
     },
+    "cancel": "Cancel",
     "edit": "Edit",
     "save": "Save Exercise",
     "name": "Exercise Name",

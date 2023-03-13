@@ -6,21 +6,6 @@ import 'package:trainings/constants/colors.dart';
 import 'package:trainings/models/exercise.dart';
 import 'package:trainings/models/training.dart';
 
-List<Exercise> _exercises = [
-  Exercise(
-    id: 0,
-    title: 'Exercise 1',
-    description: '20 kg x 20 Reps',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-    reps: const [
-      'Push up • 20 Reps',
-      'Push up • 20 Reps',
-      'Push up • 20 Reps',
-      'Push up • 20 Reps',
-    ],
-  ),
-];
 
 class TrainingTemplateCard extends StatefulWidget {
   const TrainingTemplateCard({Key? key, required this.template}) : super(key: key);
@@ -59,6 +44,17 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
     super.dispose();
   }
 
+  _toggleTemplate () {
+    setState(() {
+      _expanded = !_expanded;
+    });
+    if (_expanded) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,16 +67,7 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
         children: [
           GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () {
-              setState(() {
-                _expanded = !_expanded;
-              });
-              if (_expanded) {
-                _controller.forward();
-              } else {
-                _controller.reverse();
-              }
-            },
+            onTap: _toggleTemplate,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -130,13 +117,11 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
                     theme: TimelineThemeData(nodePosition: 0),
                     shrinkWrap: true,
                     builder: TimelineTileBuilder.connected(
-                      connectorBuilder: (_, index, __) {
-                        return const SolidLineConnector();
-                      },
+                      connectorBuilder: (_, index, __) => const SolidLineConnector(),
                       contentsBuilder: (context, index) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
-                          '${_exercises[0].title} ${_exercises[0].reps[index]}',
+                          '${exercises[0].title} ${exercises[0].reps[index]}',
                           style: TextStyle(
                             fontSize: 16,
                             color: FitnessColors.blindGray,
@@ -151,7 +136,7 @@ class _TrainingTemplateCardState extends State<TrainingTemplateCard>
                           ),
                         );
                       },
-                      itemCount: _exercises[0].reps.length,
+                      itemCount: exercises[0].reps.length,
                     ),
                   ),
                 ),

@@ -136,9 +136,7 @@ class OfferPage extends StatelessWidget {
                       child: Column(
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                            onPressed: () => Navigator.pop(context),
                             style: ElevatedButton.styleFrom(
                                 elevation: 0,
                                 backgroundColor: FitnessColors.orange,

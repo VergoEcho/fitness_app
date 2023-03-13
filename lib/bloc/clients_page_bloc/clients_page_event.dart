@@ -6,5 +6,5 @@ abstract class ClientsPageEvent {
 
 class ClientsPageModeChanged extends ClientsPageEvent {
   const ClientsPageModeChanged(this.value);
-  final ClientState value;
+  final ClientsPageState value;
 }

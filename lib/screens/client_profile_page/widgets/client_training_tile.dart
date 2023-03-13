@@ -22,7 +22,7 @@ class ClientTrainingTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(top: 16),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(top: 16, left: 16, bottom: 16,),
         decoration: BoxDecoration(
           color: FitnessColors.white,
           borderRadius: BorderRadius.circular(13),

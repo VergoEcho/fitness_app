@@ -12,15 +12,6 @@ import 'package:trainings/screens/exercise_page/exercise_page.dart';
 
 import 'widgets/exercise_search_item.dart';
 
-Exercise _templateExercise = Exercise(
-  id: 0,
-  title: 'Exercise Name',
-  description: 'Distance (km)/Time (min)',
-  reps: const [],
-  createdAt: DateTime.now(),
-  updatedAt: DateTime.now(),
-);
-
 class ExercisesSearchPage extends StatefulWidget {
   const ExercisesSearchPage({Key? key}) : super(key: key);
 
@@ -32,6 +23,7 @@ class ExercisesSearchPage extends StatefulWidget {
 
 class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
   int? _selectedIndex;
+  TextEditingController searchController = TextEditingController();
 
   List<Exercise> exercisesList(BuildContext context) {
     String search = context.read<SearchCubit>().state;
@@ -39,6 +31,63 @@ class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
     return exercises.where((exercise) {
       return exercise.title.toLowerCase().contains(search.toLowerCase());
     }).toList();
+  }
+
+  void _createNewExercise() {
+    context.read<ExerciseEditCubit>().changeMode(ExerciseCreateMode());
+    Navigator.of(context, rootNavigator: true)
+        .pushNamed(ExercisePage.route)
+        .then((value) {
+      if (value != null) {
+        Navigator.pop(context, value);
+      }
+    });
+  }
+
+  void _onSearchChanged(value) {
+    if (_selectedIndex != null) {
+      setState(() {
+        _selectedIndex = null;
+      });
+    }
+    context.read<SearchCubit>().update(value);
+  }
+
+  void _clearSearch() {
+    context.read<SearchCubit>().clear();
+    searchController.clear();
+  }
+
+  void _selectExercise() {
+    context.read<ExerciseEditCubit>().changeMode(ExerciseCreateMode());
+    Navigator.of(context, rootNavigator: true)
+        .pushNamed(ExercisePage.route)
+        .then((value) {
+      if (value != null) {
+        Navigator.pop(context, value);
+      }
+    });
+  }
+
+  Widget? _exerciseCardBuilder(BuildContext context, int index) {
+    return ExerciseSearchItem(
+      index: index,
+      selectedIndex: _selectedIndex,
+      exercise: exercisesList(context)[index],
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+    );
+  }
+
+  VoidCallback? _addExercise(BuildContext context) {
+    return _selectedIndex != null
+        ? () {
+            Navigator.pop(context, templateExercise);
+          }
+        : null;
   }
 
   @override
@@ -70,16 +119,7 @@ class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
         ),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {
-            context.read<ExerciseEditCubit>().changeMode(ExerciseCreateMode());
-            Navigator.of(context, rootNavigator: true)
-                .pushNamed(ExercisePage.route)
-                .then((value) {
-              if (value != null) {
-                Navigator.pop(context, value);
-              }
-            });
-          },
+          onPressed: _createNewExercise,
           child: const Icon(
             CupertinoIcons.add_circled_solid,
             opticalSize: 20,
@@ -92,33 +132,54 @@ class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
           children: [
             Container(
               decoration: BoxDecoration(
-                  color: FitnessColors.white,
-                  borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(24),
-                      bottomLeft: Radius.circular(24))),
+                color: FitnessColors.white,
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(24),
+                  bottomLeft: Radius.circular(24),
+                ),
+              ),
               padding: const EdgeInsets.only(
-                  top: 8, left: 16, right: 16, bottom: 32),
-              child: CupertinoSearchTextField(
-                style: TextStyle(
-                  color: FitnessColors.darkGray,
-                ),
-                prefixIcon: Icon(
-                  CupertinoIcons.search,
-                  color: FitnessColors.darkGray,
-                ),
-                suffixIcon: Icon(
-                  CupertinoIcons.mic_solid,
-                  color: FitnessColors.blindGray,
-                ),
-                suffixMode: OverlayVisibilityMode.always,
-                onSuffixTap: () {},
-                onChanged: (value) {
-                  if (_selectedIndex != null) {
-                    setState(() {
-                      _selectedIndex = null;
-                    });
-                  }
-                  context.read<SearchCubit>().update(value);
+                top: 8,
+                left: 16,
+                right: 16,
+                bottom: 32,
+              ),
+              child: BlocBuilder<SearchCubit, String>(
+                builder: (context, state) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: CupertinoSearchTextField(
+                          controller: searchController,
+                          style: TextStyle(
+                            color: FitnessColors.darkGray,
+                          ),
+                          prefixIcon: Icon(
+                            CupertinoIcons.search,
+                            color: FitnessColors.darkGray,
+                          ),
+                          suffixIcon: Icon(
+                            CupertinoIcons.mic_solid,
+                            color: FitnessColors.blindGray,
+                          ),
+                          suffixMode: OverlayVisibilityMode.always,
+                          onSuffixTap: () {},
+                          onChanged: _onSearchChanged,
+                        ),
+                      ),
+                      state.isEmpty
+                          ? const SizedBox()
+                          : SizedBox(
+                              height: 36,
+                              child: CupertinoButton(
+                                padding: const EdgeInsets.only(left: 14),
+                                onPressed: _clearSearch,
+                                child:
+                                    Text(LocaleKeys.exercise_page_cancel.tr()),
+                              ),
+                            ),
+                    ],
+                  );
                 },
               ),
             ),
@@ -153,18 +214,7 @@ class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12))),
-                                onPressed: () {
-                                  context
-                                      .read<ExerciseEditCubit>()
-                                      .changeMode(ExerciseCreateMode());
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pushNamed(ExercisePage.route)
-                                      .then((value) {
-                                    if (value != null) {
-                                      Navigator.pop(context, value);
-                                    }
-                                  });
-                                },
+                                onPressed: _selectExercise,
                                 child: Text(
                                   LocaleKeys.search_exercise_page_new_exercise
                                       .tr(),
@@ -183,18 +233,7 @@ class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
                     : Expanded(
                         child: ListView.builder(
                           itemCount: exercisesList(context).length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ExerciseSearchItem(
-                              index: index,
-                              selectedIndex: _selectedIndex,
-                              exercise: exercisesList(context)[index],
-                              onTap: () {
-                                setState(() {
-                                  _selectedIndex = index;
-                                });
-                              },
-                            );
-                          },
+                          itemBuilder: _exerciseCardBuilder,
                         ),
                       );
               },
@@ -210,11 +249,7 @@ class _ExercisesSearchPageState extends State<ExercisesSearchPage> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12))),
-                onPressed: _selectedIndex != null
-                    ? () {
-                        Navigator.pop(context, _templateExercise);
-                      }
-                    : null,
+                onPressed: _addExercise(context),
                 child: Text(
                   LocaleKeys.search_exercise_page_add.tr(),
                   style: const TextStyle(
